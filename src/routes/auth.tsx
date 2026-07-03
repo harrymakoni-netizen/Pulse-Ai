@@ -100,12 +100,6 @@ function AuthPage() {
             </p>
           </div>
 
-          {mode !== "forgot" && (
-            <Button type="button" onClick={handleGoogle} variant="outline" className="mb-4 w-full gap-2" disabled={busy}>
-              <GoogleIcon /> Continue with Google
-            </Button>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-3">
             {mode === "sign-up" && (
               <>
