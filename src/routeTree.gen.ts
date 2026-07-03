@@ -17,6 +17,7 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedRecordsRouteImport } from './routes/_authenticated/records'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedMinistryRouteImport } from './routes/_authenticated/ministry'
 import { Route as AuthenticatedHospitalsRouteImport } from './routes/_authenticated/hospitals'
 import { Route as AuthenticatedHospitalRouteImport } from './routes/_authenticated/hospital'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -67,6 +68,11 @@ const AuthenticatedNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMinistryRoute = AuthenticatedMinistryRouteImport.update({
+  id: '/ministry',
+  path: '/ministry',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedHospitalsRoute = AuthenticatedHospitalsRouteImport.update({
   id: '/hospitals',
   path: '/hospitals',
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hospital': typeof AuthenticatedHospitalRoute
   '/hospitals': typeof AuthenticatedHospitalsRoute
+  '/ministry': typeof AuthenticatedMinistryRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/records': typeof AuthenticatedRecordsRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hospital': typeof AuthenticatedHospitalRoute
   '/hospitals': typeof AuthenticatedHospitalsRoute
+  '/ministry': typeof AuthenticatedMinistryRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/records': typeof AuthenticatedRecordsRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/hospital': typeof AuthenticatedHospitalRoute
   '/_authenticated/hospitals': typeof AuthenticatedHospitalsRoute
+  '/_authenticated/ministry': typeof AuthenticatedMinistryRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/records': typeof AuthenticatedRecordsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/hospital'
     | '/hospitals'
+    | '/ministry'
     | '/notifications'
     | '/records'
     | '/settings'
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/hospital'
     | '/hospitals'
+    | '/ministry'
     | '/notifications'
     | '/records'
     | '/settings'
@@ -222,6 +233,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/hospital'
     | '/_authenticated/hospitals'
+    | '/_authenticated/ministry'
     | '/_authenticated/notifications'
     | '/_authenticated/records'
     | '/_authenticated/settings'
@@ -294,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ministry': {
+      id: '/_authenticated/ministry'
+      path: '/ministry'
+      fullPath: '/ministry'
+      preLoaderRoute: typeof AuthenticatedMinistryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/hospitals': {
@@ -370,6 +389,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHospitalRoute: typeof AuthenticatedHospitalRoute
   AuthenticatedHospitalsRoute: typeof AuthenticatedHospitalsRoute
+  AuthenticatedMinistryRoute: typeof AuthenticatedMinistryRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedRecordsRoute: typeof AuthenticatedRecordsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
@@ -385,6 +405,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHospitalRoute: AuthenticatedHospitalRoute,
   AuthenticatedHospitalsRoute: AuthenticatedHospitalsRoute,
+  AuthenticatedMinistryRoute: AuthenticatedMinistryRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedRecordsRoute: AuthenticatedRecordsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
