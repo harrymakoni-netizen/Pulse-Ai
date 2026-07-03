@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,17 +38,6 @@ function AuthPage() {
     });
   }, [navigate]);
 
-  async function handleGoogle() {
-    setBusy(true);
-    try {
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-      if (result.error) { toast.error(result.error.message ?? "Google sign-in failed"); setBusy(false); return; }
-      if ((result as { redirected?: boolean }).redirected) return;
-      navigate({ to: "/dashboard", replace: true });
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Google sign-in failed");
-    } finally { setBusy(false); }
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -112,12 +100,6 @@ function AuthPage() {
             </p>
           </div>
 
-          {mode !== "forgot" && (
-            <Button type="button" onClick={handleGoogle} variant="outline" className="mb-4 w-full gap-2" disabled={busy}>
-              <GoogleIcon /> Continue with Google
-            </Button>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-3">
             {mode === "sign-up" && (
               <>
@@ -176,16 +158,5 @@ function AuthPage() {
         </motion.div>
       </div>
     </div>
-  );
-}
-
-function GoogleIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
-      <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.3l7.8 6C12.5 13.1 17.8 9.5 24 9.5z"/>
-      <path fill="#4285F4" d="M46.5 24.5c0-1.7-.2-3-.4-4.4H24v8.6h12.7c-.6 3.1-2.4 5.8-5.1 7.5l7.8 6C43.9 37.9 46.5 32 46.5 24.5z"/>
-      <path fill="#FBBC05" d="M10.4 28.7c-.5-1.4-.7-2.9-.7-4.7s.3-3.3.7-4.7l-7.8-6C.9 16.6 0 20.2 0 24s.9 7.4 2.6 10.7l7.8-6z"/>
-      <path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.8-6c-2.1 1.4-4.9 2.3-7.4 2.3-6.2 0-11.5-3.6-13.6-9.5l-7.8 6C6.5 42.6 14.6 48 24 48z"/>
-    </svg>
   );
 }
