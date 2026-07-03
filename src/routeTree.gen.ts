@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedEmergencyNewRouteImport } from './routes/_authenticated/emergency.new'
+import { Route as AuthenticatedEmergencyIdRouteImport } from './routes/_authenticated/emergency.$id'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -46,12 +47,19 @@ const AuthenticatedEmergencyNewRoute =
     path: '/emergency/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedEmergencyIdRoute =
+  AuthenticatedEmergencyIdRouteImport.update({
+    id: '/emergency/$id',
+    path: '/emergency/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/emergency/new': typeof AuthenticatedEmergencyNewRoute
 }
 export interface FileRoutesByTo {
@@ -59,6 +67,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/emergency/new': typeof AuthenticatedEmergencyNewRoute
 }
 export interface FileRoutesById {
@@ -68,13 +77,26 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/_authenticated/emergency/new': typeof AuthenticatedEmergencyNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/dashboard' | '/emergency/new'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/emergency/$id'
+    | '/emergency/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/dashboard' | '/emergency/new'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/emergency/$id'
+    | '/emergency/new'
   id:
     | '__root__'
     | '/'
@@ -82,6 +104,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/dashboard'
+    | '/_authenticated/emergency/$id'
     | '/_authenticated/emergency/new'
   fileRoutesById: FileRoutesById
 }
@@ -136,16 +159,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEmergencyNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/emergency/$id': {
+      id: '/_authenticated/emergency/$id'
+      path: '/emergency/$id'
+      fullPath: '/emergency/$id'
+      preLoaderRoute: typeof AuthenticatedEmergencyIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedEmergencyIdRoute: typeof AuthenticatedEmergencyIdRoute
   AuthenticatedEmergencyNewRoute: typeof AuthenticatedEmergencyNewRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedEmergencyIdRoute: AuthenticatedEmergencyIdRoute,
   AuthenticatedEmergencyNewRoute: AuthenticatedEmergencyNewRoute,
 }
 
