@@ -19,6 +19,31 @@ import {
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Minimal Web Speech API type declarations (not in lib.dom for all TS versions)
+type SRResultItem = { transcript: string };
+type SRResult = { readonly length: number; isFinal: boolean; [i: number]: SRResultItem };
+type SRResultList = { readonly length: number; [i: number]: SRResult };
+type SREvent = { results: SRResultList; resultIndex: number };
+type SRErrorEvent = { error: string };
+interface SRInstance {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((e: SREvent) => void) | null;
+  onerror: ((e: SRErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+}
+type SRCtor = new () => SRInstance;
+declare global {
+  interface Window {
+    SpeechRecognition?: SRCtor;
+    webkitSpeechRecognition?: SRCtor;
+  }
+}
+
 export const Route = createFileRoute("/_authenticated/assistant")({
   head: () => ({ meta: [{ title: "AI Assistant · LifeLine+" }] }),
   component: AssistantPage,
@@ -53,7 +78,7 @@ function AssistantPage() {
   // Speech recognition state
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SRInstance | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -129,15 +154,15 @@ function AssistantPage() {
       return;
     }
     window.speechSynthesis?.cancel();
-    const SpeechRecognitionClass =
-      window.SpeechRecognition || (window as unknown as { webkitSpeechRecognition: typeof SpeechRecognition }).webkitSpeechRecognition;
-    const recognition = new SpeechRecognitionClass();
+    const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Ctor) { toast.error("Voice input is not supported"); return; }
+    const recognition = new Ctor();
     recognition.continuous = true;
     recognition.interimResults = true;
     // Try native language first, fall back to English variant
     recognition.lang = speechLang[lang];
     let finalTranscript = "";
-    recognition.onresult = (e: SpeechRecognitionEvent) => {
+    recognition.onresult = (e: SREvent) => {
       let interim = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const result = e.results[i];
@@ -149,7 +174,7 @@ function AssistantPage() {
       }
       setTranscript(finalTranscript + interim);
     };
-    recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
+    recognition.onerror = (e: SRErrorEvent) => {
       if (e.error === "not-allowed") {
         toast.error("Microphone access denied");
       } else if (e.error !== "aborted" && e.error !== "no-speech") {
