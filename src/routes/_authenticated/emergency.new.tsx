@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery, useServerFn } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/lifeline/app-shell";
 import { Button } from "@/components/ui/button";
@@ -287,6 +287,3 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
   const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
   return 2*R*Math.asin(Math.sqrt(a));
 }
-
-// unused re-export to prevent tree-shake removal of value we use above
-export const _ = useServerFn;
