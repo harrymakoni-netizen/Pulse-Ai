@@ -14,16 +14,445 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ambulances: {
+        Row: {
+          created_at: string
+          hospital_id: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          plate: string
+          status: Database["public"]["Enums"]["ambulance_status"]
+        }
+        Insert: {
+          created_at?: string
+          hospital_id?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          plate: string
+          status?: Database["public"]["Enums"]["ambulance_status"]
+        }
+        Update: {
+          created_at?: string
+          hospital_id?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          plate?: string
+          status?: Database["public"]["Enums"]["ambulance_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambulances_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      appointments: {
+        Row: {
+          created_at: string
+          doctor_name: string | null
+          hospital_id: string | null
+          id: string
+          reason: string | null
+          scheduled_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          doctor_name?: string | null
+          hospital_id?: string | null
+          id?: string
+          reason?: string | null
+          scheduled_at: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          doctor_name?: string | null
+          hospital_id?: string | null
+          id?: string
+          reason?: string | null
+          scheduled_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emergency_contacts: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          phone: string
+          relation: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          phone: string
+          relation?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          phone?: string
+          relation?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emergency_events: {
+        Row: {
+          created_at: string
+          id: string
+          note: string | null
+          request_id: string
+          status: Database["public"]["Enums"]["emergency_status"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          request_id: string
+          status: Database["public"]["Enums"]["emergency_status"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          request_id?: string
+          status?: Database["public"]["Enums"]["emergency_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emergency_events_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "emergency_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emergency_requests: {
+        Row: {
+          age: number | null
+          ai_report: string | null
+          ai_summary: Json | null
+          ambulance_id: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          eta_minutes: number | null
+          hospital_id: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          location_label: string | null
+          medical_history: string | null
+          pain_level: number | null
+          patient_id: string
+          photo_url: string | null
+          severity: Database["public"]["Enums"]["emergency_severity"] | null
+          status: Database["public"]["Enums"]["emergency_status"]
+          symptoms: string[]
+          symptoms_text: string | null
+          updated_at: string
+        }
+        Insert: {
+          age?: number | null
+          ai_report?: string | null
+          ai_summary?: Json | null
+          ambulance_id?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          eta_minutes?: number | null
+          hospital_id?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location_label?: string | null
+          medical_history?: string | null
+          pain_level?: number | null
+          patient_id: string
+          photo_url?: string | null
+          severity?: Database["public"]["Enums"]["emergency_severity"] | null
+          status?: Database["public"]["Enums"]["emergency_status"]
+          symptoms?: string[]
+          symptoms_text?: string | null
+          updated_at?: string
+        }
+        Update: {
+          age?: number | null
+          ai_report?: string | null
+          ai_summary?: Json | null
+          ambulance_id?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          eta_minutes?: number | null
+          hospital_id?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location_label?: string | null
+          medical_history?: string | null
+          pain_level?: number | null
+          patient_id?: string
+          photo_url?: string | null
+          severity?: Database["public"]["Enums"]["emergency_severity"] | null
+          status?: Database["public"]["Enums"]["emergency_status"]
+          symptoms?: string[]
+          symptoms_text?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emergency_requests_ambulance_id_fkey"
+            columns: ["ambulance_id"]
+            isOneToOne: false
+            referencedRelation: "ambulances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emergency_requests_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hospitals: {
+        Row: {
+          address: string
+          available_beds: number
+          city: string
+          created_at: string
+          has_emergency: boolean
+          id: string
+          lat: number
+          lng: number
+          name: string
+          phone: string | null
+          rating: number | null
+          specialties: string[]
+          total_beds: number
+        }
+        Insert: {
+          address: string
+          available_beds?: number
+          city: string
+          created_at?: string
+          has_emergency?: boolean
+          id?: string
+          lat: number
+          lng: number
+          name: string
+          phone?: string | null
+          rating?: number | null
+          specialties?: string[]
+          total_beds?: number
+        }
+        Update: {
+          address?: string
+          available_beds?: number
+          city?: string
+          created_at?: string
+          has_emergency?: boolean
+          id?: string
+          lat?: number
+          lng?: number
+          name?: string
+          phone?: string | null
+          rating?: number | null
+          specialties?: string[]
+          total_beds?: number
+        }
+        Relationships: []
+      }
+      medical_records: {
+        Row: {
+          created_at: string
+          details: Json | null
+          file_url: string | null
+          id: string
+          record_date: string | null
+          record_type: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          file_url?: string | null
+          id?: string
+          record_date?: string | null
+          record_type: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          file_url?: string | null
+          id?: string
+          record_date?: string | null
+          record_type?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          category: string
+          created_at: string
+          id: string
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          allergies: string[] | null
+          avatar_url: string | null
+          blood_type: string | null
+          created_at: string
+          dob: string | null
+          full_name: string | null
+          id: string
+          language: Database["public"]["Enums"]["preferred_language"]
+          medications: string[] | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          allergies?: string[] | null
+          avatar_url?: string | null
+          blood_type?: string | null
+          created_at?: string
+          dob?: string | null
+          full_name?: string | null
+          id: string
+          language?: Database["public"]["Enums"]["preferred_language"]
+          medications?: string[] | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          allergies?: string[] | null
+          avatar_url?: string | null
+          blood_type?: string | null
+          created_at?: string
+          dob?: string | null
+          full_name?: string | null
+          id?: string
+          language?: Database["public"]["Enums"]["preferred_language"]
+          medications?: string[] | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          hospital_id: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hospital_id?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hospital_id?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      ambulance_status:
+        | "available"
+        | "dispatched"
+        | "en_route"
+        | "on_scene"
+        | "transporting"
+        | "offline"
+      app_role: "patient" | "hospital_staff" | "ambulance" | "admin"
+      emergency_severity: "low" | "medium" | "high" | "critical"
+      emergency_status:
+        | "requested"
+        | "assessed"
+        | "hospital_notified"
+        | "dispatched"
+        | "en_route"
+        | "arrived"
+        | "transporting"
+        | "completed"
+        | "cancelled"
+      preferred_language: "en" | "sn" | "nd"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +579,29 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      ambulance_status: [
+        "available",
+        "dispatched",
+        "en_route",
+        "on_scene",
+        "transporting",
+        "offline",
+      ],
+      app_role: ["patient", "hospital_staff", "ambulance", "admin"],
+      emergency_severity: ["low", "medium", "high", "critical"],
+      emergency_status: [
+        "requested",
+        "assessed",
+        "hospital_notified",
+        "dispatched",
+        "en_route",
+        "arrived",
+        "transporting",
+        "completed",
+        "cancelled",
+      ],
+      preferred_language: ["en", "sn", "nd"],
+    },
   },
 } as const
