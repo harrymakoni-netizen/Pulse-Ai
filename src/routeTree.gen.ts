@@ -14,9 +14,13 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedRecordsRouteImport } from './routes/_authenticated/records'
+import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedHospitalsRouteImport } from './routes/_authenticated/hospitals'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
+import { Route as AuthenticatedAppointmentsRouteImport } from './routes/_authenticated/appointments'
 import { Route as AuthenticatedEmergencyNewRouteImport } from './routes/_authenticated/emergency.new'
 import { Route as AuthenticatedEmergencyIdRouteImport } from './routes/_authenticated/emergency.$id'
 
@@ -44,6 +48,22 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRecordsRoute = AuthenticatedRecordsRouteImport.update({
+  id: '/records',
+  path: '/records',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNotificationsRoute =
+  AuthenticatedNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedHospitalsRoute = AuthenticatedHospitalsRouteImport.update({
   id: '/hospitals',
   path: '/hospitals',
@@ -59,6 +79,12 @@ const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
   path: '/assistant',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAppointmentsRoute =
+  AuthenticatedAppointmentsRouteImport.update({
+    id: '/appointments',
+    path: '/appointments',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEmergencyNewRoute =
   AuthenticatedEmergencyNewRouteImport.update({
     id: '/emergency/new',
@@ -76,9 +102,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/appointments': typeof AuthenticatedAppointmentsRoute
   '/assistant': typeof AuthenticatedAssistantRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hospitals': typeof AuthenticatedHospitalsRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
+  '/records': typeof AuthenticatedRecordsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/emergency/new': typeof AuthenticatedEmergencyNewRoute
@@ -87,9 +117,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/appointments': typeof AuthenticatedAppointmentsRoute
   '/assistant': typeof AuthenticatedAssistantRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hospitals': typeof AuthenticatedHospitalsRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
+  '/records': typeof AuthenticatedRecordsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/emergency/new': typeof AuthenticatedEmergencyNewRoute
@@ -100,9 +134,13 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/appointments': typeof AuthenticatedAppointmentsRoute
   '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/hospitals': typeof AuthenticatedHospitalsRoute
+  '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
+  '/_authenticated/records': typeof AuthenticatedRecordsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/_authenticated/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/_authenticated/emergency/new': typeof AuthenticatedEmergencyNewRoute
@@ -113,9 +151,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/appointments'
     | '/assistant'
     | '/dashboard'
     | '/hospitals'
+    | '/notifications'
+    | '/records'
+    | '/settings'
     | '/api/chat'
     | '/emergency/$id'
     | '/emergency/new'
@@ -124,9 +166,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/appointments'
     | '/assistant'
     | '/dashboard'
     | '/hospitals'
+    | '/notifications'
+    | '/records'
+    | '/settings'
     | '/api/chat'
     | '/emergency/$id'
     | '/emergency/new'
@@ -136,9 +182,13 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/appointments'
     | '/_authenticated/assistant'
     | '/_authenticated/dashboard'
     | '/_authenticated/hospitals'
+    | '/_authenticated/notifications'
+    | '/_authenticated/records'
+    | '/_authenticated/settings'
     | '/api/chat'
     | '/_authenticated/emergency/$id'
     | '/_authenticated/emergency/new'
@@ -189,6 +239,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/records': {
+      id: '/_authenticated/records'
+      path: '/records'
+      fullPath: '/records'
+      preLoaderRoute: typeof AuthenticatedRecordsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notifications': {
+      id: '/_authenticated/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/hospitals': {
       id: '/_authenticated/hospitals'
       path: '/hospitals'
@@ -210,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAssistantRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/appointments': {
+      id: '/_authenticated/appointments'
+      path: '/appointments'
+      fullPath: '/appointments'
+      preLoaderRoute: typeof AuthenticatedAppointmentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/emergency/new': {
       id: '/_authenticated/emergency/new'
       path: '/emergency/new'
@@ -228,17 +306,25 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppointmentsRoute: typeof AuthenticatedAppointmentsRoute
   AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHospitalsRoute: typeof AuthenticatedHospitalsRoute
+  AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
+  AuthenticatedRecordsRoute: typeof AuthenticatedRecordsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedEmergencyIdRoute: typeof AuthenticatedEmergencyIdRoute
   AuthenticatedEmergencyNewRoute: typeof AuthenticatedEmergencyNewRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppointmentsRoute: AuthenticatedAppointmentsRoute,
   AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHospitalsRoute: AuthenticatedHospitalsRoute,
+  AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
+  AuthenticatedRecordsRoute: AuthenticatedRecordsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedEmergencyIdRoute: AuthenticatedEmergencyIdRoute,
   AuthenticatedEmergencyNewRoute: AuthenticatedEmergencyNewRoute,
 }
