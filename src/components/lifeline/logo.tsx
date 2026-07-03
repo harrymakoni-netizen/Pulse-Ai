@@ -14,7 +14,7 @@ export function LifeLineLogo({ size = 36, emergency = false, showWordmark = true
       <div
         className={cn(
           "relative inline-flex items-center justify-center rounded-full",
-          emergency ? "pulse-alert" : "pulse-calm",
+          emergency && "pulse-alert",
         )}
         style={{ width: size + 4, height: size + 4 }}
         aria-hidden="true"
