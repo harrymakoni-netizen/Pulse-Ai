@@ -18,9 +18,12 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedRecordsRouteImport } from './routes/_authenticated/records'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedHospitalsRouteImport } from './routes/_authenticated/hospitals'
+import { Route as AuthenticatedHospitalRouteImport } from './routes/_authenticated/hospital'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedAppointmentsRouteImport } from './routes/_authenticated/appointments'
+import { Route as AuthenticatedAmbulanceRouteImport } from './routes/_authenticated/ambulance'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedEmergencyNewRouteImport } from './routes/_authenticated/emergency.new'
 import { Route as AuthenticatedEmergencyIdRouteImport } from './routes/_authenticated/emergency.$id'
 
@@ -69,6 +72,11 @@ const AuthenticatedHospitalsRoute = AuthenticatedHospitalsRouteImport.update({
   path: '/hospitals',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHospitalRoute = AuthenticatedHospitalRouteImport.update({
+  id: '/hospital',
+  path: '/hospital',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -85,6 +93,16 @@ const AuthenticatedAppointmentsRoute =
     path: '/appointments',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAmbulanceRoute = AuthenticatedAmbulanceRouteImport.update({
+  id: '/ambulance',
+  path: '/ambulance',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedEmergencyNewRoute =
   AuthenticatedEmergencyNewRouteImport.update({
     id: '/emergency/new',
@@ -102,9 +120,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/ambulance': typeof AuthenticatedAmbulanceRoute
   '/appointments': typeof AuthenticatedAppointmentsRoute
   '/assistant': typeof AuthenticatedAssistantRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/hospital': typeof AuthenticatedHospitalRoute
   '/hospitals': typeof AuthenticatedHospitalsRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/records': typeof AuthenticatedRecordsRoute
@@ -117,9 +138,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/ambulance': typeof AuthenticatedAmbulanceRoute
   '/appointments': typeof AuthenticatedAppointmentsRoute
   '/assistant': typeof AuthenticatedAssistantRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/hospital': typeof AuthenticatedHospitalRoute
   '/hospitals': typeof AuthenticatedHospitalsRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/records': typeof AuthenticatedRecordsRoute
@@ -134,9 +158,12 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/ambulance': typeof AuthenticatedAmbulanceRoute
   '/_authenticated/appointments': typeof AuthenticatedAppointmentsRoute
   '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/hospital': typeof AuthenticatedHospitalRoute
   '/_authenticated/hospitals': typeof AuthenticatedHospitalsRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/records': typeof AuthenticatedRecordsRoute
@@ -151,9 +178,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/admin'
+    | '/ambulance'
     | '/appointments'
     | '/assistant'
     | '/dashboard'
+    | '/hospital'
     | '/hospitals'
     | '/notifications'
     | '/records'
@@ -166,9 +196,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/admin'
+    | '/ambulance'
     | '/appointments'
     | '/assistant'
     | '/dashboard'
+    | '/hospital'
     | '/hospitals'
     | '/notifications'
     | '/records'
@@ -182,9 +215,12 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/admin'
+    | '/_authenticated/ambulance'
     | '/_authenticated/appointments'
     | '/_authenticated/assistant'
     | '/_authenticated/dashboard'
+    | '/_authenticated/hospital'
     | '/_authenticated/hospitals'
     | '/_authenticated/notifications'
     | '/_authenticated/records'
@@ -267,6 +303,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHospitalsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/hospital': {
+      id: '/_authenticated/hospital'
+      path: '/hospital'
+      fullPath: '/hospital'
+      preLoaderRoute: typeof AuthenticatedHospitalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -288,6 +331,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppointmentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/ambulance': {
+      id: '/_authenticated/ambulance'
+      path: '/ambulance'
+      fullPath: '/ambulance'
+      preLoaderRoute: typeof AuthenticatedAmbulanceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/emergency/new': {
       id: '/_authenticated/emergency/new'
       path: '/emergency/new'
@@ -306,9 +363,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAmbulanceRoute: typeof AuthenticatedAmbulanceRoute
   AuthenticatedAppointmentsRoute: typeof AuthenticatedAppointmentsRoute
   AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedHospitalRoute: typeof AuthenticatedHospitalRoute
   AuthenticatedHospitalsRoute: typeof AuthenticatedHospitalsRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedRecordsRoute: typeof AuthenticatedRecordsRoute
@@ -318,9 +378,12 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAmbulanceRoute: AuthenticatedAmbulanceRoute,
   AuthenticatedAppointmentsRoute: AuthenticatedAppointmentsRoute,
   AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedHospitalRoute: AuthenticatedHospitalRoute,
   AuthenticatedHospitalsRoute: AuthenticatedHospitalsRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedRecordsRoute: AuthenticatedRecordsRoute,
