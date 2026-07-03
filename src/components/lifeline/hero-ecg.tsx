@@ -67,7 +67,7 @@ export function HeroEcg({ accelerate = false }: { accelerate?: boolean }) {
         </defs>
 
         {/* Faint static baseline (always visible) */}
-        <path d={d} fill="none" stroke="url(#ecg-fade)" strokeOpacity="0.18" strokeWidth="1.2" />
+        <path d={d} fill="none" stroke="url(#ecg-fade)" strokeOpacity="0.18" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
 
         {/* Animated glowing trace */}
         <path
@@ -79,6 +79,7 @@ export function HeroEcg({ accelerate = false }: { accelerate?: boolean }) {
           strokeLinecap="round"
           strokeLinejoin="round"
           filter="url(#ecg-bloom)"
+          vectorEffect="non-scaling-stroke"
           style={
             reduced
               ? undefined
