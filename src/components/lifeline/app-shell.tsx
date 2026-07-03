@@ -15,6 +15,7 @@ import {
   Building2,
   Ambulance as AmbulanceIcon,
   Shield,
+  LandPlot,
   LogOut,
   Menu,
   X,
@@ -36,6 +37,7 @@ const nav = [
 const roleNav = [
   { to: "/hospital", label: "Hospital", icon: Building2 },
   { to: "/ambulance", label: "Ambulance", icon: AmbulanceIcon },
+  { to: "/ministry", label: "Ministry of Health", icon: LandPlot },
   { to: "/admin", label: "Admin", icon: Shield },
 ] as const;
 
