@@ -38,17 +38,6 @@ function AuthPage() {
     });
   }, [navigate]);
 
-  async function handleGoogle() {
-    setBusy(true);
-    try {
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-      if (result.error) { toast.error(result.error.message ?? "Google sign-in failed"); setBusy(false); return; }
-      if ((result as { redirected?: boolean }).redirected) return;
-      navigate({ to: "/dashboard", replace: true });
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Google sign-in failed");
-    } finally { setBusy(false); }
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
