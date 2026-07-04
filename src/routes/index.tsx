@@ -2,8 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { LifeLineLogo } from "@/components/lifeline/logo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { HeroEcg } from "@/components/lifeline/hero-ecg";
-import { useState } from "react";
 import {
   ShieldCheck,
   Ambulance,
@@ -65,10 +63,9 @@ function SiteHeader() {
 }
 
 function Hero() {
-  const [accelerate, setAccelerate] = useState(false);
   return (
     <section className="gradient-hero relative overflow-hidden">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-16 md:px-8 md:pb-28 md:pt-24">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-24">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
             <span className="inline-block h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
@@ -78,9 +75,6 @@ function Hero() {
             Every second counts.<br />
             <span className="text-gradient-brand">AI-powered emergency healthcare.</span>
           </h1>
-          <div className="relative left-1/2 mt-2 mb-8 w-[100vw] -translate-x-1/2 overflow-hidden">
-            <HeroEcg accelerate={accelerate} />
-          </div>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             LifeLine+ connects patients, hospitals, and ambulances using artificial intelligence to reduce emergency response times and improve patient outcomes.
           </p>
@@ -89,10 +83,6 @@ function Hero() {
               asChild
               size="lg"
               className="h-12 w-full gap-2 bg-[color:var(--alert)] text-white hover:bg-[color:var(--alert)]/90 sm:w-auto"
-              onMouseEnter={() => setAccelerate(true)}
-              onMouseLeave={() => setAccelerate(false)}
-              onFocus={() => setAccelerate(true)}
-              onBlur={() => setAccelerate(false)}
             >
               <Link to="/auth">
                 <HeartPulse className="h-5 w-5" />
