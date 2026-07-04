@@ -43,12 +43,12 @@ export function HeroEcg({ accelerate = false }: { accelerate?: boolean }) {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      className="pointer-events-none relative w-full overflow-hidden"
     >
       <svg
         viewBox="0 0 1000 200"
         preserveAspectRatio="none"
-        className="absolute inset-x-0 top-1/2 h-[38%] w-full -translate-y-1/2 opacity-70"
+        className="h-16 w-full opacity-70 md:h-20"
       >
         <defs>
           <filter id="ecg-bloom" x="-10%" y="-50%" width="120%" height="200%">
@@ -67,7 +67,7 @@ export function HeroEcg({ accelerate = false }: { accelerate?: boolean }) {
         </defs>
 
         {/* Faint static baseline (always visible) */}
-        <path d={d} fill="none" stroke="url(#ecg-fade)" strokeOpacity="0.18" strokeWidth="1.2" />
+        <path d={d} fill="none" stroke="url(#ecg-fade)" strokeOpacity="0.18" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
 
         {/* Animated glowing trace */}
         <path
@@ -79,6 +79,7 @@ export function HeroEcg({ accelerate = false }: { accelerate?: boolean }) {
           strokeLinecap="round"
           strokeLinejoin="round"
           filter="url(#ecg-bloom)"
+          vectorEffect="non-scaling-stroke"
           style={
             reduced
               ? undefined
