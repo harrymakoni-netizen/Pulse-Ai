@@ -2,8 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { LifeLineLogo } from "@/components/lifeline/logo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { HeroEcg } from "@/components/lifeline/hero-ecg";
-import { useState } from "react";
 import {
   ShieldCheck,
   Ambulance,
