@@ -68,8 +68,7 @@ function Hero() {
   const [accelerate, setAccelerate] = useState(false);
   return (
     <section className="gradient-hero relative overflow-hidden">
-      <HeroEcg accelerate={accelerate} />
-      <div className="relative z-10 mx-auto max-w-7xl px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-24">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-16 md:px-8 md:pb-28 md:pt-24">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
             <span className="inline-block h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
