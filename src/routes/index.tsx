@@ -85,10 +85,6 @@ function Hero() {
               asChild
               size="lg"
               className="h-12 w-full gap-2 bg-[color:var(--alert)] text-white hover:bg-[color:var(--alert)]/90 sm:w-auto"
-              onMouseEnter={() => setAccelerate(true)}
-              onMouseLeave={() => setAccelerate(false)}
-              onFocus={() => setAccelerate(true)}
-              onBlur={() => setAccelerate(false)}
             >
               <Link to="/auth">
                 <HeartPulse className="h-5 w-5" />
