@@ -78,6 +78,9 @@ function Hero() {
             Every second counts.<br />
             <span className="text-gradient-brand">AI-powered emergency healthcare.</span>
           </h1>
+          <div className="relative left-1/2 mt-2 mb-8 w-[100vw] -translate-x-1/2 overflow-hidden">
+            <HeroEcg accelerate={accelerate} />
+          </div>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             LifeLine+ connects patients, hospitals, and ambulances using artificial intelligence to reduce emergency response times and improve patient outcomes.
           </p>
