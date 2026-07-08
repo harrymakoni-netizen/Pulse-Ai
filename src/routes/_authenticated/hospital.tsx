@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SeverityBadge } from "@/components/lifeline/severity-badge";
 import { BedDouble, Ambulance, Building2, Timer, Users } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/hospital")({
   head: () => ({ meta: [{ title: "Hospital dashboard · LifeLine+" }] }),
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/hospital")({
 });
 
 function HospitalDash() {
+  const t = useT();
   const q = useQuery({ queryKey: ["staff-requests"], queryFn: async () => (await supabase.from("emergency_requests").select("id,severity,status,created_at,eta_minutes,ai_report,symptoms").order("created_at", { ascending: false }).limit(20)).data ?? [] });
   const kpis = [
     { icon: Ambulance, label: "Incoming", value: q.data?.filter(r => ["hospital_notified","dispatched","en_route","transporting"].includes(r.status)).length ?? 0 },
@@ -21,7 +23,7 @@ function HospitalDash() {
   ];
   return (
     <AppShell>
-      <div className="mb-6 flex items-center gap-2"><Building2 className="h-5 w-5 text-primary" /><h1 className="font-display text-2xl font-semibold md:text-3xl">Hospital Command Center</h1></div>
+      <div className="mb-6 flex items-center gap-2"><Building2 className="h-5 w-5 text-primary" /><h1 className="font-display text-2xl font-semibold md:text-3xl">{t("hospital.title")}</h1></div>
       <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {kpis.map(k => (
           <div key={k.label} className="rounded-2xl border border-border bg-card p-4">
