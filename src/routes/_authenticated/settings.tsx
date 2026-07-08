@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Trash2, Plus, Shield } from "lucide-react";
+import { useI18n, useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({ meta: [{ title: "Settings · LifeLine+" }] }),
@@ -17,6 +18,8 @@ export const Route = createFileRoute("/_authenticated/settings")({
 });
 
 function SettingsPage() {
+  const t = useT();
+  const { lang: appLang, setLang: setAppLang } = useI18n();
   const qc = useQueryClient();
   const profile = useQuery({
     queryKey: ["profile"],
@@ -33,14 +36,13 @@ function SettingsPage() {
   });
 
   const [fullName, setFullName] = useState(""); const [phone, setPhone] = useState(""); const [blood, setBlood] = useState("");
-  const [allergies, setAllergies] = useState(""); const [meds, setMeds] = useState(""); const [lang, setLang] = useState("en");
+  const [allergies, setAllergies] = useState(""); const [meds, setMeds] = useState("");
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     if (profile.data) {
       setFullName(profile.data.full_name ?? ""); setPhone(profile.data.phone ?? ""); setBlood(profile.data.blood_type ?? "");
       setAllergies((profile.data.allergies ?? []).join(", ")); setMeds((profile.data.medications ?? []).join(", "));
-      setLang(profile.data.language ?? "en");
     }
   }, [profile.data]);
 
@@ -56,12 +58,12 @@ function SettingsPage() {
         full_name: fullName, phone, blood_type: blood,
         allergies: allergies.split(",").map(s => s.trim()).filter(Boolean),
         medications: meds.split(",").map(s => s.trim()).filter(Boolean),
-        language: lang as "en"|"sn"|"nd",
+        language: appLang,
       }).eq("id", userData.user.id);
       if (error) throw error;
     },
-    onSuccess: () => { toast.success("Profile saved"); qc.invalidateQueries({ queryKey: ["profile"] }); },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onSuccess: () => { toast.success(t("common.save")); qc.invalidateQueries({ queryKey: ["profile"] }); },
+    onError: (e) => toast.error(e instanceof Error ? e.message : t("auth.toast.fail")),
   });
 
   const [cName, setCName] = useState(""); const [cRel, setCRel] = useState(""); const [cPhone, setCPhone] = useState("");
@@ -81,32 +83,33 @@ function SettingsPage() {
 
   return (
     <AppShell>
-      <h1 className="mb-6 font-display text-2xl font-semibold md:text-3xl">Settings</h1>
+      <h1 className="mb-6 font-display text-2xl font-semibold md:text-3xl">{t("settings.title")}</h1>
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-2xl border border-border bg-card p-6">
-          <h2 className="mb-4 font-medium">Medical profile</h2>
+          <h2 className="mb-4 font-medium">{t("settings.medical")}</h2>
           <div className="grid gap-3">
-            <div><Label>Full name</Label><Input value={fullName} onChange={(e) => setFullName(e.target.value)} /></div>
-            <div><Label>Phone</Label><Input value={phone} onChange={(e) => setPhone(e.target.value)} /></div>
+            <div><Label>{t("auth.fullName")}</Label><Input value={fullName} onChange={(e) => setFullName(e.target.value)} /></div>
+            <div><Label>{t("auth.phone")}</Label><Input value={phone} onChange={(e) => setPhone(e.target.value)} /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><Label>Blood type</Label><Input value={blood} onChange={(e) => setBlood(e.target.value)} placeholder="O+" /></div>
+              <div><Label>{t("dash.bloodType")}</Label><Input value={blood} onChange={(e) => setBlood(e.target.value)} placeholder="O+" /></div>
               <div>
-                <Label>Language</Label>
+                <Label>{t("settings.language")}</Label>
                 <div className="mt-1.5 flex gap-1">
                   {(["en","sn","nd"] as const).map(l => (
-                    <button key={l} onClick={() => setLang(l)} className={`flex-1 rounded-md border px-2 py-1.5 text-xs ${lang === l ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"}`}>{l.toUpperCase()}</button>
+                    <button key={l} type="button" onClick={() => setAppLang(l)} className={`flex-1 rounded-md border px-2 py-1.5 text-xs ${appLang === l ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"}`}>{l.toUpperCase()}</button>
                   ))}
                 </div>
+                <p className="mt-1.5 text-[11px] text-muted-foreground">{t("settings.language.sub")}</p>
               </div>
             </div>
-            <div><Label>Allergies (comma-separated)</Label><Textarea rows={2} value={allergies} onChange={(e) => setAllergies(e.target.value)} placeholder="Penicillin, peanuts" /></div>
-            <div><Label>Current medications</Label><Textarea rows={2} value={meds} onChange={(e) => setMeds(e.target.value)} placeholder="Metformin, Amlodipine" /></div>
-            <Button onClick={() => save.mutate()} disabled={save.isPending}>Save changes</Button>
+            <div><Label>{t("dash.allergies")}</Label><Textarea rows={2} value={allergies} onChange={(e) => setAllergies(e.target.value)} placeholder="Penicillin, peanuts" /></div>
+            <div><Label>{t("dash.meds")}</Label><Textarea rows={2} value={meds} onChange={(e) => setMeds(e.target.value)} placeholder="Metformin, Amlodipine" /></div>
+            <Button onClick={() => save.mutate()} disabled={save.isPending}>{t("common.save")}</Button>
           </div>
         </section>
 
         <section className="rounded-2xl border border-border bg-card p-6">
-          <h2 className="mb-4 font-medium">Emergency contacts</h2>
+          <h2 className="mb-4 font-medium">{t("settings.contacts")}</h2>
           <ul className="space-y-2">
             {contacts.data?.map(c => (
               <li key={c.id} className="flex items-center justify-between rounded-lg border border-border p-3">
