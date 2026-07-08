@@ -13,6 +13,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedRecordsRouteImport } from './routes/_authenticated/records'
@@ -45,6 +46,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTranscribeRoute = ApiTranscribeRouteImport.update({
+  id: '/api/transcribe',
+  path: '/api/transcribe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/records': typeof AuthenticatedRecordsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
   '/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/emergency/new': typeof AuthenticatedEmergencyNewRoute
 }
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/records': typeof AuthenticatedRecordsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
   '/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/emergency/new': typeof AuthenticatedEmergencyNewRoute
 }
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/_authenticated/records': typeof AuthenticatedRecordsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
   '/_authenticated/emergency/$id': typeof AuthenticatedEmergencyIdRoute
   '/_authenticated/emergency/new': typeof AuthenticatedEmergencyNewRoute
 }
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/records'
     | '/settings'
     | '/api/chat'
+    | '/api/transcribe'
     | '/emergency/$id'
     | '/emergency/new'
   fileRoutesByTo: FileRoutesByTo
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/records'
     | '/settings'
     | '/api/chat'
+    | '/api/transcribe'
     | '/emergency/$id'
     | '/emergency/new'
   id:
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/_authenticated/records'
     | '/_authenticated/settings'
     | '/api/chat'
+    | '/api/transcribe'
     | '/_authenticated/emergency/$id'
     | '/_authenticated/emergency/new'
   fileRoutesById: FileRoutesById
@@ -248,6 +260,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiTranscribeRoute: typeof ApiTranscribeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/transcribe': {
+      id: '/api/transcribe'
+      path: '/api/transcribe'
+      fullPath: '/api/transcribe'
+      preLoaderRoute: typeof ApiTranscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -422,17 +442,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiTranscribeRoute: ApiTranscribeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
