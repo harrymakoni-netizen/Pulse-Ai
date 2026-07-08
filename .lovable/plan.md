@@ -1,112 +1,63 @@
+## Goal
 
-# LifeLine+ MVP Plan
+On first visit, greet the user with a centered welcome modal to pick English, Shona, or Ndebele. Remember the choice, translate every page of LifeLine+ to it, and let them change language later from the header.
 
-Zimbabwe-focused AI emergency healthcare platform. Deep on patient journey, scaffolded elsewhere. Real AI + Lovable Cloud (Supabase) auth/DB with RLS.
+## User experience
 
-## Design system
+1. First-ever visit → dimmed backdrop, LifeLine+ logo, headline "Choose your language / Sarudza mutauro / Khetha ulimi", three large language cards (EN / SN / ND with native names + a short line each), Continue button.
+2. Choice persists in `localStorage` under `lifeline.lang`. Modal never reappears unless the user clears storage.
+3. A compact EN/SN/ND switcher lives in the top-right of the app header (AppShell) and on the landing page nav — clicking updates the app instantly.
+4. Every user-facing string on every page (landing, auth, dashboard, hospitals, hospital, ambulance, ministry, appointments, records, notifications, emergency new/detail, settings, admin, assistant, 404/error) renders through the active language.
 
-- Palette: medical blue `#1565C0`, emerald `#10B981`, ink `#0B1F3A`, alert red `#E11D48`, warm greys, off-white background `#F7F9FC`
-- Typography: **Inter** body, **Space Grotesk** display (both via `@fontsource-variable`)
-- Motion: Framer Motion. Signature heartbeat pulse (calm blue 4–6s idle; faster red when emergency active). ECG-line loader. All animations respect `prefers-reduced-motion`.
-- shadcn/ui + Tailwind. Glass cards, soft shadows, rounded-2xl.
-- Uploaded LIFELINE logo uploaded as `src/assets/lifeline-logo.png.asset.json` via lovable-assets, used in header + auth + footer with pulse glow.
+## Technical approach
 
-## Routes (TanStack Start file-based)
+### 1. i18n infrastructure (new)
 
-Public:
-- `/` Landing (hero, How it Works, Features, Benefits, AI Technology, Partner Hospitals, Testimonials, FAQ, Footer)
-- `/auth` Sign in / Sign up with role picker (Patient / Hospital / Ambulance / Admin), forgot password, email confirmation
-- `/reset-password`
+```text
+src/i18n/
+  index.tsx         ← LanguageProvider + useT() hook + <LanguagePicker/>
+  translations.ts   ← flat dictionary: t[lang][key] = string
+```
 
-Authenticated (`_authenticated/`, managed layout):
-- `/dashboard` — patient dashboard (SOS, medical profile, contacts, history, active emergency card)
-- `/emergency/new` — SOS workflow wizard
-- `/emergency/$id` — live emergency status + timeline + AI report + hospital match + ambulance ETA
-- `/assistant` — AI symptom chat (English / Shona / Ndebele)
-- `/hospitals` — Leaflet map + filters (distance, beds, services)
-- `/records` — medical history, prescriptions, vaccinations, labs, insurance
-- `/appointments`
-- `/notifications`
-- `/settings` — theme, language, notifications, 2FA placeholder, delete account
+- `LanguageProvider` reads `localStorage.lifeline.lang` (SSR-safe: default "en" on server, hydrate real value in `useEffect`), exposes `{ lang, setLang, t }` via React context.
+- `useT()` returns a `t(key, vars?)` function. Missing keys fall back to English so nothing renders blank.
+- Mount `<LanguageProvider>` in `src/routes/__root.tsx` so it wraps every route.
+- `<LanguagePicker />` is a Radix Dialog shown when `localStorage.lifeline.lang` is unset after hydration; on selection it writes storage and closes.
 
-Role scaffolds (clean shells, ready to expand):
-- `/hospital` — incoming queue, bed availability, AI summaries (mock realtime)
-- `/ambulance` — dispatch queue, status updates, route panel
-- `/admin` — national stats, heatmap placeholder, charts (Recharts)
+### 2. Header language switcher
 
-## AI (Lovable AI Gateway, `google/gemini-3-flash-preview`)
+- Add a small pill toggle (EN/SN/ND) into `src/components/lifeline/app-shell.tsx` header, and into the landing page nav in `src/routes/index.tsx`. Both call `setLang()` from context.
 
-Server route `src/routes/api/chat.ts` — AI SDK `streamText` for the assistant. System prompt: Zimbabwe emergency triage, multilingual (EN/SN/ND), asks symptoms → severity → first aid → hospital recommendation.
+### 3. Translate every route
 
-Server functions (`src/lib/emergency.functions.ts`):
-- `assessEmergency` — structured output (Zod `Output.object`): `{ severity: 'low'|'medium'|'high'|'critical', summary, recommendedSpecialty, firstAid[], redFlags[] }`
-- `generateHospitalReport` — professional handoff summary for hospital staff from the SOS submission.
+Replace hard-coded strings with `t("key")` in:
 
-Chat UI uses AI Elements (`conversation`, `message`, `prompt-input`, `shimmer`), streaming, `message.parts` rendering, markdown. Language toggle in composer.
+- Landing: `src/routes/index.tsx`
+- Auth: `src/routes/auth.tsx`, `src/routes/reset-password.tsx`
+- Authenticated shell + pages: `src/components/lifeline/app-shell.tsx`, `dashboard.tsx`, `hospitals.tsx`, `hospital.tsx`, `ambulance.tsx`, `ministry.tsx`, `appointments.tsx`, `records.tsx`, `notifications.tsx`, `emergency.new.tsx`, `emergency.$id.tsx`, `settings.tsx`, `admin.tsx`
+- Existing `assistant.tsx`: migrate its local `T` dictionary into the shared `translations.ts` and use `useT()`.
+- Error/not-found boundaries in `__root.tsx` and route files.
 
-## SOS Workflow
+Keys are grouped by page (`landing.hero.title`, `dashboard.stats.activeCases`, …) to keep the dictionary readable. All three languages provided for every key.
 
-Multi-step wizard on `/emergency/new`:
-1. Symptoms (multi-select chips + free text)
-2. Pain level slider (0–10), age, brief history
-3. Location capture (`navigator.geolocation`; fallback manual)
-4. Emergency contact + optional photo (Supabase Storage) + optional voice (MediaRecorder → base64)
-5. AI assessment (calls `assessEmergency`, shows severity card with animated pulse ring color-coded by severity)
-6. Hospital match: top 3 from Zimbabwe seed hospitals ranked by distance × specialty × bed availability
-7. Confirm → creates `emergency_requests` row → routes to `/emergency/$id`
+### 4. AI chat language sync
 
-`/emergency/$id` shows: status timeline (Requested → AI Assessed → Hospital Notified → Ambulance Dispatched → En Route → Arrived → Completed), AI report accordion, matched hospital card, simulated ambulance ETA countdown, cancel button.
+`assistant.tsx` already sends `language` to `/api/chat`. Wire the same `lang` from context so the AI replies in the active language everywhere.
 
-## Backend (Lovable Cloud / Supabase)
+### 5. Dates / numbers
 
-Enable Cloud. Migration:
-- `profiles` (id → auth.users, full_name, phone, language, blood_type, allergies, medications, dob)
-- `user_roles` + `app_role` enum (patient, hospital_staff, ambulance, admin) + `has_role()` SECURITY DEFINER
-- `emergency_contacts` (user_id, name, relation, phone)
-- `hospitals` (name, address, lat, lng, phone, specialties[], total_beds, available_beds, has_emergency)
-- `ambulances` (hospital_id, plate, status, lat, lng)
-- `emergency_requests` (patient_id, symptoms, pain_level, location(lat,lng), severity, ai_summary jsonb, ai_report text, hospital_id, ambulance_id, status, created_at)
-- `emergency_events` (request_id, status, note, created_at) — timeline
-- `medical_records` (patient_id, type, title, details jsonb, file_url, date)
-- `appointments`, `notifications`
-- GRANTS for each public table + `service_role`, `authenticated`, narrow `anon` SELECT only on `hospitals`
-- RLS: patients read/write their own rows; hospital_staff read requests assigned to their hospital; admins read all via `has_role`
-- Seed: 12 Zimbabwe hospitals (Parirenyatwa, Sally Mugabe, Mpilo, Chitungwiza, Avenues, Mater Dei, UBH, etc.) with real coords
+Format via `Intl.DateTimeFormat` / `Intl.NumberFormat` using a locale map (`en: "en-ZW"`, `sn: "sn-ZW"`, `nd: "nd-ZW"`) exposed by the provider as `locale`.
 
-Auth: email/password + Google OAuth (via Lovable broker); email confirmation on. Registration writes `profiles` + `user_roles` via trigger.
+## Out of scope (this pass)
 
-## Hospital Finder
+- Translating dynamic content that comes from the database (hospital names, user-entered notes) — those stay as written.
+- RTL support (not needed for these languages).
+- Server-side language negotiation via `Accept-Language`; we rely on the client picker.
 
-Leaflet + OpenStreetMap (`react-leaflet`, `leaflet`). User location marker + hospital markers with severity-colored icons. Filter panel (distance slider, has emergency, min available beds, specialty multi-select). Side list synced with map.
+## Verification
 
-## Pulse system
-
-Global `.pulse-heartbeat` utility in styles.css + Framer variants. `<PulseLogo>` component (calm blue). `<EmergencyPulse severity="critical">` (red, faster). ECG SVG loader replaces spinners on route pending states. All gated by `useReducedMotion()`.
-
-## Scaffolded role dashboards
-
-Same shell layout (sidebar + topbar), route-guarded by `has_role`. Each shows realistic mock data cards + a "coming soon" callout for deep features. Admin includes Recharts line/bar for response times + emergencies by region.
-
-## Technical section
-
-- Stack: TanStack Start, TS strict, Tailwind v4, shadcn/ui, Framer Motion, Recharts, react-leaflet, AI SDK + `@ai-sdk/react`
-- Fonts via `@fontsource-variable/inter` and `@fontsource-variable/space-grotesk`
-- Server boundaries: `createServerFn` for internal ops, `/api/chat` server route for streaming
-- All server fns using auth via `requireSupabaseAuth`; `attachSupabaseAuth` middleware appended in `src/start.ts`
-- Public route loaders never call protected fns; patient dashboard loads via `_authenticated` gate
-- Chat: AI Elements installed (`conversation`, `message`, `prompt-input`, `shimmer`)
-- Storage bucket `emergency-media` (private, RLS to owner)
-- SEO: per-route `head()` with distinct title/description; leaf og:image on landing only
-- Accessibility: WCAG AA tokens, aria-labels on icon buttons, `<main>` per route, reduced-motion respected
-
-## Out of scope for MVP (scaffolded/placeholder only)
-
-- Real SMS/push (in-app notifications only)
-- Real ambulance GPS stream (simulated ETA)
-- Real Google Maps (using Leaflet/OSM instead)
-- Payments/insurance claims
-- Deep hospital/ambulance/admin flows beyond navigable shells with mock data
-
-## End-to-end demo path
-
-Sign up as patient → complete profile → press SOS → wizard → AI assessment → hospital match → live status page with simulated ambulance progression → chat with AI assistant → browse hospital finder map. This is the flow judges will click through.
+- Load site fresh (clear localStorage) → welcome modal appears, picking Shona translates the landing page immediately.
+- Navigate through dashboard, hospitals, ministry, assistant, settings → all copy is in Shona.
+- Switch to Ndebele from the header pill → every page updates without reload.
+- Reload → chosen language persists, modal does not reappear.
+- Playwright screenshot pass across desktop + mobile in all three languages on the landing page and dashboard.
