@@ -22,23 +22,24 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import { LanguagePill, useT } from "@/i18n";
 
-const nav = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/emergency/new", label: "Emergency SOS", icon: Siren, emphasis: true },
-  { to: "/assistant", label: "AI Assistant", icon: Sparkles },
-  { to: "/hospitals", label: "Hospitals", icon: MapPin },
-  { to: "/records", label: "Medical Records", icon: FolderHeart },
-  { to: "/appointments", label: "Appointments", icon: CalendarCheck },
-  { to: "/notifications", label: "Notifications", icon: Bell },
-  { to: "/settings", label: "Settings", icon: Settings },
+const navItems = [
+  { to: "/dashboard", key: "nav.dashboard", icon: LayoutDashboard },
+  { to: "/emergency/new", key: "nav.sos", icon: Siren, emphasis: true },
+  { to: "/assistant", key: "nav.assistant", icon: Sparkles },
+  { to: "/hospitals", key: "nav.hospitals", icon: MapPin },
+  { to: "/records", key: "nav.records", icon: FolderHeart },
+  { to: "/appointments", key: "nav.appointments", icon: CalendarCheck },
+  { to: "/notifications", key: "nav.notifications", icon: Bell },
+  { to: "/settings", key: "nav.settings", icon: Settings },
 ] as const;
 
-const roleNav = [
-  { to: "/hospital", label: "Hospital", icon: Building2 },
-  { to: "/ambulance", label: "Ambulance", icon: AmbulanceIcon },
-  { to: "/ministry", label: "Ministry of Health", icon: LandPlot },
-  { to: "/admin", label: "Admin", icon: Shield },
+const roleNavItems = [
+  { to: "/hospital", key: "nav.hospital", icon: Building2 },
+  { to: "/ambulance", key: "nav.ambulance", icon: AmbulanceIcon },
+  { to: "/ministry", key: "nav.ministry", icon: LandPlot },
+  { to: "/admin", key: "nav.admin", icon: Shield },
 ] as const;
 
 export function AppShell({ children, title }: { children: ReactNode; title?: string }) {
@@ -46,6 +47,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
   const navigate = useNavigate();
   const qc = useQueryClient();
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const t = useT();
 
   useEffect(() => { setOpen(false); }, [path]);
 
@@ -60,14 +62,14 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
     <div className="min-h-dvh bg-background">
       {/* Sidebar (desktop) */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-border bg-sidebar md:flex md:flex-col">
-        <div className="flex h-16 items-center px-6"><LifeLineLogo /></div>
+        <div className="flex h-16 items-center justify-between px-6"><LifeLineLogo /><LanguagePill /></div>
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 pb-4">
-          {nav.map((item) => (
-            <NavItem key={item.to} to={item.to} label={item.label} Icon={item.icon} emphasis={"emphasis" in item ? item.emphasis : false} active={path.startsWith(item.to)} />
+          {navItems.map((item) => (
+            <NavItem key={item.to} to={item.to} label={t(item.key)} Icon={item.icon} emphasis={"emphasis" in item ? item.emphasis : false} active={path.startsWith(item.to)} />
           ))}
-          <div className="mt-4 px-3 pb-1 pt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Role dashboards</div>
-          {roleNav.map((item) => (
-            <NavItem key={item.to} to={item.to} label={item.label} Icon={item.icon} active={path.startsWith(item.to)} />
+          <div className="mt-4 px-3 pb-1 pt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("nav.roleGroup")}</div>
+          {roleNavItems.map((item) => (
+            <NavItem key={item.to} to={item.to} label={t(item.key)} Icon={item.icon} active={path.startsWith(item.to)} />
           ))}
         </nav>
         <div className="border-t border-border p-3">
@@ -75,7 +77,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
             onClick={signOut}
             className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
           >
-            <LogOut className="h-4 w-4" /> Sign out
+            <LogOut className="h-4 w-4" /> {t("common.signOut")}
           </button>
         </div>
       </aside>
@@ -83,18 +85,21 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
       {/* Mobile top bar */}
       <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/85 px-4 backdrop-blur md:hidden">
         <LifeLineLogo />
-        <Button variant="ghost" size="icon" onClick={() => setOpen((v) => !v)} aria-label="Menu">
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
+        <div className="flex items-center gap-2">
+          <LanguagePill />
+          <Button variant="ghost" size="icon" onClick={() => setOpen((v) => !v)} aria-label={t("nav.menu")}>
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
       {open ? (
         <div className="fixed inset-x-0 top-14 z-30 border-b border-border bg-background/95 p-3 backdrop-blur md:hidden">
           <nav className="space-y-0.5">
-            {[...nav, ...roleNav].map((item) => (
-              <NavItem key={item.to} to={item.to} label={item.label} Icon={item.icon} active={path.startsWith(item.to)} />
+            {[...navItems, ...roleNavItems].map((item) => (
+              <NavItem key={item.to} to={item.to} label={t(item.key)} Icon={item.icon} active={path.startsWith(item.to)} />
             ))}
             <button onClick={signOut} className="mt-2 flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary">
-              <LogOut className="h-4 w-4" /> Sign out
+              <LogOut className="h-4 w-4" /> {t("common.signOut")}
             </button>
           </nav>
         </div>
