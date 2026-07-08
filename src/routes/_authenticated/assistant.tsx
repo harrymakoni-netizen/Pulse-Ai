@@ -11,38 +11,12 @@ import {
   Loader2,
   Languages,
   Mic,
-  MicOff,
   Volume2,
   VolumeX,
   RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-
-// Minimal Web Speech API type declarations (not in lib.dom for all TS versions)
-type SRResultItem = { transcript: string };
-type SRResult = { readonly length: number; isFinal: boolean; [i: number]: SRResultItem };
-type SRResultList = { readonly length: number; [i: number]: SRResult };
-type SREvent = { results: SRResultList; resultIndex: number };
-type SRErrorEvent = { error: string };
-interface SRInstance {
-  lang: string;
-  continuous: boolean;
-  interimResults: boolean;
-  onresult: ((e: SREvent) => void) | null;
-  onerror: ((e: SRErrorEvent) => void) | null;
-  onend: (() => void) | null;
-  start: () => void;
-  stop: () => void;
-  abort: () => void;
-}
-type SRCtor = new () => SRInstance;
-declare global {
-  interface Window {
-    SpeechRecognition?: SRCtor;
-    webkitSpeechRecognition?: SRCtor;
-  }
-}
 
 export const Route = createFileRoute("/_authenticated/assistant")({
   head: () => ({ meta: [{ title: "AI Assistant · LifeLine+" }] }),
@@ -53,20 +27,94 @@ type Msg = { role: "user" | "assistant"; content: string };
 type Lang = "en" | "sn" | "nd";
 
 const langNames = { en: "English", sn: "Shona", nd: "Ndebele" } as const;
-const suggestions: Record<Lang, string[]> = {
-  en: ["I have chest pain", "Someone is unconscious", "First aid for a burn", "Signs of a stroke"],
-  sn: ["Ndine kurwadziwa pachipfuva", "Munhu haaite kutaura", "Zvekutanga kuita nekutsva", "Zviratidzo zve stroke"],
-  nd: ["Ngiphethwe yisifuba", "Umuntu ubuthongo", "Uncedo lokuqala lokutsha", "Izimpawu ze-stroke"],
-};
-const placeholders: Record<Lang, string> = {
-  en: "Describe what's happening...",
-  sn: "Tsanangura zviri kuitika...",
-  nd: "Chaza ukuthi kwenzenjani...",
-};
 
-// BCP 47 codes for Web Speech API
-const speechLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
-const speechLangFallback: Record<Lang, string> = { en: "en-US", sn: "en-ZW", nd: "en-ZW" };
+// Full i18n dictionary for every visible string on this page.
+const T = {
+  en: {
+    eyebrow: "AI Emergency Assistant",
+    title: "Talk to LifeLine+ AI",
+    enableVoice: "Enable voice output",
+    disableVoice: "Disable voice output",
+    howCanIHelp: "How can I help?",
+    intro: (l: string) => `Ask about symptoms, first aid, or an emergency situation — in ${l}.`,
+    listening: (l: string) => `Listening in ${l}...`,
+    send: "Send",
+    cancel: "Cancel",
+    stopRecording: "Stop and transcribe",
+    startVoice: "Start voice input",
+    placeholder: "Describe what's happening...",
+    suggestions: ["I have chest pain", "Someone is unconscious", "First aid for a burn", "Signs of a stroke"],
+    emergencyTitle: "Emergency?",
+    emergencyBody: "If this is life-threatening, use the SOS flow — it dispatches an ambulance.",
+    startSos: "Start SOS",
+    voiceTitle: "Voice input",
+    voiceBody: "Tap the microphone and speak. When you stop, your words are transcribed and sent.",
+    replay: "Replay last response",
+    disclaimer: "LifeLine+ AI supports English, Shona, and Ndebele. This assistant does not replace professional medical advice.",
+    transcribing: "Transcribing your voice…",
+    micDenied: "Microphone access denied. Please allow it in your browser settings.",
+    micUnavailable: "Microphone not available on this device.",
+    tooShort: "Recording too short — please try again.",
+    transcribeFailed: "Could not transcribe audio. Please try again.",
+  },
+  sn: {
+    eyebrow: "Mubatsiri weAI weMamergency",
+    title: "Taura neLifeLine+ AI",
+    enableVoice: "Bvumidza izwi",
+    disableVoice: "Dzima izwi",
+    howCanIHelp: "Ndingakubatsira sei?",
+    intro: (l: string) => `Bvunza nezve zviratidzo, rubatsiro rwekutanga, kana mamergency — mu${l}.`,
+    listening: (l: string) => `Ndiri kuteerera mu${l}...`,
+    send: "Tumira",
+    cancel: "Kanzura",
+    stopRecording: "Mira uye shandurira",
+    startVoice: "Tanga kutaura",
+    placeholder: "Tsanangura zviri kuitika...",
+    suggestions: ["Ndine kurwadziwa pachipfuva", "Munhu haaite kutaura", "Zvekutanga kuita nekutsva", "Zviratidzo zve stroke"],
+    emergencyTitle: "Mamergency?",
+    emergencyBody: "Kana izvi zvichigona kukonzera rufu, shandisa SOS — inodaidza ambulance.",
+    startSos: "Tanga SOS",
+    voiceTitle: "Kutaura",
+    voiceBody: "Dzvanya maikorofoni utaure. Kana wapedza, mashoko ako anonyorwa oendeswa.",
+    replay: "Dzokorora mhinduro yekupedzisira",
+    disclaimer: "LifeLine+ AI inotsigira Chirungu, chiShona, neisiNdebele. Mubatsiri uyu haatsivi zano rechiremba.",
+    transcribing: "Kushandura izwi rako kuita mashoko…",
+    micDenied: "Maikorofoni haabvumidzwe. Bvumidza mune settings dzebrowser.",
+    micUnavailable: "Maikorofoni haiwanikwe padhivhaisi iyi.",
+    tooShort: "Zvakanyanya kupfupika — edzazve.",
+    transcribeFailed: "Hazvina kubudirira kushandurira izwi. Edzazve.",
+  },
+  nd: {
+    eyebrow: "Umsizi we-AI wesimo esiphuthumayo",
+    title: "Khuluma le-LifeLine+ AI",
+    enableVoice: "Vumela ilizwi",
+    disableVoice: "Vala ilizwi",
+    howCanIHelp: "Ngingakusiza njani?",
+    intro: (l: string) => `Buza ngezimpawu, uncedo lokuqala, kumbe isimo esiphuthumayo — nge${l}.`,
+    listening: (l: string) => `Ngilalele nge${l}...`,
+    send: "Thumela",
+    cancel: "Khansela",
+    stopRecording: "Yima uphendulele",
+    startVoice: "Qalisa ilizwi",
+    placeholder: "Chaza ukuthi kwenzenjani...",
+    suggestions: ["Ngiphethwe yisifuba", "Umuntu ubuthongo", "Uncedo lokuqala lokutsha", "Izimpawu ze-stroke"],
+    emergencyTitle: "Isimo esiphuthumayo?",
+    emergencyBody: "Uma kuyingozi empilweni, sebenzisa i-SOS — ithumela i-ambulensi.",
+    startSos: "Qalisa i-SOS",
+    voiceTitle: "Ilizwi",
+    voiceBody: "Cindezela imakrofoni ukhulume. Nxa uqedile, amazwi akho ayabhalwa athunyelwe.",
+    replay: "Phinda impendulo yokugcina",
+    disclaimer: "I-LifeLine+ AI isekela isiNgisi, isiShona, le-isiNdebele. Umsizi lo katshintshi iseluleko sikadokotela.",
+    transcribing: "Kuphendulelwa ilizwi lakho…",
+    micDenied: "Imakrofoni ivimbelwe. Ivumele kuzilungiselelo zebhrawuza.",
+    micUnavailable: "Imakrofoni ayikho kule idivayisi.",
+    tooShort: "Ukurekhoda kufishane kakhulu — zama futhi.",
+    transcribeFailed: "Yehlulekile ukuphendulela. Zama futhi.",
+  },
+} as const;
+
+// BCP 47 codes for text-to-speech playback
+const ttsLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
 
 function AssistantPage() {
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -74,47 +122,54 @@ function AssistantPage() {
   const [busy, setBusy] = useState(false);
   const [lang, setLang] = useState<Lang>("en");
   const [ttsEnabled, setTtsEnabled] = useState(false);
+  const t = T[lang];
 
-  // Speech recognition state
+  // Recording state
   const [isRecording, setIsRecording] = useState(false);
-  const [transcript, setTranscript] = useState("");
-  const recognitionRef = useRef<SRInstance | null>(null);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const cancelledRef = useRef(false);
+  const timerRef = useRef<number | null>(null);
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Check for speech recognition support
-  const hasSpeechRecognition =
+  const hasMic =
     typeof window !== "undefined" &&
-    ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
+    !!navigator.mediaDevices?.getUserMedia &&
+    typeof MediaRecorder !== "undefined";
 
-  // Auto-scroll on message update
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Focus textarea
   useEffect(() => {
     textareaRef.current?.focus();
   }, [busy]);
 
-  // TTS for last assistant message
+  useEffect(() => () => {
+    streamRef.current?.getTracks().forEach((tr) => tr.stop());
+    if (timerRef.current) window.clearInterval(timerRef.current);
+  }, []);
+
   const speakText = useCallback((text: string) => {
     if (!ttsEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = speechLang[lang] || "en-US";
+    utterance.lang = ttsLang[lang] || "en-US";
     utterance.rate = 0.95;
     window.speechSynthesis.speak(utterance);
   }, [ttsEnabled, lang]);
 
-  // Send message (text or voice transcript)
   async function send(text: string) {
     const trimmed = text.trim();
     if (!trimmed || busy) return;
     const next: Msg[] = [...messages, { role: "user", content: trimmed }];
     setMessages(next);
     setInput("");
-    setTranscript("");
     setBusy(true);
     setMessages((m) => [...m, { role: "assistant", content: "" }]);
     try {
@@ -137,7 +192,6 @@ function AssistantPage() {
           return copy;
         });
       }
-      // Speak finished response
       speakText(acc);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Chat failed");
@@ -147,66 +201,80 @@ function AssistantPage() {
     }
   }
 
-  // Start voice recording
-  function startRecording() {
-    if (!hasSpeechRecognition) {
-      toast.error("Voice input is not supported in this browser");
-      return;
+  function pickMime(): string | undefined {
+    const candidates = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/mpeg"];
+    for (const c of candidates) {
+      if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported?.(c)) return c;
     }
-    window.speechSynthesis?.cancel();
-    const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!Ctor) { toast.error("Voice input is not supported"); return; }
-    const recognition = new Ctor();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    // Try native language first, fall back to English variant
-    recognition.lang = speechLang[lang];
-    let finalTranscript = "";
-    recognition.onresult = (e: SREvent) => {
-      let interim = "";
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        const result = e.results[i];
-        if (result.isFinal) {
-          finalTranscript += result[0].transcript;
-        } else {
-          interim += result[0].transcript;
-        }
-      }
-      setTranscript(finalTranscript + interim);
-    };
-    recognition.onerror = (e: SRErrorEvent) => {
-      if (e.error === "not-allowed") {
-        toast.error("Microphone access denied");
-      } else if (e.error !== "aborted" && e.error !== "no-speech") {
-        // Fallback language on language-not-supported
-        recognition.lang = speechLangFallback[lang];
-      }
+    return undefined;
+  }
+
+  async function startRecording() {
+    if (!hasMic) { toast.error(t.micUnavailable); return; }
+    try {
+      window.speechSynthesis?.cancel();
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      const mimeType = pickMime();
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      chunksRef.current = [];
+      cancelledRef.current = false;
+      recorder.ondataavailable = (ev) => {
+        if (ev.data && ev.data.size > 0) chunksRef.current.push(ev.data);
+      };
+      recorder.onstop = async () => {
+        streamRef.current?.getTracks().forEach((tr) => tr.stop());
+        streamRef.current = null;
+        if (timerRef.current) { window.clearInterval(timerRef.current); timerRef.current = null; }
+        setIsRecording(false);
+        if (cancelledRef.current) return;
+        const blob = new Blob(chunksRef.current, { type: mimeType || "audio/webm" });
+        if (blob.size < 2048) { toast.error(t.tooShort); return; }
+        await transcribeAndSend(blob);
+      };
+      recorder.start();
+      recorderRef.current = recorder;
+      setElapsed(0);
+      timerRef.current = window.setInterval(() => setElapsed((s) => s + 1), 1000);
+      setIsRecording(true);
+    } catch (err) {
+      const name = (err as { name?: string })?.name;
+      if (name === "NotAllowedError" || name === "SecurityError") toast.error(t.micDenied);
+      else if (name === "NotFoundError") toast.error(t.micUnavailable);
+      else toast.error(t.micUnavailable);
       setIsRecording(false);
-    };
-    recognition.onend = () => setIsRecording(false);
-    recognition.start();
-    recognitionRef.current = recognition;
-    setTranscript("");
-    setIsRecording(true);
-  }
-
-  // Stop and send the transcript
-  function stopRecording() {
-    recognitionRef.current?.stop();
-    setIsRecording(false);
-    if (transcript.trim()) {
-      send(transcript);
     }
   }
 
-  // Cancel recording without sending
-  function cancelRecording() {
-    recognitionRef.current?.abort();
-    setIsRecording(false);
-    setTranscript("");
+  function stopRecording() {
+    cancelledRef.current = false;
+    try { recorderRef.current?.stop(); } catch { /* noop */ }
   }
 
-  // Replay last assistant text
+  function cancelRecording() {
+    cancelledRef.current = true;
+    try { recorderRef.current?.stop(); } catch { /* noop */ }
+  }
+
+  async function transcribeAndSend(blob: Blob) {
+    setIsTranscribing(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", blob, "recording.webm");
+      fd.append("language", lang);
+      const res = await fetch("/api/transcribe", { method: "POST", body: fd });
+      if (!res.ok) throw new Error(await res.text());
+      const data = (await res.json()) as { text?: string };
+      const text = (data.text ?? "").trim();
+      if (!text) { toast.error(t.transcribeFailed); return; }
+      await send(text);
+    } catch (e) {
+      toast.error(e instanceof Error && e.message ? e.message : t.transcribeFailed);
+    } finally {
+      setIsTranscribing(false);
+    }
+  }
+
   function replayLastAssistant() {
     const last = [...messages].reverse().find((m) => m.role === "assistant" && m.content);
     if (last) speakText(last.content);
@@ -217,11 +285,10 @@ function AssistantPage() {
       {/* Header */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-widest text-primary">AI Emergency Assistant</div>
-          <h1 className="mt-1 font-display text-2xl font-semibold">Talk to LifeLine+ AI</h1>
+          <div className="text-xs font-semibold uppercase tracking-widest text-primary">{t.eyebrow}</div>
+          <h1 className="mt-1 font-display text-2xl font-semibold">{t.title}</h1>
         </div>
         <div className="flex items-center gap-2">
-          {/* TTS toggle */}
           <Button
             variant="outline"
             size="icon"
@@ -229,12 +296,11 @@ function AssistantPage() {
               setTtsEnabled((v) => !v);
               window.speechSynthesis?.cancel();
             }}
-            aria-label={ttsEnabled ? "Disable voice output" : "Enable voice output"}
+            aria-label={ttsEnabled ? t.disableVoice : t.enableVoice}
             className="h-8 w-8"
           >
             {ttsEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
           </Button>
-          {/* Language selector */}
           <div className="flex items-center gap-1 rounded-full border border-border bg-card p-1 text-xs">
             <Languages className="ml-2 h-3.5 w-3.5 text-muted-foreground" />
             {(["en", "sn", "nd"] as const).map((l) => (
@@ -253,18 +319,15 @@ function AssistantPage() {
       <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
         <div className="flex min-h-[60vh] flex-col rounded-3xl border border-border bg-card">
           <div className="flex-1 space-y-4 overflow-y-auto p-6">
-            {/* Empty state */}
             {messages.length === 0 && (
               <div className="flex h-full flex-col items-center justify-center gap-4 py-10 text-center">
                 <LifeLineLogo showWordmark={false} size={56} />
                 <div>
-                  <div className="font-display text-xl font-semibold">How can I help?</div>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Ask about symptoms, first aid, or an emergency situation — in {langNames[lang]}.
-                  </p>
+                  <div className="font-display text-xl font-semibold">{t.howCanIHelp}</div>
+                  <p className="mt-1 text-sm text-muted-foreground">{t.intro(langNames[lang])}</p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-2">
-                  {suggestions[lang].map((s) => (
+                  {t.suggestions.map((s) => (
                     <button
                       key={s}
                       onClick={() => send(s)}
@@ -310,41 +373,45 @@ function AssistantPage() {
             <div ref={bottomRef} />
           </div>
 
-          {/* Recording state overlay */}
           <AnimatePresence>
-            {isRecording && (
+            {(isRecording || isTranscribing) && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 className="border-t border-border bg-primary/5 p-4"
               >
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="relative flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--alert)] opacity-75" />
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-[color:var(--alert)]" />
-                  </span>
-                  <span className="font-medium">Listening in {langNames[lang]}...</span>
-                </div>
-                {transcript && (
-                  <p className="mt-2 rounded-lg bg-background/50 px-3 py-2 text-sm italic text-muted-foreground">
-                    {transcript}
-                  </p>
+                {isRecording ? (
+                  <>
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="relative flex h-3 w-3">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--alert)] opacity-75" />
+                        <span className="relative inline-flex h-3 w-3 rounded-full bg-[color:var(--alert)]" />
+                      </span>
+                      <span className="font-medium">{t.listening(langNames[lang])}</span>
+                      <span className="ml-auto tabular-nums text-xs text-muted-foreground">
+                        {String(Math.floor(elapsed / 60)).padStart(2, "0")}:{String(elapsed % 60).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <div className="mt-3 flex items-center gap-2">
+                      <Button size="sm" onClick={stopRecording} className="gap-1.5">
+                        <Send className="h-3.5 w-3.5" /> {t.stopRecording}
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={cancelRecording}>
+                        {t.cancel}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" /> {t.transcribing}
+                  </div>
                 )}
-                <div className="mt-3 flex items-center gap-2">
-                  <Button size="sm" onClick={stopRecording} className="gap-1.5">
-                    <Send className="h-3.5 w-3.5" /> Send
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={cancelRecording}>
-                    Cancel
-                  </Button>
-                </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Input area */}
-          {!isRecording && (
+          {!isRecording && !isTranscribing && (
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -352,14 +419,13 @@ function AssistantPage() {
               }}
               className="flex items-end gap-2 border-t border-border p-4"
             >
-              {/* Mic button */}
-              {hasSpeechRecognition && (
+              {hasMic && (
                 <Button
                   type="button"
                   size="icon"
                   variant="ghost"
                   onClick={startRecording}
-                  aria-label="Start voice input"
+                  aria-label={t.startVoice}
                   disabled={busy}
                   className="shrink-0"
                 >
@@ -377,50 +443,41 @@ function AssistantPage() {
                     send(input);
                   }
                 }}
-                placeholder={placeholders[lang]}
+                placeholder={t.placeholder}
                 className="min-h-11 resize-none"
               />
-              <Button type="submit" size="icon" disabled={busy || !input.trim()} aria-label="Send">
+              <Button type="submit" size="icon" disabled={busy || !input.trim()} aria-label={t.send}>
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
             </form>
           )}
         </div>
 
-        {/* Sidebar */}
         <aside className="hidden space-y-4 lg:block">
           <div className="rounded-2xl border border-border bg-card p-5">
-            <div className="text-sm font-medium">Emergency?</div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              If this is life-threatening, use the SOS flow — it dispatches an ambulance.
-            </p>
+            <div className="text-sm font-medium">{t.emergencyTitle}</div>
+            <p className="mt-1 text-xs text-muted-foreground">{t.emergencyBody}</p>
             <Button asChild className="mt-3 w-full bg-[color:var(--alert)] hover:bg-[color:var(--alert)]/90">
-              <a href="/emergency/new">Start SOS</a>
+              <a href="/emergency/new">{t.startSos}</a>
             </Button>
           </div>
 
-          {/* Voice tips */}
           <div className="rounded-2xl border border-border bg-card p-5">
             <div className="flex items-center gap-2 text-sm font-medium">
-              <Mic className="h-4 w-4 text-primary" /> Voice input
+              <Mic className="h-4 w-4 text-primary" /> {t.voiceTitle}
             </div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Tap the microphone and speak. The assistant transcribes your words, then responds.
-            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{t.voiceBody}</p>
           </div>
 
-          {/* TTS replay */}
           {ttsEnabled && messages.some((m) => m.role === "assistant" && m.content) && (
             <div className="rounded-2xl border border-border bg-card p-5">
               <Button variant="outline" size="sm" className="w-full gap-2" onClick={replayLastAssistant}>
-                <RotateCcw className="h-3.5 w-3.5" /> Replay last response
+                <RotateCcw className="h-3.5 w-3.5" /> {t.replay}
               </Button>
             </div>
           )}
 
-          <div className="rounded-2xl border border-border bg-card p-5 text-xs text-muted-foreground">
-            LifeLine+ AI supports English, Shona, and Ndebele. This assistant does not replace professional medical advice.
-          </div>
+          <div className="rounded-2xl border border-border bg-card p-5 text-xs text-muted-foreground">{t.disclaimer}</div>
         </aside>
       </div>
     </AppShell>
