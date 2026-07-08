@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { EcgLoader } from "@/components/lifeline/ecg-loader";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/hospitals")({
   head: () => ({ meta: [{ title: "Hospitals · LifeLine+" }] }),
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/_authenticated/hospitals")({
 });
 
 function HospitalsPage() {
+  const t = useT();
   const hospitals = useQuery({ queryKey: ["hospitals"], queryFn: () => listHospitals() });
   const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
   const [maxKm, setMaxKm] = useState(200);
@@ -42,33 +44,33 @@ function HospitalsPage() {
   return (
     <AppShell>
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-semibold md:text-3xl">Hospitals near you</h1>
-        <p className="text-sm text-muted-foreground">Filter by distance, emergency capability and bed availability.</p>
+        <h1 className="font-display text-2xl font-semibold md:text-3xl">{t("hosp.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("hosp.sub")}</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <aside className="space-y-4 rounded-2xl border border-border bg-card p-5">
           <div>
-            <Label>Search</Label>
-            <Input placeholder="Hospital or city" value={q} onChange={(e) => setQ(e.target.value)} className="mt-1.5" />
+            <Label>{t("hosp.search")}</Label>
+            <Input placeholder={t("hosp.searchPh")} value={q} onChange={(e) => setQ(e.target.value)} className="mt-1.5" />
           </div>
           <div>
-            <Label>Max distance: {maxKm} km</Label>
+            <Label>{t("hosp.maxDistance")}: {maxKm} km</Label>
             <Slider min={5} max={500} step={5} value={[maxKm]} onValueChange={(v) => setMaxKm(v[0] ?? 200)} className="mt-3" />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="er">Emergency capable</Label>
+            <Label htmlFor="er">{t("hosp.emergencyCapable")}</Label>
             <Switch id="er" checked={onlyER} onCheckedChange={setOnlyER} />
           </div>
           <div>
-            <Label>Min available beds: {minBeds}</Label>
+            <Label>{t("hosp.minBeds")}: {minBeds}</Label>
             <Slider min={0} max={100} step={5} value={[minBeds]} onValueChange={(v) => setMinBeds(v[0] ?? 0)} className="mt-3" />
           </div>
         </aside>
 
         <div className="space-y-4">
           <HospitalMap items={list} center={loc} />
-          {hospitals.isLoading ? <EcgLoader label="Loading hospitals..." /> : (
+          {hospitals.isLoading ? <EcgLoader label={t("hosp.loading")} /> : (
             <ul className="grid gap-3 md:grid-cols-2">
               {list.map((h) => (
                 <li key={h.id} className="rounded-2xl border border-border bg-card p-4">
@@ -83,9 +85,9 @@ function HospitalsPage() {
                     {h.specialties.slice(0,4).map(s => <span key={s} className="rounded-full bg-secondary px-2 py-0.5 text-[10px]">{s}</span>)}
                   </div>
                   <div className="mt-3 flex items-center justify-between text-xs">
-                    <span className="flex items-center gap-1 text-muted-foreground"><BedDouble className="h-3 w-3" /> {h.available_beds}/{h.total_beds} beds</span>
+                    <span className="flex items-center gap-1 text-muted-foreground"><BedDouble className="h-3 w-3" /> {h.available_beds}/{h.total_beds} {t("hosp.beds")}</span>
                     {h.has_emergency && <span className="inline-flex items-center gap-1 text-[color:var(--alert)]"><HeartPulse className="h-3 w-3" /> ER</span>}
-                    {h.phone && <a className="text-primary flex items-center gap-1" href={`tel:${h.phone}`}><Phone className="h-3 w-3" /> Call</a>}
+                    {h.phone && <a className="text-primary flex items-center gap-1" href={`tel:${h.phone}`}><Phone className="h-3 w-3" /> {t("common.call")}</a>}
                   </div>
                 </li>
               ))}
@@ -107,9 +109,10 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
 import { lazy, Suspense } from "react";
 const LeafletMap = lazy(() => import("@/components/lifeline/hospital-map"));
 function HospitalMap({ items, center }: { items: Array<{ id: string; name: string; lat: number; lng: number; city: string; has_emergency: boolean; available_beds: number }>; center: { lat: number; lng: number } | null }) {
+  const t = useT();
   return (
     <div className="h-72 overflow-hidden rounded-2xl border border-border md:h-96">
-      <Suspense fallback={<EcgLoader label="Loading map..." />}>
+      <Suspense fallback={<EcgLoader label={t("hosp.mapLoading")} />}>
         <LeafletMap items={items} center={center} />
       </Suspense>
     </div>
