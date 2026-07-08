@@ -55,12 +55,9 @@ function SiteHeader() {
           <a href="#partners" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.partners")}</a>
           <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.faq")}</a>
         </nav>
-        <div className="flex flex-col items-end gap-1">
-          <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm"><Link to="/auth">{t("common.signIn")}</Link></Button>
-            <Button asChild size="sm" className="hidden md:inline-flex"><Link to="/auth" search={{ mode: "sign-up" } as never}>{t("common.getStarted")}</Link></Button>
-          </div>
-          <LanguagePill className="hidden sm:flex" />
+        <div className="flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm"><Link to="/auth">{t("common.signIn")}</Link></Button>
+          <Button asChild size="sm" className="hidden md:inline-flex"><Link to="/auth" search={{ mode: "sign-up" } as never}>{t("common.getStarted")}</Link></Button>
         </div>
       </div>
     </header>
@@ -96,6 +93,9 @@ function Hero() {
             <Button asChild variant="outline" size="lg" className="h-12 w-full sm:w-auto">
               <a href="#how">{t("landing.hero.cta.more")} <ArrowRight className="ml-1 h-4 w-4" /></a>
             </Button>
+          </div>
+          <div className="mt-5 flex justify-center">
+            <LanguagePill />
           </div>
           <div className="mt-10 grid grid-cols-3 gap-4 text-center">
             <Stat kpi="< 8 min" label={t("landing.hero.stat.response")} />
