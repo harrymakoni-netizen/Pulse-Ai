@@ -3,14 +3,19 @@ import { AppShell } from "@/components/lifeline/app-shell";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { CalendarClock } from "lucide-react";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/appointments")({
   head: () => ({ meta: [{ title: "Appointments · LifeLine+" }] }),
-  component: () => {
+  component: AppointmentsPage,
+});
+
+function AppointmentsPage() {
+  const t = useT();
     const q = useQuery({ queryKey: ["appointments"], queryFn: async () => (await supabase.from("appointments").select("*, hospitals(name)").order("scheduled_at")).data ?? [] });
     return (
       <AppShell>
-        <h1 className="mb-6 font-display text-2xl font-semibold md:text-3xl">Appointments</h1>
+        <h1 className="mb-6 font-display text-2xl font-semibold md:text-3xl">{t("appt.title")}</h1>
         {q.data?.length ? (
           <ul className="grid gap-3 md:grid-cols-2">
             {q.data.map(a => (
@@ -22,8 +27,7 @@ export const Route = createFileRoute("/_authenticated/appointments")({
               </li>
             ))}
           </ul>
-        ) : <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">No appointments scheduled.</div>}
+        ) : <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">{t("appt.empty")}</div>}
       </AppShell>
     );
-  },
-});
+}

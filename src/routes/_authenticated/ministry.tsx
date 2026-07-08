@@ -31,6 +31,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/ministry")({
   head: () => ({ meta: [{ title: "National Operations · Ministry of Health · LifeLine+" }] }),
@@ -93,6 +94,7 @@ const aiInsights = [
 ];
 
 function MinistryDashboard() {
+  const t = useT();
   const totalActive = provinces.reduce((s, p) => s + p.active, 0);
   const totalBeds = provinces.reduce((s, p) => s + p.beds, 0);
   const totalAmbulances = provinces.reduce((s, p) => s + p.ambulances, 0);
@@ -117,16 +119,11 @@ function MinistryDashboard() {
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-primary" />
           <div className="text-xs font-semibold uppercase tracking-widest text-primary">
-            Ministry of Health · National Operations
+            {t("ministry.title")}
           </div>
         </div>
-        <h1 className="mt-1 font-display text-2xl font-semibold md:text-3xl">
-          Zimbabwe emergency healthcare command
-        </h1>
-        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-          Real-time nationwide view of emergencies, hospital capacity, ambulance fleet, and AI-generated
-          operational insights.
-        </p>
+        <h1 className="mt-1 font-display text-2xl font-semibold md:text-3xl">{t("ministry.title")}</h1>
+        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{t("ministry.sub")}</p>
       </motion.div>
 
       {/* KPIs */}
