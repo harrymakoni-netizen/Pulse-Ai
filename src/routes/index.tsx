@@ -55,12 +55,9 @@ function SiteHeader() {
           <a href="#partners" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.partners")}</a>
           <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.faq")}</a>
         </nav>
-        <div className="flex flex-col items-end gap-1">
-          <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm"><Link to="/auth">{t("common.signIn")}</Link></Button>
-            <Button asChild size="sm" className="hidden md:inline-flex"><Link to="/auth" search={{ mode: "sign-up" } as never}>{t("common.getStarted")}</Link></Button>
-          </div>
-          <LanguagePill className="hidden sm:flex" />
+        <div className="flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm"><Link to="/auth">{t("common.signIn")}</Link></Button>
+          <Button asChild size="sm" className="hidden md:inline-flex"><Link to="/auth" search={{ mode: "sign-up" } as never}>{t("common.getStarted")}</Link></Button>
         </div>
       </div>
     </header>
