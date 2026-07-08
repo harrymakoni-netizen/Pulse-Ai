@@ -94,6 +94,9 @@ function Hero() {
               <a href="#how">{t("landing.hero.cta.more")} <ArrowRight className="ml-1 h-4 w-4" /></a>
             </Button>
           </div>
+          <div className="mt-5 flex justify-center">
+            <LanguagePill />
+          </div>
           <div className="mt-10 grid grid-cols-3 gap-4 text-center">
             <Stat kpi="< 8 min" label={t("landing.hero.stat.response")} />
             <Stat kpi="12+" label={t("landing.hero.stat.hospitals")} />
