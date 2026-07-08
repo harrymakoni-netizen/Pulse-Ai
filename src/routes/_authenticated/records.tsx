@@ -11,6 +11,7 @@ import { FolderHeart, Plus, FileText } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { useT } from "@/i18n";
 
 const TYPES = [
   { key: "history", label: "History" },
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/_authenticated/records")({
 });
 
 function RecordsPage() {
+  const t = useT();
   const qc = useQueryClient();
   const [tab, setTab] = useState("history");
   const records = useQuery({
@@ -51,8 +53,8 @@ function RecordsPage() {
 
   return (
     <AppShell>
-      <div className="mb-6 flex items-center gap-2 text-primary"><FolderHeart className="h-5 w-5" /><span className="text-xs font-semibold uppercase tracking-widest">Medical Records</span></div>
-      <h1 className="mb-6 font-display text-2xl font-semibold md:text-3xl">Your health, in one place.</h1>
+      <div className="mb-6 flex items-center gap-2 text-primary"><FolderHeart className="h-5 w-5" /><span className="text-xs font-semibold uppercase tracking-widest">{t("records.title")}</span></div>
+      <h1 className="mb-6 font-display text-2xl font-semibold md:text-3xl">{t("records.title")}</h1>
 
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList className="flex flex-wrap">
