@@ -4,14 +4,19 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Bell, HeartPulse, Info } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/notifications")({
   head: () => ({ meta: [{ title: "Notifications · LifeLine+" }] }),
-  component: () => {
+  component: NotificationsPage,
+});
+
+function NotificationsPage() {
+  const t = useT();
     const q = useQuery({ queryKey: ["notifications"], queryFn: async () => (await supabase.from("notifications").select("*").order("created_at", { ascending: false })).data ?? [] });
     return (
       <AppShell>
-        <div className="mb-6 flex items-center gap-2"><Bell className="h-5 w-5 text-primary" /><h1 className="font-display text-2xl font-semibold md:text-3xl">Notifications</h1></div>
+        <div className="mb-6 flex items-center gap-2"><Bell className="h-5 w-5 text-primary" /><h1 className="font-display text-2xl font-semibold md:text-3xl">{t("notif.title")}</h1></div>
         {q.data?.length ? (
           <ul className="divide-y divide-border rounded-2xl border border-border bg-card">
             {q.data.map(n => (
@@ -27,8 +32,7 @@ export const Route = createFileRoute("/_authenticated/notifications")({
               </li>
             ))}
           </ul>
-        ) : <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">You're all caught up.</div>}
+        ) : <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">{t("notif.empty")}</div>}
       </AppShell>
     );
-  },
-});
+}
