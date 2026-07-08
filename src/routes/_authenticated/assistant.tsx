@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/assistant")({
   head: () => ({ meta: [{ title: "AI Assistant · LifeLine+" }] }),
@@ -117,10 +118,10 @@ const T = {
 const ttsLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
 
 function AssistantPage() {
+  const { lang, setLang } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
-  const [lang, setLang] = useState<Lang>("en");
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const t = T[lang];
 
