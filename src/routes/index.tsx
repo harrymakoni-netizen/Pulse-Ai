@@ -306,7 +306,7 @@ function PartnerHospitals() {
 }
 
 function Testimonials() {
-  const t = useT();
+  const tr = useT();
   const items = [
     { name: "Dr. Tendai M.", role: "Emergency Physician, Parirenyatwa", quote: "The AI handoff report saves us critical minutes. Patients arrive with context already documented." },
     { name: "Rutendo S.", role: "Patient, Harare", quote: "When my father collapsed, LifeLine+ dispatched an ambulance and matched us with the right hospital in minutes." },
@@ -315,7 +315,7 @@ function Testimonials() {
   return (
     <section className="border-t border-border bg-secondary/40 py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <SectionHeading eyebrow={t("landing.testimonials.eyebrow")} title={t("landing.testimonials.title")} />
+        <SectionHeading eyebrow={tr("landing.testimonials.eyebrow")} title={tr("landing.testimonials.title")} />
         <div className="mt-14 grid gap-4 md:grid-cols-3">
           {items.map((t) => (
             <div key={t.name} className="rounded-2xl border border-border bg-card p-6">
