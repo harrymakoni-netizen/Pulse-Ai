@@ -2,10 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/lifeline/app-shell";
 import { Shield, TrendingUp, Users, Ambulance, Timer } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, BarChart, Bar, Tooltip, CartesianGrid } from "recharts";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin · LifeLine+" }] }),
-  component: () => {
+  component: AdminPage,
+});
+
+function AdminPage() {
+  const t = useT();
     const responseTimes = Array.from({ length: 12 }, (_, i) => ({ month: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i], minutes: Math.round(10 + Math.random()*6) }));
     const byRegion = [
       { region: "Harare", emergencies: 421 }, { region: "Bulawayo", emergencies: 267 }, { region: "Mutare", emergencies: 138 },
@@ -13,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
     ];
     return (
       <AppShell>
-        <div className="mb-6 flex items-center gap-2"><Shield className="h-5 w-5 text-primary" /><h1 className="font-display text-2xl font-semibold md:text-3xl">National Command</h1></div>
+        <div className="mb-6 flex items-center gap-2"><Shield className="h-5 w-5 text-primary" /><h1 className="font-display text-2xl font-semibold md:text-3xl">{t("admin.title")}</h1></div>
         <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Kpi icon={<TrendingUp className="h-4 w-4 text-primary" />} value="1,027" label="Emergencies (30d)" />
           <Kpi icon={<Timer className="h-4 w-4 text-primary" />} value="8.4 min" label="Avg response" />
@@ -52,8 +57,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
         </div>
       </AppShell>
     );
-  },
-});
+}
 
 function Kpi({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
   return (
