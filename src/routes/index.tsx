@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { LifeLineLogo } from "@/components/lifeline/logo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { LanguagePill, useT } from "@/i18n";
 import {
   ShieldCheck,
   Ambulance,
@@ -42,20 +43,22 @@ function Landing() {
 }
 
 function SiteHeader() {
+  const t = useT();
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
         <LifeLineLogo />
         <nav className="hidden items-center gap-8 md:flex">
-          <a href="#how" className="text-sm text-muted-foreground hover:text-foreground">How it works</a>
-          <a href="#features" className="text-sm text-muted-foreground hover:text-foreground">Features</a>
-          <a href="#ai" className="text-sm text-muted-foreground hover:text-foreground">AI technology</a>
-          <a href="#partners" className="text-sm text-muted-foreground hover:text-foreground">Partners</a>
-          <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">FAQ</a>
+          <a href="#how" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.how")}</a>
+          <a href="#features" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.features")}</a>
+          <a href="#ai" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.ai")}</a>
+          <a href="#partners" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.partners")}</a>
+          <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.faq")}</a>
         </nav>
         <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm"><Link to="/auth">Sign in</Link></Button>
-          <Button asChild size="sm" className="hidden md:inline-flex"><Link to="/auth" search={{ mode: "sign-up" } as never}>Get started</Link></Button>
+          <LanguagePill className="hidden sm:flex" />
+          <Button asChild variant="ghost" size="sm"><Link to="/auth">{t("common.signIn")}</Link></Button>
+          <Button asChild size="sm" className="hidden md:inline-flex"><Link to="/auth" search={{ mode: "sign-up" } as never}>{t("common.getStarted")}</Link></Button>
         </div>
       </div>
     </header>
@@ -63,21 +66,20 @@ function SiteHeader() {
 }
 
 function Hero() {
+  const t = useT();
   return (
     <section className="gradient-hero relative overflow-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-24">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
             <span className="inline-block h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
-            AI for Impact · Zimbabwe
+            {t("landing.hero.badge")}
           </span>
           <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
-            Every second counts.<br />
-            <span className="text-gradient-brand">AI-powered emergency healthcare.</span>
+            {t("landing.hero.title1")}<br />
+            <span className="text-gradient-brand">{t("landing.hero.title2")}</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-            LifeLine+ connects patients, hospitals, and ambulances using artificial intelligence to reduce emergency response times and improve patient outcomes.
-          </p>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">{t("landing.hero.body")}</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
               asChild
@@ -86,17 +88,17 @@ function Hero() {
             >
               <Link to="/auth">
                 <HeartPulse className="h-5 w-5" />
-                Request emergency assistance
+                {t("landing.hero.cta.sos")}
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-12 w-full sm:w-auto">
-              <a href="#how">Learn more <ArrowRight className="ml-1 h-4 w-4" /></a>
+              <a href="#how">{t("landing.hero.cta.more")} <ArrowRight className="ml-1 h-4 w-4" /></a>
             </Button>
           </div>
           <div className="mt-10 grid grid-cols-3 gap-4 text-center">
-            <Stat kpi="< 8 min" label="Avg response" />
-            <Stat kpi="12+" label="Partner hospitals" />
-            <Stat kpi="3" label="Languages" />
+            <Stat kpi="< 8 min" label={t("landing.hero.stat.response")} />
+            <Stat kpi="12+" label={t("landing.hero.stat.hospitals")} />
+            <Stat kpi="3" label={t("landing.hero.stat.languages")} />
           </div>
         </motion.div>
 
@@ -104,9 +106,9 @@ function Hero() {
           <div className="glass elevated relative rounded-3xl border p-2">
             <div className="rounded-2xl bg-gradient-to-br from-primary/5 via-background to-emerald-500/5 p-8">
               <div className="grid gap-6 md:grid-cols-3">
-                <PreviewCard icon={<Sparkles className="h-4 w-4" />} title="AI Triage" body="Severity assessed in seconds from your symptoms." />
-                <PreviewCard icon={<MapPinned className="h-4 w-4" />} title="Nearest Hospital" body="Matched to specialty, distance, and bed availability." />
-                <PreviewCard icon={<Ambulance className="h-4 w-4" />} title="Live Dispatch" body="Track your ambulance from dispatch to arrival." />
+                <PreviewCard icon={<Sparkles className="h-4 w-4" />} title={t("landing.preview.triage.title")} body={t("landing.preview.triage.body")} />
+                <PreviewCard icon={<MapPinned className="h-4 w-4" />} title={t("landing.preview.nearest.title")} body={t("landing.preview.nearest.body")} />
+                <PreviewCard icon={<Ambulance className="h-4 w-4" />} title={t("landing.preview.dispatch.title")} body={t("landing.preview.dispatch.body")} />
               </div>
             </div>
           </div>
@@ -146,15 +148,16 @@ function SectionHeading({ eyebrow, title, sub }: { eyebrow: string; title: strin
 }
 
 function HowItWorks() {
+  const t = useT();
   const steps = [
-    { icon: HeartPulse, title: "Request help", body: "Press the SOS button. Share symptoms with the AI in English, Shona or Ndebele." },
-    { icon: Sparkles, title: "AI triage", body: "The assistant assesses severity, gives first aid, and generates a hospital handoff." },
-    { icon: Ambulance, title: "Coordinated response", body: "The nearest suitable hospital is notified and the ambulance is dispatched with your report." },
+    { icon: HeartPulse, title: t("landing.how.s1.title"), body: t("landing.how.s1.body") },
+    { icon: Sparkles, title: t("landing.how.s2.title"), body: t("landing.how.s2.body") },
+    { icon: Ambulance, title: t("landing.how.s3.title"), body: t("landing.how.s3.body") },
   ];
   return (
     <section id="how" className="border-t border-border py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <SectionHeading eyebrow="How it works" title="From distress to dispatch in seconds" sub="Three coordinated steps, powered by AI and connected to the network." />
+        <SectionHeading eyebrow={t("landing.how.eyebrow")} title={t("landing.how.title")} sub={t("landing.how.sub")} />
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {steps.map((s, i) => (
             <motion.div key={s.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
@@ -162,7 +165,7 @@ function HowItWorks() {
               <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <s.icon className="h-5 w-5" />
               </div>
-              <div className="mb-1 text-sm font-medium text-muted-foreground">Step {i + 1}</div>
+              <div className="mb-1 text-sm font-medium text-muted-foreground">{t("landing.how.step")} {i + 1}</div>
               <h3 className="font-display text-xl font-semibold">{s.title}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
             </motion.div>
@@ -174,18 +177,19 @@ function HowItWorks() {
 }
 
 function Features() {
+  const t = useT();
   const items = [
-    { icon: Sparkles, title: "AI Emergency Assistant", body: "Conversational triage in English, Shona and Ndebele." },
-    { icon: Ambulance, title: "Live Ambulance Tracking", body: "Real-time ETA and route updates from dispatch to arrival." },
-    { icon: Hospital, title: "Smart Hospital Matching", body: "Chosen by distance, specialty, and current bed availability." },
-    { icon: ShieldCheck, title: "Secure Medical Records", body: "Blood type, allergies and history shared only when needed." },
-    { icon: Radio, title: "Multi-channel Alerts", body: "In-app, SMS and voice channels for care coordination." },
-    { icon: Activity, title: "Health Analytics", body: "National-scale insights for public health authorities." },
+    { icon: Sparkles, title: t("landing.features.f1.title"), body: t("landing.features.f1.body") },
+    { icon: Ambulance, title: t("landing.features.f2.title"), body: t("landing.features.f2.body") },
+    { icon: Hospital, title: t("landing.features.f3.title"), body: t("landing.features.f3.body") },
+    { icon: ShieldCheck, title: t("landing.features.f4.title"), body: t("landing.features.f4.body") },
+    { icon: Radio, title: t("landing.features.f5.title"), body: t("landing.features.f5.body") },
+    { icon: Activity, title: t("landing.features.f6.title"), body: t("landing.features.f6.body") },
   ];
   return (
     <section id="features" className="bg-secondary/40 py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <SectionHeading eyebrow="Features" title="A complete emergency care platform" />
+        <SectionHeading eyebrow={t("landing.features.eyebrow")} title={t("landing.features.title")} />
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((f) => (
             <div key={f.title} className="group rounded-2xl border border-border bg-card p-6 transition-shadow hover:shadow-lg">
@@ -203,16 +207,17 @@ function Features() {
 }
 
 function Benefits() {
+  const t = useT();
   const items = [
-    { title: "For patients", body: "Faster help, in your language, with the hospital that fits your case.", icon: HeartPulse },
-    { title: "For hospitals", body: "Structured handoff reports arrive before the patient does.", icon: Hospital },
-    { title: "For ambulances", body: "AI-prioritized queues and turn-by-turn navigation.", icon: Ambulance },
-    { title: "For authorities", body: "National dashboards and disease trend analytics.", icon: ShieldCheck },
+    { title: t("landing.benefits.b1.title"), body: t("landing.benefits.b1.body"), icon: HeartPulse },
+    { title: t("landing.benefits.b2.title"), body: t("landing.benefits.b2.body"), icon: Hospital },
+    { title: t("landing.benefits.b3.title"), body: t("landing.benefits.b3.body"), icon: Ambulance },
+    { title: t("landing.benefits.b4.title"), body: t("landing.benefits.b4.body"), icon: ShieldCheck },
   ];
   return (
     <section className="py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <SectionHeading eyebrow="Benefits" title="Built for everyone in the emergency chain" />
+        <SectionHeading eyebrow={t("landing.benefits.eyebrow")} title={t("landing.benefits.title")} />
         <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {items.map((b) => (
             <div key={b.title} className="rounded-2xl border border-border bg-card p-6">
@@ -228,27 +233,27 @@ function Benefits() {
 }
 
 function AiTechnology() {
+  const t = useT();
+  const points = [
+    t("landing.ai.p1"),
+    t("landing.ai.p2"),
+    t("landing.ai.p3"),
+    t("landing.ai.p4"),
+    t("landing.ai.p5"),
+  ];
   return (
     <section id="ai" className="border-t border-border bg-gradient-to-b from-background to-secondary/30 py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-widest text-primary">AI Technology</div>
-            <h2 className="mt-2 font-display text-3xl font-semibold md:text-4xl">Triage that thinks like a clinician.</h2>
-            <p className="mt-4 text-muted-foreground">
-              Our AI is trained to ask the right questions, weigh red flags, and produce a structured handoff. It works alongside human dispatchers, not instead of them.
-            </p>
+            <div className="text-xs font-semibold uppercase tracking-widest text-primary">{t("landing.ai.eyebrow")}</div>
+            <h2 className="mt-2 font-display text-3xl font-semibold md:text-4xl">{t("landing.ai.title")}</h2>
+            <p className="mt-4 text-muted-foreground">{t("landing.ai.body")}</p>
             <ul className="mt-6 space-y-3 text-sm">
-              {[
-                "Severity classification (Low → Critical)",
-                "First-aid instructions while help is on the way",
-                "Structured hospital handoff (vitals, allergies, timeline)",
-                "Multi-lingual: English · Shona · Ndebele",
-                "Predictive analytics for outbreak signals",
-              ].map((t) => (
-                <li key={t} className="flex items-start gap-2">
+              {points.map((line) => (
+                <li key={line} className="flex items-start gap-2">
                   <span className="mt-1 h-2 w-2 rounded-full bg-[color:var(--emerald-brand)]" />
-                  <span>{t}</span>
+                  <span>{line}</span>
                 </li>
               ))}
             </ul>
@@ -256,7 +261,7 @@ function AiTechnology() {
           <div className="glass elevated rounded-3xl border p-2">
             <div className="rounded-2xl bg-card p-6">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="pulse-calm h-2 w-2 rounded-full bg-primary" /> Assistant · live
+                <span className="pulse-calm h-2 w-2 rounded-full bg-primary" /> {t("landing.ai.live")}
               </div>
               <div className="mt-4 space-y-3 text-sm">
                 <ChatBubble role="user">Chest pain for 20 minutes, sweating.</ChatBubble>
@@ -284,11 +289,12 @@ function ChatBubble({ role, children }: { role: "user" | "ai"; children: React.R
 }
 
 function PartnerHospitals() {
+  const t = useT();
   const hospitals = ["Parirenyatwa", "Sally Mugabe", "Mpilo", "Chitungwiza", "Avenues Clinic", "Mater Dei", "UBH", "Mutare Provincial", "Gweru", "Masvingo", "West End", "Victoria Falls"];
   return (
     <section id="partners" className="py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <SectionHeading eyebrow="Partner Hospitals" title="Connected to Zimbabwe's leading emergency centres" />
+        <SectionHeading eyebrow={t("landing.partners.eyebrow")} title={t("landing.partners.title")} />
         <div className="mt-10 flex flex-wrap justify-center gap-3">
           {hospitals.map((h) => (
             <span key={h} className="rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground">{h}</span>
@@ -300,6 +306,7 @@ function PartnerHospitals() {
 }
 
 function Testimonials() {
+  const t = useT();
   const items = [
     { name: "Dr. Tendai M.", role: "Emergency Physician, Parirenyatwa", quote: "The AI handoff report saves us critical minutes. Patients arrive with context already documented." },
     { name: "Rutendo S.", role: "Patient, Harare", quote: "When my father collapsed, LifeLine+ dispatched an ambulance and matched us with the right hospital in minutes." },
@@ -308,7 +315,7 @@ function Testimonials() {
   return (
     <section className="border-t border-border bg-secondary/40 py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <SectionHeading eyebrow="Testimonials" title="Trusted across the emergency chain" />
+        <SectionHeading eyebrow={t("landing.testimonials.eyebrow")} title={t("landing.testimonials.title")} />
         <div className="mt-14 grid gap-4 md:grid-cols-3">
           {items.map((t) => (
             <div key={t.name} className="rounded-2xl border border-border bg-card p-6">
@@ -329,17 +336,18 @@ function Testimonials() {
 }
 
 function Faq() {
+  const t = useT();
   const items = [
-    { q: "Is LifeLine+ available across Zimbabwe?", a: "We are onboarding hospitals city by city. Today we cover Harare, Bulawayo, Mutare, Gweru, Masvingo and Victoria Falls with more coming." },
-    { q: "Does the AI replace medical professionals?", a: "No. The AI supports dispatchers and hospital staff with faster triage and structured handoffs. All care decisions remain human." },
-    { q: "How is my data protected?", a: "Records are encrypted, access is scoped by role, and you control what is shared during an emergency." },
-    { q: "Which languages are supported?", a: "English, Shona (chiShona) and Ndebele (isiNdebele)." },
-    { q: "Do I need a smartphone?", a: "LifeLine+ works on any modern browser, and we support SMS fallback for low-bandwidth areas." },
+    { q: t("landing.faq.q1"), a: t("landing.faq.a1") },
+    { q: t("landing.faq.q2"), a: t("landing.faq.a2") },
+    { q: t("landing.faq.q3"), a: t("landing.faq.a3") },
+    { q: t("landing.faq.q4"), a: t("landing.faq.a4") },
+    { q: t("landing.faq.q5"), a: t("landing.faq.a5") },
   ];
   return (
     <section id="faq" className="py-20 md:py-28">
       <div className="mx-auto max-w-3xl px-4 md:px-8">
-        <SectionHeading eyebrow="FAQ" title="Frequently asked questions" />
+        <SectionHeading eyebrow={t("landing.faq.eyebrow")} title={t("landing.faq.title")} />
         <div className="mt-10 divide-y divide-border rounded-2xl border border-border bg-card">
           {items.map((item, i) => (
             <details key={i} className="group p-5">
@@ -357,20 +365,21 @@ function Faq() {
 }
 
 function SiteFooter() {
+  const t = useT();
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-8">
         <div className="grid gap-8 md:grid-cols-4">
           <div>
             <LifeLineLogo />
-            <p className="mt-3 text-sm text-muted-foreground">AI-powered emergency healthcare coordination. Care · Support · Hope.</p>
+            <p className="mt-3 text-sm text-muted-foreground">{t("landing.footer.tagline")}</p>
           </div>
-          <FooterCol title="Product" items={[["How it works", "#how"], ["Features", "#features"], ["AI technology", "#ai"], ["FAQ", "#faq"]]} />
-          <FooterCol title="Company" items={[["Partner hospitals", "#partners"], ["Privacy policy", "#"], ["Terms", "#"], ["Contact", "mailto:hello@lifeline.co.zw"]]} />
-          <FooterCol title="Emergency" items={[["Zimbabwe: 999", "tel:999"], ["Ambulance: 112", "tel:112"], ["LifeLine+ dispatch", "/dashboard"]]} />
+          <FooterCol title={t("landing.footer.product")} items={[[t("landing.nav.how"), "#how"], [t("landing.nav.features"), "#features"], [t("landing.nav.ai"), "#ai"], [t("landing.nav.faq"), "#faq"]]} />
+          <FooterCol title={t("landing.footer.company")} items={[[t("landing.partners.eyebrow"), "#partners"], [t("landing.footer.privacy"), "#"], [t("landing.footer.terms"), "#"], [t("landing.footer.contact"), "mailto:hello@lifeline.co.zw"]]} />
+          <FooterCol title={t("landing.footer.emergency")} items={[["Zimbabwe: 999", "tel:999"], ["Ambulance: 112", "tel:112"], ["LifeLine+ dispatch", "/dashboard"]]} />
         </div>
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground md:flex-row">
-          <div>© {new Date().getFullYear()} LifeLine+ · Built for the Zimbabwe AI for Impact Challenge.</div>
+          <div>© {new Date().getFullYear()} LifeLine+ · {t("landing.footer.rights")}</div>
           <div className="flex gap-4">
             <a href="#" className="hover:text-foreground">Twitter</a>
             <a href="#" className="hover:text-foreground">LinkedIn</a>
