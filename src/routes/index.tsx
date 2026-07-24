@@ -141,22 +141,6 @@ function Hero() {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="mx-auto mt-14 max-w-4xl"
-        >
-          <div className="rounded-3xl border border-white/15 bg-white/[0.06] p-2 backdrop-blur-xl shadow-2xl">
-            <div className="rounded-2xl bg-black/25 p-8">
-              <div className="grid gap-6 md:grid-cols-3">
-                <PreviewCard icon={<Sparkles className="h-4 w-4" />} title={t("landing.preview.triage.title")} body={t("landing.preview.triage.body")} />
-                <PreviewCard icon={<MapPinned className="h-4 w-4" />} title={t("landing.preview.nearest.title")} body={t("landing.preview.nearest.body")} />
-                <PreviewCard icon={<Ambulance className="h-4 w-4" />} title={t("landing.preview.dispatch.title")} body={t("landing.preview.dispatch.body")} />
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
@@ -178,16 +162,6 @@ function Stat({ kpi, label }: { kpi: string; label: string }) {
     <div>
       <div className="font-display text-2xl font-semibold text-foreground md:text-3xl">{kpi}</div>
       <div className="text-xs text-muted-foreground">{label}</div>
-    </div>
-  );
-}
-
-function PreviewCard({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
-  return (
-    <div className="rounded-xl border border-white/15 bg-white/5 p-4 text-white backdrop-blur-sm">
-      <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">{icon}</div>
-      <div className="font-medium">{title}</div>
-      <div className="mt-1 text-sm text-white/70">{body}</div>
     </div>
   );
 }
