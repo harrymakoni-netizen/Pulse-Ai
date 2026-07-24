@@ -445,6 +445,7 @@ const sn: Dict = {
   "auth.password": "Password",
   "auth.forgot": "Wakanganwa?",
   "auth.action.signin": "Pinda",
+  "auth.demoNote": "Chidzidzo — dzvanya kamwe kuti upinde.",
   "auth.action.signup": "Gadzira account",
   "auth.action.reset": "Tumira link",
   "auth.switch.toSignup": "Mutsva paLifeLine+?",
