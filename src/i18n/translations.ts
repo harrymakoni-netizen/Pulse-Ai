@@ -716,6 +716,7 @@ const nd: Dict = {
   "auth.password": "I-password",
   "auth.forgot": "Ukhohliwe?",
   "auth.action.signin": "Ngena",
+  "auth.demoNote": "Imodi yesibonelo — chofoza kanye ungene.",
   "auth.action.signup": "Dala i-akhawunti",
   "auth.action.reset": "Thumela isixhumanisi",
   "auth.switch.toSignup": "Umusha ku-LifeLine+?",
