@@ -69,28 +69,16 @@ const diseaseTrend = [
 ];
 
 const severitySplit = [
-  { name: "Critical", value: 14, color: "#E11D48" },
-  { name: "High", value: 27, color: "#F97316" },
-  { name: "Medium", value: 38, color: "#F59E0B" },
-  { name: "Low", value: 21, color: "#10B981" },
+  { key: "critical", value: 14, color: "#E11D48" },
+  { key: "high", value: 27, color: "#F97316" },
+  { key: "medium", value: 38, color: "#F59E0B" },
+  { key: "low", value: 21, color: "#10B981" },
 ];
 
 const aiInsights = [
-  {
-    title: "Respiratory spike in Harare Metro",
-    body: "Respiratory-related emergencies are up 22% week-over-week in Harare's high-density suburbs. Consider pre-positioning oxygen supplies at Parirenyatwa and Sally Mugabe.",
-    tag: "Trend",
-  },
-  {
-    title: "Ambulance shortfall in Mat. South",
-    body: "Response times in Matabeleland South exceed 15 min for 34% of dispatches. Reallocating 2 ambulances from Bulawayo urban would reduce median ETA by ~3.4 min.",
-    tag: "Resource",
-  },
-  {
-    title: "Cardiac cluster near Chitungwiza",
-    body: "AI detected a statistically significant cluster of cardiac events near Chitungwiza in the last 72h. Recommend a targeted screening campaign.",
-    tag: "Cluster",
-  },
+  { id: 1 as const },
+  { id: 2 as const },
+  { id: 3 as const },
 ];
 
 function MinistryDashboard() {
