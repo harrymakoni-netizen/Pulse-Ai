@@ -308,7 +308,7 @@ const en: Dict = {
 
   // Emergency new (SOS flow)
   "emerg.new.eyebrow": "Emergency request",
-  "emerg.new.title": "Let's get you help — fast.",
+  "emerg.new.heading": "Let's get you help — fast.",
   "emerg.new.step": "Step {n} of {total}",
   "emerg.new.happening": "What's happening?",
   "emerg.new.describe": "Describe in your own words",
