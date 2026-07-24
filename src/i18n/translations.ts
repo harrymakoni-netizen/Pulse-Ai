@@ -38,7 +38,7 @@ const en: Dict = {
   "landing.nav.ai": "AI technology",
   "landing.nav.partners": "Partners",
   "landing.nav.faq": "FAQ",
-  "landing.hero.badge": "AI for Impact · Zimbabwe",
+  "landing.hero.badge": "AI for Impact Zimbabwe",
   "landing.hero.title1": "Every second counts.",
   "landing.hero.title2": "AI-powered emergency healthcare.",
   "landing.hero.body": "LifeLine+ connects patients, hospitals, and ambulances using artificial intelligence to reduce emergency response times and improve patient outcomes.",
