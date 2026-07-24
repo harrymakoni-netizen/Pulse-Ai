@@ -164,6 +164,7 @@ const en: Dict = {
   "auth.password": "Password",
   "auth.forgot": "Forgot?",
   "auth.action.signin": "Sign in",
+  "auth.demoNote": "Demo mode — one tap to enter the experience.",
   "auth.action.signup": "Create account",
   "auth.action.reset": "Send reset link",
   "auth.switch.toSignup": "New to LifeLine+?",
