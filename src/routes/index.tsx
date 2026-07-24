@@ -13,7 +13,6 @@ import {
   HeartPulse,
   Languages,
   Activity,
-  MapPinned,
   Radio,
   ArrowRight,
   Star,
@@ -141,22 +140,6 @@ function Hero() {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="mx-auto mt-14 max-w-4xl"
-        >
-          <div className="rounded-3xl border border-white/15 bg-white/[0.06] p-2 backdrop-blur-xl shadow-2xl">
-            <div className="rounded-2xl bg-black/25 p-8">
-              <div className="grid gap-6 md:grid-cols-3">
-                <PreviewCard icon={<Sparkles className="h-4 w-4" />} title={t("landing.preview.triage.title")} body={t("landing.preview.triage.body")} />
-                <PreviewCard icon={<MapPinned className="h-4 w-4" />} title={t("landing.preview.nearest.title")} body={t("landing.preview.nearest.body")} />
-                <PreviewCard icon={<Ambulance className="h-4 w-4" />} title={t("landing.preview.dispatch.title")} body={t("landing.preview.dispatch.body")} />
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
@@ -178,16 +161,6 @@ function Stat({ kpi, label }: { kpi: string; label: string }) {
     <div>
       <div className="font-display text-2xl font-semibold text-foreground md:text-3xl">{kpi}</div>
       <div className="text-xs text-muted-foreground">{label}</div>
-    </div>
-  );
-}
-
-function PreviewCard({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
-  return (
-    <div className="rounded-xl border border-white/15 bg-white/5 p-4 text-white backdrop-blur-sm">
-      <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">{icon}</div>
-      <div className="font-medium">{title}</div>
-      <div className="mt-1 text-sm text-white/70">{body}</div>
     </div>
   );
 }
@@ -319,10 +292,14 @@ function AiTechnology() {
                 <span className="pulse-calm h-2 w-2 rounded-full bg-primary" /> {t("landing.ai.live")}
               </div>
               <div className="mt-4 space-y-3 text-sm">
-                <ChatBubble role="user">Chest pain for 20 minutes, sweating.</ChatBubble>
-                <ChatBubble role="ai">Severity: <strong className="text-[color:var(--alert)]">Critical</strong>. Sit upright, chew aspirin if not allergic, stay still. Dispatching to Parirenyatwa Cardiology in 6 min.</ChatBubble>
-                <ChatBubble role="user">Handizivi kuti ndoita sei.</ChatBubble>
-                <ChatBubble role="ai">Zvakanaka. Gara pasi, iva wakadzikama. Ambulance yatouya. Handeyi tione zvatinofanira kuita.</ChatBubble>
+                <ChatBubble role="user">{t("landing.ai.chat.u1")}</ChatBubble>
+                <ChatBubble role="ai">
+                  {t("landing.ai.chat.a1.pre")}
+                  <strong className="text-[color:var(--alert)]">{t("landing.ai.chat.a1.sev")}</strong>
+                  {t("landing.ai.chat.a1.post")}
+                </ChatBubble>
+                <ChatBubble role="user">{t("landing.ai.chat.u2")}</ChatBubble>
+                <ChatBubble role="ai">{t("landing.ai.chat.a2")}</ChatBubble>
               </div>
               <div className="mt-4 flex items-center gap-2 rounded-lg border border-dashed border-border p-3 text-xs text-muted-foreground">
                 <Languages className="h-4 w-4" /> EN · SN · ND
@@ -363,9 +340,9 @@ function PartnerHospitals() {
 function Testimonials() {
   const tr = useT();
   const items = [
-    { name: "Dr. Tendai M.", role: "Emergency Physician, Parirenyatwa", quote: "The AI handoff report saves us critical minutes. Patients arrive with context already documented." },
-    { name: "Rutendo S.", role: "Patient, Harare", quote: "When my father collapsed, LifeLine+ dispatched an ambulance and matched us with the right hospital in minutes." },
-    { name: "Blessing N.", role: "Paramedic, Bulawayo", quote: "AI-prioritized calls mean I know exactly what to prepare for on the way." },
+    { name: tr("landing.tst.1.name"), role: tr("landing.tst.1.role"), quote: tr("landing.tst.1.quote") },
+    { name: tr("landing.tst.2.name"), role: tr("landing.tst.2.role"), quote: tr("landing.tst.2.quote") },
+    { name: tr("landing.tst.3.name"), role: tr("landing.tst.3.role"), quote: tr("landing.tst.3.quote") },
   ];
   return (
     <section className="border-t border-border bg-secondary/40 py-20 md:py-28">
