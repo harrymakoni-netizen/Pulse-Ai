@@ -13,7 +13,6 @@ import {
   HeartPulse,
   Languages,
   Activity,
-  MapPinned,
   Radio,
   ArrowRight,
   Star,
@@ -293,10 +292,14 @@ function AiTechnology() {
                 <span className="pulse-calm h-2 w-2 rounded-full bg-primary" /> {t("landing.ai.live")}
               </div>
               <div className="mt-4 space-y-3 text-sm">
-                <ChatBubble role="user">Chest pain for 20 minutes, sweating.</ChatBubble>
-                <ChatBubble role="ai">Severity: <strong className="text-[color:var(--alert)]">Critical</strong>. Sit upright, chew aspirin if not allergic, stay still. Dispatching to Parirenyatwa Cardiology in 6 min.</ChatBubble>
-                <ChatBubble role="user">Handizivi kuti ndoita sei.</ChatBubble>
-                <ChatBubble role="ai">Zvakanaka. Gara pasi, iva wakadzikama. Ambulance yatouya. Handeyi tione zvatinofanira kuita.</ChatBubble>
+                <ChatBubble role="user">{t("landing.ai.chat.u1")}</ChatBubble>
+                <ChatBubble role="ai">
+                  {t("landing.ai.chat.a1.pre")}
+                  <strong className="text-[color:var(--alert)]">{t("landing.ai.chat.a1.sev")}</strong>
+                  {t("landing.ai.chat.a1.post")}
+                </ChatBubble>
+                <ChatBubble role="user">{t("landing.ai.chat.u2")}</ChatBubble>
+                <ChatBubble role="ai">{t("landing.ai.chat.a2")}</ChatBubble>
               </div>
               <div className="mt-4 flex items-center gap-2 rounded-lg border border-dashed border-border p-3 text-xs text-muted-foreground">
                 <Languages className="h-4 w-4" /> EN · SN · ND
@@ -337,9 +340,9 @@ function PartnerHospitals() {
 function Testimonials() {
   const tr = useT();
   const items = [
-    { name: "Dr. Tendai M.", role: "Emergency Physician, Parirenyatwa", quote: "The AI handoff report saves us critical minutes. Patients arrive with context already documented." },
-    { name: "Rutendo S.", role: "Patient, Harare", quote: "When my father collapsed, LifeLine+ dispatched an ambulance and matched us with the right hospital in minutes." },
-    { name: "Blessing N.", role: "Paramedic, Bulawayo", quote: "AI-prioritized calls mean I know exactly what to prepare for on the way." },
+    { name: tr("landing.tst.1.name"), role: tr("landing.tst.1.role"), quote: tr("landing.tst.1.quote") },
+    { name: tr("landing.tst.2.name"), role: tr("landing.tst.2.role"), quote: tr("landing.tst.2.quote") },
+    { name: tr("landing.tst.3.name"), role: tr("landing.tst.3.role"), quote: tr("landing.tst.3.quote") },
   ];
   return (
     <section className="border-t border-border bg-secondary/40 py-20 md:py-28">
