@@ -20,8 +20,6 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-type Role = "patient" | "hospital_staff" | "ambulance" | "admin";
-
 function AuthPage() {
   const t = useT();
   const [mode, setMode] = useState<"sign-in" | "forgot">("sign-in");

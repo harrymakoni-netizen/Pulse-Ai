@@ -3,6 +3,7 @@ import { LifeLineLogo } from "@/components/lifeline/logo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { LanguagePill, useT } from "@/i18n";
+import heroImage from "@/assets/hero-emergency.png.asset.json";
 import {
   ShieldCheck,
   Ambulance,
@@ -57,7 +58,6 @@ function SiteHeader() {
         </nav>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost" size="sm"><Link to="/auth">{t("common.signIn")}</Link></Button>
-          <Button asChild size="sm" className="hidden md:inline-flex"><Link to="/auth" search={{ mode: "sign-up" } as never}>{t("common.getStarted")}</Link></Button>
         </div>
       </div>
     </header>
@@ -67,46 +67,88 @@ function SiteHeader() {
 function Hero() {
   const t = useT();
   return (
-    <section className="gradient-hero relative overflow-hidden">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-            <span className="inline-block h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+    <section className="relative overflow-hidden">
+      {/* Cinematic hero image */}
+      <div className="absolute inset-0">
+        <img
+          src={heroImage.url}
+          alt="Emergency response team with AI-powered heads-up display at night"
+          className="h-full w-full object-cover"
+          loading="eager"
+          fetchPriority="high"
+        />
+        {/* Layered scrims for legibility over any part of the image */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/85" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/40" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pb-24 pt-20 md:px-8 md:pb-32 md:pt-28">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="mx-auto max-w-3xl text-center text-white"
+        >
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+            <span className="inline-block h-2 w-2 rounded-full bg-[color:var(--alert)]" aria-hidden="true" />
             {t("landing.hero.badge")}
           </span>
-          <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
-            {t("landing.hero.title1")}<br />
-            <span className="text-gradient-brand">{t("landing.hero.title2")}</span>
+          <h1
+            className="mt-6 font-display text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl"
+            style={{ textShadow: "0 2px 20px rgba(0,0,0,0.55)" }}
+          >
+            {t("landing.hero.title1")}
+            <br />
+            <span className="bg-gradient-to-r from-white via-[#93c5fd] to-[#5eead4] bg-clip-text text-transparent">
+              {t("landing.hero.title2")}
+            </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">{t("landing.hero.body")}</p>
+          <p
+            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/85 md:text-lg"
+            style={{ textShadow: "0 1px 12px rgba(0,0,0,0.6)" }}
+          >
+            {t("landing.hero.body")}
+          </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
               asChild
               size="lg"
-              className="h-12 w-full gap-2 bg-[color:var(--alert)] text-white hover:bg-[color:var(--alert)]/90 sm:w-auto"
+              className="h-12 w-full gap-2 bg-[color:var(--alert)] text-white shadow-[0_10px_40px_-10px_rgba(225,29,72,0.7)] hover:bg-[color:var(--alert)]/90 sm:w-auto"
             >
               <Link to="/auth">
                 <HeartPulse className="h-5 w-5" />
                 {t("landing.hero.cta.sos")}
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="h-12 w-full sm:w-auto">
-              <a href="#how">{t("landing.hero.cta.more")} <ArrowRight className="ml-1 h-4 w-4" /></a>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="h-12 w-full border-white/30 bg-white/5 text-white backdrop-blur-md hover:bg-white/15 hover:text-white sm:w-auto"
+            >
+              <a href="#how">
+                {t("landing.hero.cta.more")} <ArrowRight className="ml-1 h-4 w-4" />
+              </a>
             </Button>
           </div>
           <div className="mt-5 flex justify-center">
-            <LanguagePill />
+            <LanguagePill className="border-white/25 bg-white/10 text-white backdrop-blur-md" />
           </div>
-          <div className="mt-10 grid grid-cols-3 gap-4 text-center">
-            <Stat kpi="< 8 min" label={t("landing.hero.stat.response")} />
-            <Stat kpi="12+" label={t("landing.hero.stat.hospitals")} />
-            <Stat kpi="3" label={t("landing.hero.stat.languages")} />
+          <div className="mt-12 grid grid-cols-3 gap-4 text-center">
+            <HeroStat kpi="< 8 min" label={t("landing.hero.stat.response")} />
+            <HeroStat kpi="12+" label={t("landing.hero.stat.hospitals")} />
+            <HeroStat kpi="3" label={t("landing.hero.stat.languages")} />
           </div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8 }} className="mx-auto mt-14 max-w-4xl">
-          <div className="glass elevated relative rounded-3xl border p-2">
-            <div className="rounded-2xl bg-gradient-to-br from-primary/5 via-background to-emerald-500/5 p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="mx-auto mt-14 max-w-4xl"
+        >
+          <div className="rounded-3xl border border-white/15 bg-white/[0.06] p-2 backdrop-blur-xl shadow-2xl">
+            <div className="rounded-2xl bg-black/25 p-8">
               <div className="grid gap-6 md:grid-cols-3">
                 <PreviewCard icon={<Sparkles className="h-4 w-4" />} title={t("landing.preview.triage.title")} body={t("landing.preview.triage.body")} />
                 <PreviewCard icon={<MapPinned className="h-4 w-4" />} title={t("landing.preview.nearest.title")} body={t("landing.preview.nearest.body")} />
@@ -117,6 +159,17 @@ function Hero() {
         </motion.div>
       </div>
     </section>
+  );
+}
+
+function HeroStat({ kpi, label }: { kpi: string; label: string }) {
+  return (
+    <div>
+      <div className="font-display text-2xl font-semibold text-white md:text-3xl" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.6)" }}>
+        {kpi}
+      </div>
+      <div className="text-xs text-white/75">{label}</div>
+    </div>
   );
 }
 
@@ -131,10 +184,10 @@ function Stat({ kpi, label }: { kpi: string; label: string }) {
 
 function PreviewCard({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
   return (
-    <div className="rounded-xl border border-border bg-card/60 p-4">
-      <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">{icon}</div>
+    <div className="rounded-xl border border-white/15 bg-white/5 p-4 text-white backdrop-blur-sm">
+      <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">{icon}</div>
       <div className="font-medium">{title}</div>
-      <div className="mt-1 text-sm text-muted-foreground">{body}</div>
+      <div className="mt-1 text-sm text-white/70">{body}</div>
     </div>
   );
 }
