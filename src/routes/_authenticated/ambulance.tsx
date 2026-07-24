@@ -36,13 +36,14 @@ function AmbulancePage() {
     const nxt = next[cur];
     if (!nxt) return;
     setStatuses((s) => ({ ...s, [id]: nxt }));
-    const toastKey = ({
+    const toastMap: Record<Status, string> = {
+      pending: "amb.toast.accepted",
       accepted: "amb.toast.accepted",
       enroute: "amb.toast.enroute",
       arrived: "amb.toast.arrived",
       completed: "amb.toast.completed",
-    } as const)[nxt];
-    toast.success(t(toastKey, { dest: destLabel }));
+    };
+    toast.success(t(toastMap[nxt], { dest: destLabel }));
   };
 
   const navigateTo = (c: (typeof CASES)[number], destLabel: string) => {
