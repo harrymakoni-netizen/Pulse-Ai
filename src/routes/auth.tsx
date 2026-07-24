@@ -20,16 +20,11 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-type Role = "patient" | "hospital_staff" | "ambulance" | "admin";
-
 function AuthPage() {
   const t = useT();
-  const [mode, setMode] = useState<"sign-in" | "sign-up" | "forgot">("sign-in");
+  const [mode, setMode] = useState<"sign-in" | "forgot">("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [role, setRole] = useState<Role>("patient");
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
 
@@ -49,21 +44,6 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success(t("auth.toast.welcome"));
-        navigate({ to: "/dashboard", replace: true });
-      } else if (mode === "sign-up") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: { full_name: fullName, phone, role },
-          },
-        });
-        if (error) throw error;
-        toast.success(t("auth.toast.created"));
-        // Auto sign in (email confirm is disabled for demo)
-        const { error: sErr } = await supabase.auth.signInWithPassword({ email, password });
-        if (sErr) { setMode("sign-in"); return; }
         navigate({ to: "/dashboard", replace: true });
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -95,40 +75,15 @@ function AuthPage() {
             </div>
             <h1 className="mt-4 font-display text-2xl font-semibold">
               {mode === "sign-in" && t("auth.welcome")}
-              {mode === "sign-up" && t("auth.create")}
               {mode === "forgot" && t("auth.reset")}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {mode === "sign-in" && t("auth.sub.signin")}
-              {mode === "sign-up" && t("auth.sub.signup")}
               {mode === "forgot" && t("auth.sub.forgot")}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3">
-            {mode === "sign-up" && (
-              <>
-                <div>
-                  <Label htmlFor="fullName">{t("auth.fullName")}</Label>
-                  <Input id="fullName" required value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Tendai Moyo" />
-                </div>
-                <div>
-                  <Label htmlFor="phone">{t("auth.phone")}</Label>
-                  <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+263 77 000 0000" />
-                </div>
-                <div>
-                  <Label>{t("auth.role")}</Label>
-                  <div className="mt-1.5 grid grid-cols-2 gap-2">
-                    {(["patient","hospital_staff","ambulance","admin"] as Role[]).map((r) => (
-                      <button type="button" key={r} onClick={() => setRole(r)}
-                        className={`rounded-md border px-3 py-2 text-xs font-medium ${role === r ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:text-foreground"}`}>
-                        {r === "hospital_staff" ? t("auth.role.hospital") : r === "patient" ? t("auth.role.patient") : r === "ambulance" ? t("auth.role.ambulance") : t("auth.role.admin")}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
             <div>
               <Label htmlFor="email">{t("auth.email")}</Label>
               <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
@@ -145,17 +100,11 @@ function AuthPage() {
               </div>
             )}
             <Button type="submit" className="mt-2 w-full" disabled={busy}>
-              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : mode === "sign-in" ? t("auth.action.signin") : mode === "sign-up" ? t("auth.action.signup") : t("auth.action.reset")}
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : mode === "sign-in" ? t("auth.action.signin") : t("auth.action.reset")}
             </Button>
           </form>
 
           <div className="mt-5 text-center text-xs text-muted-foreground">
-            {mode === "sign-in" && (
-              <>{t("auth.switch.toSignup")} <button className="text-primary hover:underline" onClick={() => setMode("sign-up")}>{t("auth.action.signup")}</button></>
-            )}
-            {mode === "sign-up" && (
-              <>{t("auth.switch.toSignin")} <button className="text-primary hover:underline" onClick={() => setMode("sign-in")}>{t("auth.action.signin")}</button></>
-            )}
             {mode === "forgot" && (
               <button className="text-primary hover:underline" onClick={() => setMode("sign-in")}>{t("auth.switch.backSignin")}</button>
             )}

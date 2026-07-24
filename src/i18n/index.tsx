@@ -38,10 +38,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (isLang(stored)) {
-        setLangState(stored);
-        setHasChosen(true);
-      }
+      // Preload last chosen language for convenience, but always re-ask on load.
+      if (isLang(stored)) setLangState(stored);
     } catch { /* ignore */ }
   }, []);
 
