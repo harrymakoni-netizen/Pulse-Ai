@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useT } from "@/i18n";
 
 const styles = {
   low: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
@@ -8,10 +9,11 @@ const styles = {
 } as const;
 
 export function SeverityBadge({ severity, className }: { severity: keyof typeof styles; className?: string }) {
+  const t = useT();
   return (
     <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium uppercase tracking-wide", styles[severity], className)}>
       <span className={cn("h-1.5 w-1.5 rounded-full", severity === "critical" ? "pulse-alert" : "pulse-calm")} style={{ background: "currentColor" }} />
-      {severity}
+      {t(`severity.${severity}`)}
     </span>
   );
 }
