@@ -89,11 +89,12 @@ function MinistryDashboard() {
   const avgEta = (provinces.reduce((s, p) => s + p.avgEta, 0) / provinces.length).toFixed(1);
 
   const kpis = [
-    { icon: Activity, label: "Active emergencies", value: totalActive, sub: "+8% vs 24h" },
-    { icon: BedDouble, label: "Beds available", value: totalBeds, sub: "national capacity" },
-    { icon: Ambulance, label: "Ambulances on duty", value: totalAmbulances, sub: "12 in transit" },
-    { icon: Timer, label: "Avg response", value: `${avgEta} min`, sub: "national median" },
+    { icon: Activity, label: t("ministry.kpi.active"), value: totalActive, sub: t("ministry.kpi.active.sub") },
+    { icon: BedDouble, label: t("ministry.kpi.beds"), value: totalBeds, sub: t("ministry.kpi.beds.sub") },
+    { icon: Ambulance, label: t("ministry.kpi.amb"), value: totalAmbulances, sub: t("ministry.kpi.amb.sub") },
+    { icon: Timer, label: t("ministry.kpi.response"), value: `${avgEta} ${t("ministry.min")}`, sub: t("ministry.kpi.response.sub") },
   ];
+  const severityData = severitySplit.map((s) => ({ ...s, name: t(`severity.${s.key}`) }));
 
   return (
     <AppShell>
@@ -137,8 +138,8 @@ function MinistryDashboard() {
         <Panel
           className="lg:col-span-2"
           icon={<MapPin className="h-4 w-4" />}
-          title="National emergency heat map"
-          sub="Active emergencies by province"
+          title={t("ministry.panel.heatmap")}
+          sub={t("ministry.panel.heatmap.sub")}
         >
           <div className="grid gap-2 sm:grid-cols-2">
             {provinces.map((p) => {
@@ -153,12 +154,12 @@ function MinistryDashboard() {
                   <div>
                     <div className="text-sm font-medium">{p.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {p.ambulances} ambulances · {p.beds} beds · {p.avgEta} min ETA
+                      {p.ambulances} {t("ministry.units.ambulances")} · {p.beds} {t("ministry.units.beds")} · {p.avgEta} {t("ministry.units.minEta")}
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="font-display text-lg font-semibold">{p.active}</div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">active</div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("ministry.units.active")}</div>
                   </div>
                 </div>
               );
@@ -167,19 +168,19 @@ function MinistryDashboard() {
         </Panel>
 
         {/* Severity pie */}
-        <Panel icon={<Flame className="h-4 w-4" />} title="Severity distribution" sub="Last 24 hours">
+        <Panel icon={<Flame className="h-4 w-4" />} title={t("ministry.panel.severity")} sub={t("ministry.panel.severity.sub")}>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={severitySplit}
+                  data={severityData}
                   dataKey="value"
                   innerRadius={45}
                   outerRadius={80}
                   paddingAngle={3}
                 >
-                  {severitySplit.map((s) => (
-                    <Cell key={s.name} fill={s.color} />
+                  {severityData.map((s) => (
+                    <Cell key={s.key} fill={s.color} />
                   ))}
                 </Pie>
                 <Tooltip contentStyle={{ borderRadius: 8, borderColor: "var(--border)" }} />
@@ -193,8 +194,8 @@ function MinistryDashboard() {
         <Panel
           className="lg:col-span-2"
           icon={<TrendingUp className="h-4 w-4" />}
-          title="Emergencies over time"
-          sub="14-day request vs response volume"
+          title={t("ministry.panel.trend")}
+          sub={t("ministry.panel.trend.sub")}
         >
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -221,7 +222,7 @@ function MinistryDashboard() {
         </Panel>
 
         {/* Response bars */}
-        <Panel icon={<Timer className="h-4 w-4" />} title="Avg response by province" sub="Minutes (lower is better)">
+        <Panel icon={<Timer className="h-4 w-4" />} title={t("ministry.panel.avgResp")} sub={t("ministry.panel.avgResp.sub")}>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={provinces} layout="vertical" margin={{ left: 10 }}>
@@ -243,8 +244,8 @@ function MinistryDashboard() {
         <Panel
           className="lg:col-span-2"
           icon={<Activity className="h-4 w-4" />}
-          title="Disease category trends"
-          sub="Monthly incident counts by category"
+          title={t("ministry.panel.disease")}
+          sub={t("ministry.panel.disease.sub")}
         >
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -264,17 +265,17 @@ function MinistryDashboard() {
         </Panel>
 
         {/* AI Insights */}
-        <Panel icon={<Sparkles className="h-4 w-4" />} title="AI operational insights" sub="Generated from live data">
+        <Panel icon={<Sparkles className="h-4 w-4" />} title={t("ministry.panel.ai")} sub={t("ministry.panel.ai.sub")}>
           <ul className="space-y-3">
             {aiInsights.map((insight) => (
-              <li key={insight.title} className="rounded-xl border border-border bg-background/50 p-3">
+              <li key={insight.id} className="rounded-xl border border-border bg-background/50 p-3">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="text-sm font-medium">{insight.title}</div>
+                  <div className="text-sm font-medium">{t(`ministry.insight.${insight.id}.title`)}</div>
                   <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary">
-                    {insight.tag}
+                    {t(`ministry.insight.${insight.id}.tag`)}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">{insight.body}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t(`ministry.insight.${insight.id}.body`)}</p>
               </li>
             ))}
           </ul>
@@ -284,8 +285,8 @@ function MinistryDashboard() {
         <Panel
           className="lg:col-span-3"
           icon={<Building2 className="h-4 w-4" />}
-          title="Hospital capacity & fleet"
-          sub="Live snapshot across national partners"
+          title={t("ministry.panel.capacity")}
+          sub={t("ministry.panel.capacity.sub")}
         >
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -306,11 +307,11 @@ function MinistryDashboard() {
                 <div className="mt-2 flex items-baseline justify-between">
                   <div>
                     <div className="font-display text-lg font-semibold">{h.beds}</div>
-                    <div className="text-[10px] uppercase text-muted-foreground">beds free</div>
+                    <div className="text-[10px] uppercase text-muted-foreground">{t("ministry.units.bedsFree")}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-medium">{h.incoming}</div>
-                    <div className="text-[10px] uppercase text-muted-foreground">incoming</div>
+                    <div className="text-[10px] uppercase text-muted-foreground">{t("ministry.units.incoming")}</div>
                   </div>
                 </div>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
@@ -322,7 +323,7 @@ function MinistryDashboard() {
                     }}
                   />
                 </div>
-                <div className="mt-1 text-[10px] text-muted-foreground">{h.occupancy}% occupancy</div>
+                <div className="mt-1 text-[10px] text-muted-foreground">{h.occupancy}% {t("ministry.units.occupancy")}</div>
               </div>
             ))}
           </div>
