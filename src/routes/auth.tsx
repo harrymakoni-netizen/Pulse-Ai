@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { HeartPulse, Loader2 } from "lucide-react";
 import { LanguagePill, useT } from "@/i18n";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -21,6 +23,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const t = useT();
   const [busy, setBusy] = useState(false);
+  const [name, setName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +33,11 @@ function AuthPage() {
   }, [navigate]);
 
   async function handleDemoSignIn() {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      toast.error(t("auth.fullName"));
+      return;
+    }
     setBusy(true);
     const email = "demo@lifelineplus.app";
     const password = "lifeline-demo-2026";
@@ -41,6 +49,10 @@ function AuthPage() {
         const retry = await supabase.auth.signInWithPassword({ email, password });
         if (retry.error) throw retry.error;
       }
+      try {
+        await supabase.auth.updateUser({ data: { full_name: trimmed } });
+        window.localStorage.setItem("lifeline.displayName", trimmed);
+      } catch { /* ignore */ }
       toast.success(t("auth.toast.welcome"));
       navigate({ to: "/dashboard", replace: true });
     } catch (e) {
@@ -69,7 +81,19 @@ function AuthPage() {
             <p className="mt-1 text-sm text-muted-foreground">{t("auth.sub.signin")}</p>
           </div>
 
-          <Button onClick={handleDemoSignIn} className="mt-2 h-12 w-full text-base" disabled={busy}>
+          <div className="space-y-2 text-left">
+            <Label htmlFor="fullName">{t("auth.fullName")}</Label>
+            <Input
+              id="fullName"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={t("auth.fullName")}
+              autoComplete="name"
+              className="h-12"
+              onKeyDown={(e) => { if (e.key === "Enter") handleDemoSignIn(); }}
+            />
+          </div>
+          <Button onClick={handleDemoSignIn} className="mt-4 h-12 w-full text-base" disabled={busy || !name.trim()}>
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.action.signin")}
           </Button>
           <p className="mt-4 text-center text-xs text-muted-foreground">{t("auth.demoNote")}</p>
