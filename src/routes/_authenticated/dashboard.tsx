@@ -43,7 +43,7 @@ function Dashboard() {
         <div>
           <div className="text-sm text-muted-foreground">{t("dash.welcome")}</div>
           <h1 className="font-display text-2xl font-semibold md:text-3xl">
-            {profile.data?.full_name ?? profile.data?.email ?? t("dash.patient")}
+            {(typeof window !== "undefined" && localStorage.getItem("lifeline.displayName")) || profile.data?.full_name || profile.data?.email || t("dash.patient")}
           </h1>
         </div>
         {active ? (
