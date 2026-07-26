@@ -169,16 +169,6 @@ function NewEmergency() {
             </div>
             <Label htmlFor="txt">{t("emerg.new.describe")}</Label>
             <Textarea id="txt" rows={4} placeholder={t("emerg.new.describePh")} value={symptomsText} onChange={(e) => setSymptomsText(e.target.value)} className="mt-1.5" />
-            <div className="mt-3">
-              <Label>{t("common.language")}</Label>
-              <div className="mt-1.5 flex gap-2">
-                {(["en","sn","nd"] as const).map(l => (
-                  <button key={l} onClick={() => setLanguage(l)} className={`rounded-md border px-3 py-1.5 text-xs ${language === l ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"}`}>
-                    {l === "en" ? "English" : l === "sn" ? "Shona" : "Ndebele"}
-                  </button>
-                ))}
-              </div>
-            </div>
             <Footer t={t} next={() => setStep(2)} nextDisabled={symptoms.length === 0 && !symptomsText.trim()} />
           </StepWrap>
         )}
