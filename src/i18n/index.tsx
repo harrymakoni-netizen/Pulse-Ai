@@ -4,10 +4,12 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import { DICT, LANG_META, type Lang } from "./translations";
+import { Globe, Check } from "lucide-react";
 
 const STORAGE_KEY = "lifeline.lang";
 
@@ -76,26 +78,66 @@ export function useT() {
   return useI18n().t;
 }
 
-// Compact EN/SN/ND pill used in headers/nav.
+// Language selector: globe trigger that expands to reveal all languages.
 export function LanguagePill({ className = "" }: { className?: string }) {
   const { lang, setLang } = useI18n();
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onDoc(e: MouseEvent) {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    }
+    function onKey(e: KeyboardEvent) { if (e.key === "Escape") setOpen(false); }
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <div className={`flex items-center gap-1 rounded-full border border-border bg-card p-1 text-xs ${className}`}>
-      {(["en", "sn", "nd"] as const).map((l) => (
-        <button
-          key={l}
-          type="button"
-          onClick={() => setLang(l)}
-          aria-pressed={lang === l}
-          className={`rounded-full px-2.5 py-1 transition-colors ${
-            lang === l
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
+    <div ref={rootRef} className={`relative inline-block text-xs ${className}`}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label="Change language"
+        className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 font-medium text-foreground shadow-sm transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Globe className="h-3.5 w-3.5" aria-hidden="true" />
+        <span className="uppercase tracking-wide">{lang}</span>
+      </button>
+      {open ? (
+        <ul
+          role="listbox"
+          aria-label="Language"
+          className="absolute right-0 z-50 mt-2 min-w-[9rem] overflow-hidden rounded-xl border border-border bg-popover p-1 shadow-lg"
         >
-          {l.toUpperCase()}
-        </button>
-      ))}
+          {(["en", "sn", "nd"] as const).map((l) => (
+            <li key={l}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={lang === l}
+                onClick={() => { setLang(l); setOpen(false); }}
+                className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-secondary ${
+                  lang === l ? "text-primary" : "text-foreground"
+                }`}
+              >
+                <span className="flex flex-col">
+                  <span className="font-medium">{LANG_META[l].native}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{l}</span>
+                </span>
+                {lang === l ? <Check className="h-4 w-4" aria-hidden="true" /> : null}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }

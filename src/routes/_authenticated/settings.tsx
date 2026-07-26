@@ -41,7 +41,9 @@ function SettingsPage() {
 
   useEffect(() => {
     if (profile.data) {
-      setFullName(profile.data.full_name ?? ""); setPhone(profile.data.phone ?? ""); setBlood(profile.data.blood_type ?? "");
+      const displayName = typeof window !== "undefined" ? window.localStorage.getItem("lifeline.displayName") : null;
+      setFullName(profile.data.full_name || displayName || "");
+      setPhone(profile.data.phone ?? ""); setBlood(profile.data.blood_type ?? "");
       setAllergies((profile.data.allergies ?? []).join(", ")); setMeds((profile.data.medications ?? []).join(", "));
     }
   }, [profile.data]);
