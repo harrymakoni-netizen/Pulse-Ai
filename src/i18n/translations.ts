@@ -340,6 +340,7 @@ const en: Dict = {
   "emerg.new.continue": "Continue",
   "emerg.new.toastConfirmed": "Emergency confirmed. Ambulance being dispatched.",
   "emerg.new.toastFail": "AI triage failed",
+  "emerg.new.toastNetwork": "Network hiccup — please try again.",
   "emerg.new.toastCreateFail": "Could not create emergency",
   "emerg.sym.chestPain": "Chest pain",
   "emerg.sym.shortness": "Shortness of breath",
