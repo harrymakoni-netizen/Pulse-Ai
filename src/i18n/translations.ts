@@ -736,6 +736,7 @@ const sn: Dict = {
   "emerg.new.continue": "Enderera",
   "emerg.new.toastConfirmed": "Chikumbiro chasimbiswa. Ambulance yatumirwa.",
   "emerg.new.toastFail": "AI triage yakundikana",
+  "emerg.new.toastNetwork": "Dambudziko renetiweki — edzazve.",
   "emerg.new.toastCreateFail": "Hazvina kubudirira kugadzira chikumbiro",
   "emerg.sym.chestPain": "Kurwadziwa pachipfuva",
   "emerg.sym.shortness": "Kupererwa nemweya",
