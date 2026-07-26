@@ -65,12 +65,32 @@ function NewEmergency() {
 
   const assess = useMutation({
     mutationFn: async () => {
-      return await assessFn({ data: {
+      const payload = {
         symptoms, symptomsText, painLevel, age: typeof age === "number" ? age : undefined, medicalHistory: history, language,
-      }});
+      };
+      let lastErr: unknown;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          return await assessFn({ data: payload });
+        } catch (e) {
+          lastErr = e;
+          const msg = e instanceof Error ? e.message : String(e);
+          // Only retry transient network errors (Safari says "Load failed", others "Failed to fetch")
+          if (!/load failed|failed to fetch|network|timeout/i.test(msg)) throw e;
+          await new Promise((r) => setTimeout(r, 600 * (attempt + 1)));
+        }
+      }
+      throw lastErr instanceof Error ? lastErr : new Error("Network error");
     },
     onSuccess: (data) => { setAssessment(data); setStep(5); },
-    onError: (e) => toast.error(e instanceof Error ? e.message : t("emerg.new.toastFail")),
+    onError: (e) => {
+      const msg = e instanceof Error ? e.message : "";
+      const friendly = /load failed|failed to fetch|network|timeout/i.test(msg)
+        ? t("emerg.new.toastNetwork")
+        : msg || t("emerg.new.toastFail");
+      toast.error(friendly);
+      setStep(3);
+    },
   });
 
   const submit = useMutation({
