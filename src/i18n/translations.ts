@@ -1130,6 +1130,7 @@ const nd: Dict = {
   "emerg.new.continue": "Qhubeka",
   "emerg.new.toastConfirmed": "Isicelo siqinisekisiwe. I-ambulensi iyathunyelwa.",
   "emerg.new.toastFail": "I-AI triage ihlulekile",
+  "emerg.new.toastNetwork": "Inkinga yenethiwekhi — zama futhi.",
   "emerg.new.toastCreateFail": "Ayikwazanga ukudala isicelo",
   "emerg.sym.chestPain": "Ubuhlungu besifuba",
   "emerg.sym.shortness": "Ukuphelelwa umoya",
