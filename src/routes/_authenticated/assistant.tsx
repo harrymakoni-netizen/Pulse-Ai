@@ -117,7 +117,7 @@ const T = {
 const ttsLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
 
 function AssistantPage() {
-  const { lang, setLang } = useI18n();
+  const { lang } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
