@@ -27,10 +27,13 @@ function AuthPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/dashboard", replace: true });
-    });
-  }, [navigate]);
+    // Fresh session on every visit: sign out any lingering user and clear
+    // profile info persisted from a previous demo run.
+    (async () => {
+      try { await supabase.auth.signOut(); } catch { /* ignore */ }
+      try { window.localStorage.removeItem("lifeline.displayName"); } catch { /* ignore */ }
+    })();
+  }, []);
 
   async function handleDemoSignIn() {
     const trimmed = name.trim();
