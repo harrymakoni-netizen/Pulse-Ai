@@ -14,12 +14,12 @@ import { format } from "date-fns";
 import { useT } from "@/i18n";
 
 const TYPES = [
-  { key: "history", label: "History" },
-  { key: "prescription", label: "Prescriptions" },
-  { key: "vaccination", label: "Vaccinations" },
-  { key: "lab", label: "Lab Results" },
-  { key: "radiology", label: "Radiology" },
-  { key: "insurance", label: "Insurance" },
+  { key: "history", label: "History", singular: "history entry" },
+  { key: "prescription", label: "Prescriptions", singular: "prescription" },
+  { key: "vaccination", label: "Vaccinations", singular: "vaccination" },
+  { key: "lab", label: "Lab Results", singular: "lab result" },
+  { key: "radiology", label: "Radiology", singular: "radiology report" },
+  { key: "insurance", label: "Insurance", singular: "insurance record" },
 ];
 
 export const Route = createFileRoute("/_authenticated/records")({
@@ -82,7 +82,7 @@ function RecordsPage() {
                 ))}
               </div>
               <div className="rounded-2xl border border-border bg-card p-5">
-                <div className="mb-3 flex items-center gap-2 text-sm font-medium"><Plus className="h-4 w-4" /> Add {t.label.slice(0,-1).toLowerCase()}</div>
+                <div className="mb-3 flex items-center gap-2 text-sm font-medium"><Plus className="h-4 w-4" /> Add {t.singular}</div>
                 <div className="space-y-3">
                   <div>
                     <Label htmlFor="ttl">Title</Label>

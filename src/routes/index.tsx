@@ -3,7 +3,7 @@ import { LifeLineLogo } from "@/components/lifeline/logo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { LanguagePill, useT } from "@/i18n";
-import heroImage from "@/assets/hero-emergency.png.asset.json";
+import heroImage from "@/assets/hero-emergency-v2.png.asset.json";
 import {
   ShieldCheck,
   Ambulance,
