@@ -51,6 +51,7 @@ Age: ${data.age ?? "n/a"}
 Medical history: ${data.medicalHistory || "n/a"}`;
 
     const raw = await callChat({
+      model: "google/gemini-3.1-flash-lite",
       messages: [
         { role: "system", content: system },
         { role: "user", content: userMsg },
