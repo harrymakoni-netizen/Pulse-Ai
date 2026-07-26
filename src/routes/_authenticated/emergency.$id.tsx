@@ -11,6 +11,8 @@ import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
 import { Ambulance, ArrowLeft, CheckCircle2, Hospital, Timer, X, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useI18n } from "@/i18n";
+import { enUS } from "date-fns/locale";
 
 export const Route = createFileRoute("/_authenticated/emergency/$id")({
   head: () => ({ meta: [{ title: "Emergency status · LifeLine+" }] }),
@@ -23,6 +25,7 @@ function EmergencyDetail() {
   const { id } = useParams({ from: "/_authenticated/emergency/$id" });
   const qc = useQueryClient();
   const advanceFn = useServerFn(advanceEmergency);
+  const { t } = useI18n();
 
   const req = useQuery({
     queryKey: ["emergency", id],
@@ -61,28 +64,29 @@ function EmergencyDetail() {
   }, [req.data?.request?.status]);
 
   if (req.isLoading || !req.data?.request) {
-    return <AppShell><EcgLoader label="Loading emergency..." /></AppShell>;
+    return <AppShell><EcgLoader label={t("emergency.detail.loading")} /></AppShell>;
   }
   const r = req.data.request;
   const events = req.data.events;
   const isDone = r.status === "completed" || r.status === "cancelled";
+  const statusLabel = (s: string) => t(`emergency.status.${s}`);
 
   return (
     <AppShell>
-      <Link to="/dashboard" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" /> Dashboard</Link>
+      <Link to="/dashboard" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" /> {t("emergency.detail.back")}</Link>
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className={r.status === "completed" || r.status === "cancelled" ? "h-2 w-2 rounded-full bg-muted-foreground" : "pulse-alert h-2 w-2 rounded-full bg-[color:var(--alert)]"} />
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{r.status.replace(/_/g, " ")}</span>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{statusLabel(r.status)}</span>
           </div>
-          <h1 className="mt-2 font-display text-3xl font-semibold">Emergency in progress</h1>
-          <p className="text-sm text-muted-foreground">Started {formatDistanceToNow(new Date(r.created_at), { addSuffix: true })}</p>
+          <h1 className="mt-2 font-display text-3xl font-semibold">{t("emergency.detail.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("emergency.detail.started", { when: formatDistanceToNow(new Date(r.created_at), { addSuffix: true, locale: enUS }) })}</p>
         </div>
         <div className="flex items-center gap-3">
           <SeverityBadge severity={(r.severity ?? "medium") as "low"|"medium"|"high"|"critical"} />
           {!isDone && (
-            <Button variant="outline" size="sm" onClick={() => advance.mutate("cancelled")}><X className="mr-1 h-4 w-4" /> Cancel</Button>
+            <Button variant="outline" size="sm" onClick={() => advance.mutate("cancelled")}><X className="mr-1 h-4 w-4" /> {t("emergency.detail.cancel")}</Button>
           )}
         </div>
       </div>
@@ -91,7 +95,7 @@ function EmergencyDetail() {
         <div className="space-y-6">
           {/* Timeline */}
           <section className="rounded-2xl border border-border bg-card p-6">
-            <h2 className="mb-4 font-medium">Status timeline</h2>
+            <h2 className="mb-4 font-medium">{t("emergency.detail.timeline")}</h2>
             <ol className="space-y-4">
               {FLOW.map((step) => {
                 const ev = events.find(e => e.status === step);
@@ -106,7 +110,7 @@ function EmergencyDetail() {
                       <div className="mt-1 h-6 w-px bg-border last:hidden" />
                     </div>
                     <div>
-                      <div className={`text-sm ${done ? "font-medium" : "text-muted-foreground"} capitalize`}>{step.replace(/_/g, " ")}</div>
+                      <div className={`text-sm ${done ? "font-medium" : "text-muted-foreground"}`}>{statusLabel(step)}</div>
                       {ev ? <div className="text-xs text-muted-foreground">{ev.note} · {formatDistanceToNow(new Date(ev.created_at), { addSuffix: true })}</div> : null}
                     </div>
                   </li>
@@ -117,32 +121,32 @@ function EmergencyDetail() {
 
           {/* AI report */}
           <section className="rounded-2xl border border-border bg-card p-6">
-            <div className="mb-3 flex items-center gap-2 text-sm font-medium"><Sparkles className="h-4 w-4 text-primary" /> AI hospital handoff</div>
+            <div className="mb-3 flex items-center gap-2 text-sm font-medium"><Sparkles className="h-4 w-4 text-primary" /> {t("emergency.detail.ai")}</div>
             <div className="rounded-xl border border-dashed border-border bg-secondary/30 p-4 text-sm whitespace-pre-wrap">
-              {r.ai_report ?? "—"}
+              {r.ai_report ?? "..."}
             </div>
           </section>
         </div>
 
         <aside className="space-y-4">
           <motion.div layout className="rounded-2xl border border-border bg-card p-5">
-            <div className="flex items-center gap-2 text-sm font-medium"><Ambulance className="h-4 w-4 text-primary" /> Ambulance</div>
-            <div className="mt-2 text-2xl font-display font-semibold">{r.eta_minutes ?? "—"} min ETA</div>
-            <div className="text-xs text-muted-foreground">Status: <span className="capitalize">{r.status.replace(/_/g, " ")}</span></div>
+            <div className="flex items-center gap-2 text-sm font-medium"><Ambulance className="h-4 w-4 text-primary" /> {t("emergency.detail.ambulance")}</div>
+            <div className="mt-2 text-2xl font-display font-semibold">{t("emergency.detail.eta", { min: String(r.eta_minutes ?? "-") })}</div>
+            <div className="text-xs text-muted-foreground">{t("emergency.detail.statusLabel")}: <span>{statusLabel(r.status)}</span></div>
           </motion.div>
           <div className="rounded-2xl border border-border bg-card p-5">
-            <div className="flex items-center gap-2 text-sm font-medium"><Hospital className="h-4 w-4 text-primary" /> Receiving hospital</div>
+            <div className="flex items-center gap-2 text-sm font-medium"><Hospital className="h-4 w-4 text-primary" /> {t("emergency.detail.receiving")}</div>
             {r.hospital ? (
               <div className="mt-2 text-sm">
                 <div className="font-medium">{r.hospital.name}</div>
                 <div className="text-xs text-muted-foreground">{r.hospital.address}</div>
                 <a className="mt-2 inline-block text-xs text-primary" href={`tel:${r.hospital.phone ?? ""}`}>{r.hospital.phone}</a>
               </div>
-            ) : <div className="text-xs text-muted-foreground mt-2">Assigning...</div>}
+            ) : <div className="text-xs text-muted-foreground mt-2">{t("emergency.detail.assigning")}</div>}
           </div>
           <div className="rounded-2xl border border-border bg-card p-5 text-xs text-muted-foreground">
-            <div className="mb-1 flex items-center gap-2 text-sm font-medium text-foreground"><Timer className="h-4 w-4" /> Live updates every 5s</div>
-            Auto-progressing for demo realism. In production this reflects real dispatch signals.
+            <div className="mb-1 flex items-center gap-2 text-sm font-medium text-foreground"><Timer className="h-4 w-4" /> {t("emergency.detail.live")}</div>
+            {t("emergency.detail.demo")}
           </div>
         </aside>
       </div>
