@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LanguageProvider, LanguageWelcome, useT } from "@/i18n";
+import { AccessibilityWidget } from "@/components/accessibility/accessibility-panel";
 
 function NotFoundComponent() {
   const t = useT();
@@ -134,8 +135,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
-        <Outlet />
+        <div id="main-content">
+          <Outlet />
+        </div>
         <LanguageWelcome />
+        <AccessibilityWidget />
         <Toaster richColors position="top-right" />
       </LanguageProvider>
     </QueryClientProvider>
