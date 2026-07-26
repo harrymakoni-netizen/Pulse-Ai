@@ -56,6 +56,7 @@ function SiteHeader() {
           <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">{t("landing.nav.faq")}</a>
         </nav>
         <div className="flex items-center gap-2">
+          <LanguagePill />
           <Button asChild variant="ghost" size="sm"><Link to="/auth">{t("common.signIn")}</Link></Button>
         </div>
       </div>
@@ -129,9 +130,6 @@ function Hero() {
                 {t("landing.hero.cta.more")} <ArrowRight className="ml-1 h-4 w-4" />
               </a>
             </Button>
-          </div>
-          <div className="mt-5 flex justify-center">
-            <LanguagePill className="border-white/25 bg-white/10 text-white backdrop-blur-md" />
           </div>
           <div className="mt-12 grid grid-cols-3 gap-4 text-center">
             <HeroStat kpi="< 8 min" label={t("landing.hero.stat.response")} />
