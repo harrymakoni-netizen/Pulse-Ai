@@ -426,6 +426,31 @@ const en: Dict = {
   "ministry.insight.3.title": "Cardiac cluster near Chitungwiza",
   "ministry.insight.3.body": "AI detected a statistically significant cluster of cardiac events near Chitungwiza in the last 72h. Recommend a targeted screening campaign.",
   "ministry.insight.3.tag": "Cluster",
+
+  // Emergency detail
+  "emergency.detail.back": "Dashboard",
+  "emergency.detail.title": "Emergency in progress",
+  "emergency.detail.started": "Started {when}",
+  "emergency.detail.cancel": "Cancel",
+  "emergency.detail.timeline": "Status timeline",
+  "emergency.detail.ai": "AI hospital handoff",
+  "emergency.detail.ambulance": "Ambulance",
+  "emergency.detail.eta": "{min} min ETA",
+  "emergency.detail.statusLabel": "Status",
+  "emergency.detail.receiving": "Receiving hospital",
+  "emergency.detail.assigning": "Assigning...",
+  "emergency.detail.live": "Live updates every 5s",
+  "emergency.detail.demo": "Auto-progressing for demo realism. In production this reflects real dispatch signals.",
+  "emergency.detail.loading": "Loading emergency...",
+  "emergency.status.requested": "Requested",
+  "emergency.status.assessed": "Assessed",
+  "emergency.status.hospital_notified": "Hospital notified",
+  "emergency.status.dispatched": "Dispatched",
+  "emergency.status.en_route": "En route",
+  "emergency.status.arrived": "Arrived",
+  "emergency.status.transporting": "Transporting",
+  "emergency.status.completed": "Completed",
+  "emergency.status.cancelled": "Cancelled",
 };
 
 const sn: Dict = {
