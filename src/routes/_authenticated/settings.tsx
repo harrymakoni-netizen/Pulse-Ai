@@ -137,7 +137,7 @@ function SettingsPage() {
             <Row label="Dark mode" desc="Softer palette for low-light environments"><Switch checked={darkMode} onCheckedChange={setDarkMode} /></Row>
             <Row label="Push notifications" desc="Emergency alerts and hospital acceptance"><Switch defaultChecked /></Row>
             <Row label="SMS fallback" desc="Send SMS when data is unavailable"><Switch defaultChecked /></Row>
-            <Row label="Two-factor authentication" desc="Coming soon — extra layer for your account"><Button variant="outline" size="sm" disabled><Shield className="mr-1 h-4 w-4" /> Set up</Button></Row>
+            <Row label="Two-factor authentication" desc="Coming soon, extra layer for your account"><Button variant="outline" size="sm" disabled><Shield className="mr-1 h-4 w-4" /> Set up</Button></Row>
             <Row label="Delete account" desc="Permanently remove your LifeLine+ account and data"><Button variant="destructive" size="sm" disabled>Delete</Button></Row>
           </div>
         </section>
