@@ -9,7 +9,6 @@ import {
   Sparkles,
   User as UserIcon,
   Loader2,
-  Languages,
   Mic,
   Volume2,
   VolumeX,
