@@ -119,10 +119,10 @@ export function AccessibilityWidget() {
         aria-label="Open accessibility menu"
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="fixed bottom-4 right-4 z-[140] inline-flex h-14 w-14 items-center justify-center rounded-full bg-black text-white shadow-xl ring-2 ring-white/40 transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--alert)] md:bottom-6 md:right-6"
+        className="fixed bottom-3 right-3 z-[140] inline-flex h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-xl ring-2 ring-white/40 transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--alert)] md:bottom-6 md:right-6 md:h-14 md:w-14"
       >
-        <Accessibility className="h-6 w-6" aria-hidden="true" />
-        <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-[color:var(--alert)] ring-2 ring-white" />
+        <Accessibility className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
+        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-[color:var(--alert)] ring-2 ring-white md:h-3 md:w-3" />
       </button>
 
       {open ? (
