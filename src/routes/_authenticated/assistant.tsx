@@ -9,7 +9,6 @@ import {
   Sparkles,
   User as UserIcon,
   Loader2,
-  Languages,
   Mic,
   Volume2,
   VolumeX,
@@ -118,7 +117,7 @@ const T = {
 const ttsLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
 
 function AssistantPage() {
-  const { lang, setLang } = useI18n();
+  const { lang } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -302,18 +301,6 @@ function AssistantPage() {
           >
             {ttsEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
           </Button>
-          <div className="flex items-center gap-1 rounded-full border border-border bg-card p-1 text-xs">
-            <Languages className="ml-2 h-3.5 w-3.5 text-muted-foreground" />
-            {(["en", "sn", "nd"] as const).map((l) => (
-              <button
-                key={l}
-                onClick={() => setLang(l)}
-                className={`rounded-full px-3 py-1 transition-colors ${lang === l ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
