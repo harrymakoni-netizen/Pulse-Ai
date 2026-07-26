@@ -16,7 +16,7 @@ import { EcgLoader } from "@/components/lifeline/ecg-loader";
 import { listHospitals } from "@/lib/hospitals.functions";
 import { assessEmergency, createEmergencyRequest, type AiAssessment } from "@/lib/emergency.functions";
 import { useServerFn as tanUseServerFn } from "@tanstack/react-start";
-import { useT } from "@/i18n";
+import { useI18n } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
@@ -45,7 +45,7 @@ const SYMPTOM_TAGS: Array<{ id: string; key: string }> = [
 type Step = 1 | 2 | 3 | 4 | 5;
 
 function NewEmergency() {
-  const t = useT();
+  const { t, lang: language } = useI18n();
   const [step, setStep] = useState<Step>(1);
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [symptomsText, setSymptomsText] = useState("");
@@ -55,7 +55,6 @@ function NewEmergency() {
   const [coords, setCoords] = useState<{ lat?: number; lng?: number; label?: string }>({});
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
-  const [language, setLanguage] = useState<"en"|"sn"|"nd">("en");
   const [assessment, setAssessment] = useState<AiAssessment | null>(null);
   const navigate = useNavigate();
 
