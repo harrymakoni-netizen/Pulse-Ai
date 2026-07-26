@@ -56,6 +56,13 @@ function AuthPage() {
         await supabase.auth.updateUser({ data: { full_name: trimmed } });
         window.localStorage.setItem("lifeline.displayName", trimmed);
       } catch { /* ignore */ }
+      // Fresh session: wipe any lingering emergency requests from prior demo runs.
+      try {
+        const { data: u } = await supabase.auth.getUser();
+        if (u.user) {
+          await supabase.from("emergency_requests").delete().eq("patient_id", u.user.id);
+        }
+      } catch { /* ignore */ }
       toast.success(t("auth.toast.welcome"));
       navigate({ to: "/dashboard", replace: true });
     } catch (e) {
