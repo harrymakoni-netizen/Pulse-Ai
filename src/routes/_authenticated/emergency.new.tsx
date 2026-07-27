@@ -205,14 +205,8 @@ function NewEmergency() {
               <div className="text-sm font-medium">{t("emerg.new.media")}</div>
               <p className="mt-0.5 text-xs text-muted-foreground">{t("emerg.new.mediaHint")}</p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-                  <Camera className="h-3.5 w-3.5" /> {t("emerg.new.uploadPhoto")}
-                  <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
-                </label>
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-                  <Video className="h-3.5 w-3.5" /> {t("emerg.new.uploadVideo")}
-                  <input type="file" accept="video/*" className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
-                </label>
+                <MediaButton kind="image" label={t("emerg.new.uploadPhoto")} onFiles={handleFiles} />
+                <MediaButton kind="video" label={t("emerg.new.uploadVideo")} onFiles={handleFiles} />
                 {mediaBusy && <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"><Loader2 className="h-3 w-3 animate-spin" /> {t("emerg.new.mediaProcessing")}</span>}
               </div>
               {images.length > 0 && (
