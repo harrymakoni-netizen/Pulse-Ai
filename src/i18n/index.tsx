@@ -12,6 +12,7 @@ import { DICT, LANG_META, type Lang } from "./translations";
 import { Globe, Check } from "lucide-react";
 
 const STORAGE_KEY = "lifeline.lang";
+const STORAGE_CHOSEN_KEY = "lifeline.hasChosen";
 
 type Ctx = {
   lang: Lang;
@@ -40,15 +41,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
-      // Preload last chosen language for convenience, but always re-ask on load.
+      const chosen = window.localStorage.getItem(STORAGE_CHOSEN_KEY);
       if (isLang(stored)) setLangState(stored);
+      if (chosen === "true") setHasChosen(true);
     } catch { /* ignore */ }
   }, []);
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l);
     setHasChosen(true);
-    try { window.localStorage.setItem(STORAGE_KEY, l); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(STORAGE_KEY, l);
+      window.localStorage.setItem(STORAGE_CHOSEN_KEY, "true");
+    } catch { /* ignore */ }
     if (typeof document !== "undefined") document.documentElement.lang = l;
   }, []);
 
