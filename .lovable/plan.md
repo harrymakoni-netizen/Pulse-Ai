@@ -1,42 +1,51 @@
-## Recommendation
+## Goal
+Let users attach a photo (or short video frame) of an injury/symptom during triage so the AI can factor visual evidence into its assessment.
 
-Client-side queue + retry is a good choice for a demo — but on its own it only hides bursts, it doesn't prevent them. When 300 tabs all fire at once, the gateway still sees 300 requests in the same second and returns 429s; the client just retries. That works, but users wait 5–15s with a spinner and no feedback.
+## Feasibility
+Yes. Lovable AI Gateway supports multimodal input — Gemini 3.x Flash models accept images in the chat `messages` array as `image_url` blocks (https URL or base64 data URL). Video is supported by Gemini too, but browser video files are large and slow; the pragmatic path is **images + an auto-captured frame from a short video**, sent as base64 to the existing triage server function.
 
-I'd suggest **client queue + retry with backoff, paired with a tiny server-side smoother**. Together they give the smoothest demo experience without touching billing or infra.
+## Scope (what will change)
 
-## What I'll build
+### 1. Emergency triage flow (`src/routes/_authenticated/emergency/new.tsx`)
+- Add a new "Photo/Video (optional)" field on Step 1 (under the description textarea).
+- Accept up to 3 images (JPEG/PNG/WebP, ≤5 MB each) OR 1 short video (≤10 s, ≤15 MB).
+- For video: extract 1–2 still frames client-side via a hidden `<canvas>` (no server transcoding needed on the Worker runtime).
+- Show thumbnails with a remove button. Compress large images client-side to ~1280 px longest edge before upload.
 
-### 1. Client-side request queue (`src/lib/ai-queue.ts`)
-- Small singleton queue wrapping calls to `assessEmergency` and `/api/chat`.
-- Max N concurrent in-flight requests per browser tab (e.g. 2). Extra calls wait in FIFO.
-- Exponential backoff with jitter on 429/503: 1s → 2s → 4s → 8s, max 4 retries.
-- On final failure, surface a clear translated toast ("AI busy, please try again") instead of a raw error.
+### 2. AI triage server function (`src/lib/emergency.functions.ts`)
+- Extend the input schema with `images: string[]` (base64 data URLs).
+- Switch the triage model to a vision-capable one (`google/gemini-3.6-flash` or `google/gemini-3.1-flash-lite` — both accept images) and build the user message as a multimodal `content` array (`text` + `image_url` blocks) instead of a plain string.
+- Update the system prompt so the model considers visual cues (visible bleeding, swelling, burns, rash, deformity) and calls out any image quality issues.
+- Keep the existing Zod-validated JSON output shape unchanged so the rest of the UI keeps working.
 
-### 2. UX feedback during wait
-- In `emergency.new.tsx` and `assistant.tsx`, show queue position / "AI is thinking…" state so users see progress instead of a frozen button.
-- Keep the SOS button disabled while queued so users don't double-fire.
-
-### 3. Light server-side smoother (`/api/chat` + `assessEmergency`)
-- Per-request 429 detection: if the gateway returns 429, translate it into a structured `{ retryAfterMs }` response so the client backs off intelligently instead of guessing.
-- No queue on the server (edge workers are stateless); just clean error propagation.
+### 3. Storage decision
+- **Do not persist images by default** — pass them straight to the model as base64 and discard. This avoids new storage buckets, RLS policy work, and PII retention concerns for a demo.
+- Optionally (only if you want it): save to a private `triage-media` Supabase Storage bucket linked to the emergency request. Not included unless you say yes.
 
 ### 4. i18n
-- Add 4 new keys (EN/SN/ND): `ai.busy`, `ai.retrying`, `ai.queued`, `ai.failed`.
+- Add keys for the new UI: `emerg.new.media`, `emerg.new.mediaHint`, `emerg.new.addPhoto`, `emerg.new.addVideo`, `emerg.new.remove`, `emerg.new.mediaTooLarge`, `emerg.new.mediaAnalyzing`, in English, Shona, Ndebele.
 
-## What I won't change
+### 5. Assistant chat (`src/routes/_authenticated/assistant.tsx`)
+- Out of scope for this plan unless you want image chat there too — happy to add in a follow-up.
 
-- No changes to the AI model, prompts, or triage logic.
-- No infra/billing changes.
-- No demo fallback (option 3) — happy to add later if you want a guaranteed "never fails on stage" mode.
-
-## Realistic outcome after this
-
-- 300 concurrent triages spread over ~10–20 seconds: all succeed, users see a brief "AI is thinking…" state.
-- 300 in the exact same instant: still all succeed, worst-case wait ~8–12s for the last few users.
-- Zero raw error toasts on stage under normal burst conditions.
+## Non-goals
+- No new storage bucket, no DB schema change, no persistence of uploaded media.
+- No real-time video streaming; only still images (and stills extracted from a short clip).
+- No changes to hospital selection, contact, or timeline logic.
 
 ## Technical notes
+- Gateway multimodal shape:
+  ```
+  { role: "user", content: [
+      { type: "text", text: "<symptoms/context>" },
+      { type: "image_url", image_url: { url: "data:image/jpeg;base64,..." } }
+  ]}
+  ```
+- Client compression: draw to `<canvas>` at max 1280 px, `toBlob("image/jpeg", 0.82)`, then `FileReader` → data URL.
+- Keep total request body under ~4 MB; enforce cap before send and show a friendly "compress or remove one" toast.
+- Reuse the existing `runAi` queue + backoff — no new rate-limit logic.
 
-- Queue lives in module scope so it's shared across components in one tab (each browser has its own queue — that's fine, the gateway limit is global so per-tab throttling still helps).
-- Backoff reads `Retry-After` header when present, falls back to exponential.
-- All existing call sites (`assessEmergency`, `useChat` transport, transcribe) route through the queue with a single wrapper.
+## Question before I build
+Video is heavier and mostly redundant vs. 1–3 clear photos. Do you want:
+- **A) Photos only** (simplest, fastest, recommended), or
+- **B) Photos + short video (≤10 s) with auto-frame extraction**?
