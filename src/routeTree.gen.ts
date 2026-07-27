@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AboutAiRouteImport } from './routes/about.ai'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedRecordsRouteImport } from './routes/_authenticated/records'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
@@ -56,6 +57,11 @@ const ApiTranscribeRoute = ApiTranscribeRouteImport.update({
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutAiRoute = AboutAiRouteImport.update({
+  id: '/about/ai',
+  path: '/about/ai',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/records': typeof AuthenticatedRecordsRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/about/ai': typeof AboutAiRoute
   '/api/chat': typeof ApiChatRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/emergency/$id': typeof AuthenticatedEmergencyIdRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/records': typeof AuthenticatedRecordsRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/about/ai': typeof AboutAiRoute
   '/api/chat': typeof ApiChatRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/emergency/$id': typeof AuthenticatedEmergencyIdRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/records': typeof AuthenticatedRecordsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/about/ai': typeof AboutAiRoute
   '/api/chat': typeof ApiChatRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/_authenticated/emergency/$id': typeof AuthenticatedEmergencyIdRoute
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/records'
     | '/settings'
+    | '/about/ai'
     | '/api/chat'
     | '/api/transcribe'
     | '/emergency/$id'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/records'
     | '/settings'
+    | '/about/ai'
     | '/api/chat'
     | '/api/transcribe'
     | '/emergency/$id'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notifications'
     | '/_authenticated/records'
     | '/_authenticated/settings'
+    | '/about/ai'
     | '/api/chat'
     | '/api/transcribe'
     | '/_authenticated/emergency/$id'
@@ -259,6 +271,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  AboutAiRoute: typeof AboutAiRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiTranscribeRoute: typeof ApiTranscribeRoute
 }
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       path: '/api/chat'
       fullPath: '/api/chat'
       preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/ai': {
+      id: '/about/ai'
+      path: '/about/ai'
+      fullPath: '/about/ai'
+      preLoaderRoute: typeof AboutAiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/settings': {
@@ -441,6 +461,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  AboutAiRoute: AboutAiRoute,
   ApiChatRoute: ApiChatRoute,
   ApiTranscribeRoute: ApiTranscribeRoute,
 }
