@@ -19,6 +19,13 @@ import { useServerFn as tanUseServerFn } from "@tanstack/react-start";
 import { useI18n } from "@/i18n";
 import { runAi } from "@/lib/ai-queue";
 import { compressImage, extractVideoFrames } from "@/lib/media";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useRef } from "react";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
