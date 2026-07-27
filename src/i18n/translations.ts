@@ -451,6 +451,12 @@ const en: Dict = {
   "emergency.status.transporting": "Transporting",
   "emergency.status.completed": "Completed",
   "emergency.status.cancelled": "Cancelled",
+
+  // AI queue / retry states
+  "ai.busy": "AI is thinking...",
+  "ai.queued": "Waiting in line for AI...",
+  "ai.retrying": "AI is busy, retrying...",
+  "ai.failed": "AI is overloaded. Please try again in a moment.",
 };
 
 const sn: Dict = {
