@@ -13,18 +13,22 @@ import {
   Volume2,
   VolumeX,
   RotateCcw,
+  Camera,
+  Video,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/i18n";
 import { fetchAi } from "@/lib/ai-queue";
+import { compressImage, extractVideoFrames } from "@/lib/media";
 
 export const Route = createFileRoute("/_authenticated/assistant")({
   head: () => ({ meta: [{ title: "AI Assistant · LifeLine+" }] }),
   component: AssistantPage,
 });
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; images?: string[] };
 type Lang = "en" | "sn" | "nd";
 
 const langNames = { en: "English", sn: "Shona", nd: "Ndebele" } as const;
@@ -57,6 +61,14 @@ const T = {
     micUnavailable: "Microphone not available on this device.",
     tooShort: "Recording too short, please try again.",
     transcribeFailed: "Could not transcribe audio. Please try again.",
+    takePhoto: "Take photo",
+    uploadPhoto: "Upload photo",
+    recordVideo: "Record video",
+    uploadVideo: "Upload video",
+    mediaProcessing: "Preparing media...",
+    mediaTooLarge: "That file is too large.",
+    mediaTooMany: "Maximum 3 attachments.",
+    removeAttachment: "Remove attachment",
   },
   sn: {
     eyebrow: "Mubatsiri weAI weMamergency",
@@ -84,6 +96,14 @@ const T = {
     micUnavailable: "Maikorofoni haiwanikwe padhivhaisi iyi.",
     tooShort: "Zvakanyanya kupfupika, edzazve.",
     transcribeFailed: "Hazvina kubudirira kushandurira izwi. Edzazve.",
+    takePhoto: "Tora mufananidzo",
+    uploadPhoto: "Tumira mufananidzo",
+    recordVideo: "Rekodha vhidhiyo",
+    uploadVideo: "Tumira vhidhiyo",
+    mediaProcessing: "Kugadzirira midhiya...",
+    mediaTooLarge: "Faira iri rakakura.",
+    mediaTooMany: "Zvinosvika zvitatu chete.",
+    removeAttachment: "Bvisa",
   },
   nd: {
     eyebrow: "Umsizi we-AI wesimo esiphuthumayo",
@@ -111,6 +131,14 @@ const T = {
     micUnavailable: "Imakrofoni ayikho kule idivayisi.",
     tooShort: "Ukurekhoda kufishane kakhulu, zama futhi.",
     transcribeFailed: "Yehlulekile ukuphendulela. Zama futhi.",
+    takePhoto: "Thatha isithombe",
+    uploadPhoto: "Layisha isithombe",
+    recordVideo: "Qopha ividiyo",
+    uploadVideo: "Layisha ividiyo",
+    mediaProcessing: "Kulungiswa imidiya...",
+    mediaTooLarge: "Ifayela likhulu kakhulu.",
+    mediaTooMany: "Okuphezulu okuthathu.",
+    removeAttachment: "Susa",
   },
 } as const;
 
@@ -123,6 +151,8 @@ function AssistantPage() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [ttsEnabled, setTtsEnabled] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
+  const [mediaBusy, setMediaBusy] = useState(false);
   const t = T[lang];
 
   // Recording state
@@ -167,17 +197,22 @@ function AssistantPage() {
 
   async function send(text: string) {
     const trimmed = text.trim();
-    if (!trimmed || busy) return;
-    const next: Msg[] = [...messages, { role: "user", content: trimmed }];
+    if ((!trimmed && images.length === 0) || busy) return;
+    const attached = images;
+    const next: Msg[] = [...messages, { role: "user", content: trimmed || "(image attached)", images: attached }];
     setMessages(next);
     setInput("");
+    setImages([]);
     setBusy(true);
     setMessages((m) => [...m, { role: "assistant", content: "" }]);
     try {
       const res = await fetchAi("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next, language: lang }),
+        body: JSON.stringify({
+          messages: next.map((m) => ({ role: m.role, content: m.content, images: m.images })),
+          language: lang,
+        }),
       }, {
         onQueued: () => toast.info(tGlobal("ai.queued")),
         onRetry: () => toast.info(tGlobal("ai.retrying")),
@@ -200,8 +235,37 @@ function AssistantPage() {
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Chat failed");
       setMessages((m) => m.slice(0, -1));
+      setImages(attached);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setMediaBusy(true);
+    try {
+      const next: string[] = [];
+      for (const file of Array.from(files)) {
+        if (images.length + next.length >= 3) { toast.error(t.mediaTooMany); break; }
+        if (file.type.startsWith("video/")) {
+          if (file.size > 25 * 1024 * 1024) { toast.error(t.mediaTooLarge); continue; }
+          const frames = await extractVideoFrames(file, 2);
+          for (const f of frames) {
+            if (images.length + next.length >= 3) break;
+            next.push(f);
+          }
+        } else if (file.type.startsWith("image/")) {
+          if (file.size > 10 * 1024 * 1024) { toast.error(t.mediaTooLarge); continue; }
+          const compressed = await compressImage(file, 1280, 0.82);
+          next.push(compressed);
+        }
+      }
+      if (next.length) setImages((prev) => [...prev, ...next].slice(0, 3));
+    } catch {
+      toast.error(t.mediaTooLarge);
+    } finally {
+      setMediaBusy(false);
     }
   }
 
@@ -353,6 +417,13 @@ function AssistantPage() {
                       : "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm"
                   }
                 >
+                  {m.images && m.images.length > 0 && (
+                    <div className="mb-2 flex flex-wrap gap-1.5">
+                      {m.images.map((src, j) => (
+                        <img key={j} src={src} alt="attachment" className="h-20 w-20 rounded-lg object-cover" />
+                      ))}
+                    </div>
+                  )}
                   {m.content || (busy && i === messages.length - 1 ? <Dots /> : null)}
                 </div>
                 {m.role === "user" && (
@@ -409,8 +480,31 @@ function AssistantPage() {
                 e.preventDefault();
                 send(input);
               }}
-              className="flex items-end gap-2 border-t border-border p-4"
+              className="border-t border-border p-4"
             >
+              {images.length > 0 && (
+                <div className="mb-2 flex flex-wrap gap-2">
+                  {images.map((src, i) => (
+                    <div key={i} className="relative overflow-hidden rounded-lg border border-border">
+                      <img src={src} alt="attachment" className="h-16 w-16 object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setImages((prev) => prev.filter((_, j) => j !== i))}
+                        aria-label={t.removeAttachment}
+                        className="absolute right-0.5 top-0.5 rounded-full bg-black/60 p-0.5 text-white hover:bg-black/80"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                  {mediaBusy && (
+                    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                      <Loader2 className="h-3 w-3 animate-spin" /> {t.mediaProcessing}
+                    </span>
+                  )}
+                </div>
+              )}
+              <div className="flex items-end gap-2">
               {hasMic && (
                 <Button
                   type="button"
@@ -424,6 +518,14 @@ function AssistantPage() {
                   <Mic className="h-4 w-4" />
                 </Button>
               )}
+              <label className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label={t.uploadPhoto}>
+                <Camera className="h-4 w-4" />
+                <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
+              </label>
+              <label className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label={t.uploadVideo}>
+                <Video className="h-4 w-4" />
+                <input type="file" accept="video/*" className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
+              </label>
               <Textarea
                 ref={textareaRef}
                 rows={1}
@@ -438,9 +540,10 @@ function AssistantPage() {
                 placeholder={t.placeholder}
                 className="min-h-11 resize-none"
               />
-              <Button type="submit" size="icon" disabled={busy || !input.trim()} aria-label={t.send}>
+              <Button type="submit" size="icon" disabled={busy || (!input.trim() && images.length === 0)} aria-label={t.send}>
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
+              </div>
             </form>
           )}
         </div>

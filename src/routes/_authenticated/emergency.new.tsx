@@ -18,6 +18,7 @@ import { assessEmergency, createEmergencyRequest, type AiAssessment } from "@/li
 import { useServerFn as tanUseServerFn } from "@tanstack/react-start";
 import { useI18n } from "@/i18n";
 import { runAi } from "@/lib/ai-queue";
+import { compressImage, extractVideoFrames } from "@/lib/media";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
@@ -198,12 +199,20 @@ function NewEmergency() {
               <p className="mt-0.5 text-xs text-muted-foreground">{t("emerg.new.mediaHint")}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-                  <Camera className="h-3.5 w-3.5" /> {t("emerg.new.addPhoto")}
+                  <Camera className="h-3.5 w-3.5" /> {t("emerg.new.takePhoto")}
                   <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
                 </label>
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-                  <Video className="h-3.5 w-3.5" /> {t("emerg.new.addVideo")}
+                  <Camera className="h-3.5 w-3.5" /> {t("emerg.new.uploadPhoto")}
+                  <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
+                </label>
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
+                  <Video className="h-3.5 w-3.5" /> {t("emerg.new.recordVideo")}
                   <input type="file" accept="video/*" capture="environment" className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
+                </label>
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
+                  <Video className="h-3.5 w-3.5" /> {t("emerg.new.uploadVideo")}
+                  <input type="file" accept="video/*" className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
                 </label>
                 {mediaBusy && <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"><Loader2 className="h-3 w-3 animate-spin" /> {t("emerg.new.mediaProcessing")}</span>}
               </div>
@@ -367,48 +376,3 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
   return 2*R*Math.asin(Math.sqrt(a));
 }
 
-async function compressImage(file: File, maxSize = 1280, quality = 0.82): Promise<string> {
-  const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
-  const w = Math.round(bitmap.width * scale);
-  const h = Math.round(bitmap.height * scale);
-  const canvas = document.createElement("canvas");
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext("2d")!;
-  ctx.drawImage(bitmap, 0, 0, w, h);
-  bitmap.close?.();
-  return canvas.toDataURL("image/jpeg", quality);
-}
-
-async function extractVideoFrames(file: File, count = 2): Promise<string[]> {
-  const url = URL.createObjectURL(file);
-  try {
-    const video = document.createElement("video");
-    video.src = url; video.muted = true; video.playsInline = true; video.preload = "auto";
-    await new Promise<void>((resolve, reject) => {
-      video.onloadedmetadata = () => resolve();
-      video.onerror = () => reject(new Error("video load failed"));
-    });
-    const duration = Math.min(video.duration || 0, 10);
-    const times = count === 1 ? [duration * 0.5] : [duration * 0.25, duration * 0.7];
-    const frames: string[] = [];
-    const w = Math.min(1280, video.videoWidth);
-    const scale = w / video.videoWidth;
-    const h = Math.round(video.videoHeight * scale);
-    const canvas = document.createElement("canvas");
-    canvas.width = w; canvas.height = h;
-    const ctx = canvas.getContext("2d")!;
-    for (const time of times) {
-      await new Promise<void>((resolve) => {
-        const onSeek = () => { video.removeEventListener("seeked", onSeek); resolve(); };
-        video.addEventListener("seeked", onSeek);
-        video.currentTime = Math.max(0, Math.min(time, (video.duration || 0) - 0.05));
-      });
-      ctx.drawImage(video, 0, 0, w, h);
-      frames.push(canvas.toDataURL("image/jpeg", 0.82));
-    }
-    return frames;
-  } finally {
-    URL.revokeObjectURL(url);
-  }
-}

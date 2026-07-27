@@ -1,23 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { streamChat, type ChatMessage } from "@/lib/ai-gateway.server";
 
+type IncomingMessage = { role: "user" | "assistant" | "system"; content: string; images?: string[] };
+
 export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = (await request.json()) as { messages?: ChatMessage[]; language?: "en"|"sn"|"nd" };
+        const body = (await request.json()) as { messages?: IncomingMessage[]; language?: "en"|"sn"|"nd" };
         const lang = body.language ?? "en";
         const langName = { en: "English", sn: "Shona (chiShona)", nd: "Ndebele (isiNdebele)" }[lang];
+        const incoming = body.messages ?? [];
+        const hasImages = incoming.some((m) => m.images && m.images.length > 0);
         const system: ChatMessage = {
           role: "system",
           content: `You are LifeLine+ AI, a calm, professional emergency healthcare assistant for Zimbabwe.
 You help users understand symptoms, provide first-aid guidance, and coordinate emergency care.
 Always respond in ${langName}. Ask focused questions one at a time. Use short paragraphs and clear bullet points.
+If the user attaches photos or video frames, examine them for visible bleeding, swelling, burns, rash, deformity, wound depth, discoloration, or other clinical signs and factor those observations into your reply. If image quality is poor or unrelated, say so briefly.
 If symptoms sound critical (chest pain with radiation, stroke signs FAST, severe bleeding, unresponsive, anaphylaxis, active seizure), tell the user to press the SOS button immediately and call 999 or 112.
 Be honest about your limits. You do not replace a clinician.`,
         };
-        const messages = [system, ...(body.messages ?? [])];
-        const upstream = await streamChat({ messages });
+        const converted: ChatMessage[] = incoming.map((m) => {
+          if (m.images && m.images.length > 0) {
+            return {
+              role: m.role,
+              content: [
+                { type: "text", text: m.content || "(image attached)" },
+                ...m.images.map((url) => ({ type: "image_url" as const, image_url: { url } })),
+              ],
+            } as ChatMessage;
+          }
+          return { role: m.role, content: m.content } as ChatMessage;
+        });
+        const messages = [system, ...converted];
+        const upstream = await streamChat({
+          messages,
+          ...(hasImages ? { model: "google/gemini-3.6-flash" } : {}),
+        });
         if (!upstream.ok || !upstream.body) {
           // Propagate transient statuses so the client queue can back off intelligently.
           if (upstream.status === 429 || upstream.status === 503) {
