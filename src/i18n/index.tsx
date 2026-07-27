@@ -50,7 +50,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const setLang = useCallback((l: Lang) => {
     setLangState(l);
     setHasChosen(true);
-    try { window.localStorage.setItem(STORAGE_KEY, l); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(STORAGE_KEY, l);
+      window.localStorage.setItem(STORAGE_CHOSEN_KEY, "true");
+    } catch { /* ignore */ }
     if (typeof document !== "undefined") document.documentElement.lang = l;
   }, []);
 
