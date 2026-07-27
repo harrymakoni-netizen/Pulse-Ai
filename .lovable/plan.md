@@ -1,51 +1,35 @@
 ## Goal
-Let users attach a photo (or short video frame) of an injury/symptom during triage so the AI can factor visual evidence into its assessment.
+Allow attaching photos/videos from the device gallery (in addition to camera capture) on the emergency triage flow, and add the same photo/video attachment capability to the AI Assistant chat so the AI can analyze the media.
 
-## Feasibility
-Yes. Lovable AI Gateway supports multimodal input — Gemini 3.x Flash models accept images in the chat `messages` array as `image_url` blocks (https URL or base64 data URL). Video is supported by Gemini too, but browser video files are large and slow; the pragmatic path is **images + an auto-captured frame from a short video**, sent as base64 to the existing triage server function.
+## Changes
 
-## Scope (what will change)
+### 1. Emergency triage (`src/routes/_authenticated/emergency.new.tsx`)
+Currently the photo/video inputs use `capture="environment"`, which on mobile forces the camera and hides the gallery. Split into two controls per media type:
+- "Take photo" (camera) and "Upload photo" (gallery) — remove `capture` on the upload input.
+- "Record video" (camera) and "Upload video" (gallery).
+Keep the existing compression / frame extraction / 3-image cap logic unchanged. Add new i18n keys (`emerg.new.takePhoto`, `emerg.new.uploadPhoto`, `emerg.new.recordVideo`, `emerg.new.uploadVideo`) in en/sn/nd.
 
-### 1. Emergency triage flow (`src/routes/_authenticated/emergency/new.tsx`)
-- Add a new "Photo/Video (optional)" field on Step 1 (under the description textarea).
-- Accept up to 3 images (JPEG/PNG/WebP, ≤5 MB each) OR 1 short video (≤10 s, ≤15 MB).
-- For video: extract 1–2 still frames client-side via a hidden `<canvas>` (no server transcoding needed on the Worker runtime).
-- Show thumbnails with a remove button. Compress large images client-side to ~1280 px longest edge before upload.
+### 2. AI Assistant media attachments (`src/routes/_authenticated/assistant.tsx`)
+- Add attach buttons next to the mic: "Take/Upload photo" and "Record/Upload video" (same 4-button pattern as triage), with a small preview strip above the composer showing thumbnails + remove (X).
+- Reuse the `compressImage` and `extractVideoFrames` helpers — extract them into `src/lib/media.ts` so both pages share one implementation.
+- Cap 3 images per message, same size limits and toasts.
+- On send: include images in the request body and clear them after successful send.
+- Add i18n keys for the assistant attach labels and preview aria-labels.
 
-### 2. AI triage server function (`src/lib/emergency.functions.ts`)
-- Extend the input schema with `images: string[]` (base64 data URLs).
-- Switch the triage model to a vision-capable one (`google/gemini-3.6-flash` or `google/gemini-3.1-flash-lite` — both accept images) and build the user message as a multimodal `content` array (`text` + `image_url` blocks) instead of a plain string.
-- Update the system prompt so the model considers visual cues (visible bleeding, swelling, burns, rash, deformity) and calls out any image quality issues.
-- Keep the existing Zod-validated JSON output shape unchanged so the rest of the UI keeps working.
+### 3. Chat API (`src/routes/api/chat.ts`) + gateway
+- Accept optional `images: string[]` on the latest user message from the assistant request body. When present, rewrite the last user message's `content` into the OpenAI multimodal blocks shape (`[{type:"text",...}, {type:"image_url",...}]`) and switch the model to `google/gemini-3.6-flash` (vision-capable) for that request only. Text-only requests keep the current fast model.
+- Update the system prompt to instruct the model to describe visible clinical signs when an image is attached, mirroring the triage prompt guidance.
+- No changes needed in `ai-gateway.server.ts` (already forwards `messages` as-is).
 
-### 3. Storage decision
-- **Do not persist images by default** — pass them straight to the model as base64 and discard. This avoids new storage buckets, RLS policy work, and PII retention concerns for a demo.
-- Optionally (only if you want it): save to a private `triage-media` Supabase Storage bucket linked to the emergency request. Not included unless you say yes.
+### 4. Shared helper (`src/lib/media.ts` — new file)
+Export `compressImage(file, maxSize?, quality?)` and `extractVideoFrames(file, count?)` moved verbatim from `emergency.new.tsx`. Update `emergency.new.tsx` to import from here.
 
-### 4. i18n
-- Add keys for the new UI: `emerg.new.media`, `emerg.new.mediaHint`, `emerg.new.addPhoto`, `emerg.new.addVideo`, `emerg.new.remove`, `emerg.new.mediaTooLarge`, `emerg.new.mediaAnalyzing`, in English, Shona, Ndebele.
+## Out of scope
+- No DB/schema changes (assistant messages aren't persisted; triage already stores `images` inside `ai_summary` via the assessment payload only — no change).
+- No changes to voice/transcription, i18n architecture, or triage business logic.
+- No new dependencies.
 
-### 5. Assistant chat (`src/routes/_authenticated/assistant.tsx`)
-- Out of scope for this plan unless you want image chat there too — happy to add in a follow-up.
-
-## Non-goals
-- No new storage bucket, no DB schema change, no persistence of uploaded media.
-- No real-time video streaming; only still images (and stills extracted from a short clip).
-- No changes to hospital selection, contact, or timeline logic.
-
-## Technical notes
-- Gateway multimodal shape:
-  ```
-  { role: "user", content: [
-      { type: "text", text: "<symptoms/context>" },
-      { type: "image_url", image_url: { url: "data:image/jpeg;base64,..." } }
-  ]}
-  ```
-- Client compression: draw to `<canvas>` at max 1280 px, `toBlob("image/jpeg", 0.82)`, then `FileReader` → data URL.
-- Keep total request body under ~4 MB; enforce cap before send and show a friendly "compress or remove one" toast.
-- Reuse the existing `runAi` queue + backoff — no new rate-limit logic.
-
-## Question before I build
-Video is heavier and mostly redundant vs. 1–3 clear photos. Do you want:
-- **A) Photos only** (simplest, fastest, recommended), or
-- **B) Photos + short video (≤10 s) with auto-frame extraction**?
+## Verification
+- Build passes.
+- Manual: on triage step 1, "Upload photo" opens the gallery on mobile; "Take photo" opens the camera. Same for video.
+- Manual: on Assistant, attach an image, send a message, confirm the AI reply references the image; remove-attachment (X) works; 3-image cap enforced.
