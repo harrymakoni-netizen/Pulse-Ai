@@ -13,18 +13,22 @@ import {
   Volume2,
   VolumeX,
   RotateCcw,
+  Camera,
+  Video,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/i18n";
 import { fetchAi } from "@/lib/ai-queue";
+import { compressImage, extractVideoFrames } from "@/lib/media";
 
 export const Route = createFileRoute("/_authenticated/assistant")({
   head: () => ({ meta: [{ title: "AI Assistant · LifeLine+" }] }),
   component: AssistantPage,
 });
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; images?: string[] };
 type Lang = "en" | "sn" | "nd";
 
 const langNames = { en: "English", sn: "Shona", nd: "Ndebele" } as const;
@@ -57,6 +61,14 @@ const T = {
     micUnavailable: "Microphone not available on this device.",
     tooShort: "Recording too short, please try again.",
     transcribeFailed: "Could not transcribe audio. Please try again.",
+    takePhoto: "Take photo",
+    uploadPhoto: "Upload photo",
+    recordVideo: "Record video",
+    uploadVideo: "Upload video",
+    mediaProcessing: "Preparing media...",
+    mediaTooLarge: "That file is too large.",
+    mediaTooMany: "Maximum 3 attachments.",
+    removeAttachment: "Remove attachment",
   },
   sn: {
     eyebrow: "Mubatsiri weAI weMamergency",
@@ -84,6 +96,14 @@ const T = {
     micUnavailable: "Maikorofoni haiwanikwe padhivhaisi iyi.",
     tooShort: "Zvakanyanya kupfupika, edzazve.",
     transcribeFailed: "Hazvina kubudirira kushandurira izwi. Edzazve.",
+    takePhoto: "Tora mufananidzo",
+    uploadPhoto: "Tumira mufananidzo",
+    recordVideo: "Rekodha vhidhiyo",
+    uploadVideo: "Tumira vhidhiyo",
+    mediaProcessing: "Kugadzirira midhiya...",
+    mediaTooLarge: "Faira iri rakakura.",
+    mediaTooMany: "Zvinosvika zvitatu chete.",
+    removeAttachment: "Bvisa",
   },
   nd: {
     eyebrow: "Umsizi we-AI wesimo esiphuthumayo",
@@ -111,6 +131,14 @@ const T = {
     micUnavailable: "Imakrofoni ayikho kule idivayisi.",
     tooShort: "Ukurekhoda kufishane kakhulu, zama futhi.",
     transcribeFailed: "Yehlulekile ukuphendulela. Zama futhi.",
+    takePhoto: "Thatha isithombe",
+    uploadPhoto: "Layisha isithombe",
+    recordVideo: "Qopha ividiyo",
+    uploadVideo: "Layisha ividiyo",
+    mediaProcessing: "Kulungiswa imidiya...",
+    mediaTooLarge: "Ifayela likhulu kakhulu.",
+    mediaTooMany: "Okuphezulu okuthathu.",
+    removeAttachment: "Susa",
   },
 } as const;
 
@@ -123,6 +151,8 @@ function AssistantPage() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [ttsEnabled, setTtsEnabled] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
+  const [mediaBusy, setMediaBusy] = useState(false);
   const t = T[lang];
 
   // Recording state
@@ -167,17 +197,22 @@ function AssistantPage() {
 
   async function send(text: string) {
     const trimmed = text.trim();
-    if (!trimmed || busy) return;
-    const next: Msg[] = [...messages, { role: "user", content: trimmed }];
+    if ((!trimmed && images.length === 0) || busy) return;
+    const attached = images;
+    const next: Msg[] = [...messages, { role: "user", content: trimmed || "(image attached)", images: attached }];
     setMessages(next);
     setInput("");
+    setImages([]);
     setBusy(true);
     setMessages((m) => [...m, { role: "assistant", content: "" }]);
     try {
       const res = await fetchAi("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next, language: lang }),
+        body: JSON.stringify({
+          messages: next.map((m) => ({ role: m.role, content: m.content, images: m.images })),
+          language: lang,
+        }),
       }, {
         onQueued: () => toast.info(tGlobal("ai.queued")),
         onRetry: () => toast.info(tGlobal("ai.retrying")),
@@ -200,8 +235,37 @@ function AssistantPage() {
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Chat failed");
       setMessages((m) => m.slice(0, -1));
+      setImages(attached);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setMediaBusy(true);
+    try {
+      const next: string[] = [];
+      for (const file of Array.from(files)) {
+        if (images.length + next.length >= 3) { toast.error(t.mediaTooMany); break; }
+        if (file.type.startsWith("video/")) {
+          if (file.size > 25 * 1024 * 1024) { toast.error(t.mediaTooLarge); continue; }
+          const frames = await extractVideoFrames(file, 2);
+          for (const f of frames) {
+            if (images.length + next.length >= 3) break;
+            next.push(f);
+          }
+        } else if (file.type.startsWith("image/")) {
+          if (file.size > 10 * 1024 * 1024) { toast.error(t.mediaTooLarge); continue; }
+          const compressed = await compressImage(file, 1280, 0.82);
+          next.push(compressed);
+        }
+      }
+      if (next.length) setImages((prev) => [...prev, ...next].slice(0, 3));
+    } catch {
+      toast.error(t.mediaTooLarge);
+    } finally {
+      setMediaBusy(false);
     }
   }
 
