@@ -35,7 +35,13 @@ export async function callChat(opts: {
   });
   if (!res.ok) {
     const text = await res.text();
-    if (res.status === 429) throw new Error("AI rate limit exceeded. Please try again shortly.");
+    if (res.status === 429 || res.status === 503) {
+      const ra = Number(res.headers.get("retry-after"));
+      const err = new Error(`AI busy (${res.status})`) as Error & { __retryable: boolean; retryAfterMs?: number };
+      err.__retryable = true;
+      if (Number.isFinite(ra) && ra > 0) err.retryAfterMs = ra * 1000;
+      throw err;
+    }
     if (res.status === 402) throw new Error("AI credits exhausted. Please add credits to continue.");
     throw new Error(`AI gateway error ${res.status}: ${text.slice(0, 300)}`);
   }
