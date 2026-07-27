@@ -3,7 +3,10 @@
 
 export type Lang = "en" | "sn" | "nd";
 
-export const LANG_META: Record<Lang, { name: string; native: string; tagline: string; locale: string }> = {
+export const LANG_META: Record<
+  Lang,
+  { name: string; native: string; tagline: string; locale: string }
+> = {
   en: { name: "English", native: "English", tagline: "Continue in English", locale: "en-ZW" },
   sn: { name: "Shona", native: "chiShona", tagline: "Ramba muchiShona", locale: "sn-ZW" },
   nd: { name: "Ndebele", native: "isiNdebele", tagline: "Qhubeka ngesiNdebele", locale: "nd-ZW" },
@@ -14,7 +17,8 @@ type Dict = Record<string, string>;
 const en: Dict = {
   // Welcome / picker
   "welcome.title": "Choose your language",
-  "welcome.subtitle": "LifeLine+ speaks English, Shona and Ndebele. Pick the one you're most comfortable in, you can change it any time.",
+  "welcome.subtitle":
+    "LifeLine+ speaks English, Shona and Ndebele. Pick the one you're most comfortable in, you can change it any time.",
   "welcome.continue": "Continue",
 
   // Common
@@ -41,7 +45,8 @@ const en: Dict = {
   "landing.hero.badge": "AI for Impact Zimbabwe",
   "landing.hero.title1": "Every second counts.",
   "landing.hero.title2": "AI-powered emergency healthcare.",
-  "landing.hero.body": "LifeLine+ connects patients, hospitals, and ambulances using artificial intelligence to reduce emergency response times and improve patient outcomes.",
+  "landing.hero.body":
+    "LifeLine+ connects patients, hospitals, and ambulances using artificial intelligence to reduce emergency response times and improve patient outcomes.",
   "landing.hero.cta.sos": "Request emergency assistance",
   "landing.hero.cta.more": "Learn more",
   "landing.hero.stat.response": "Avg response",
@@ -60,11 +65,14 @@ const en: Dict = {
   "landing.how.sub": "Three coordinated steps, powered by AI and connected to the network.",
   "landing.how.step": "Step",
   "landing.how.s1.title": "Request help",
-  "landing.how.s1.body": "Press the SOS button. Share symptoms with the AI in English, Shona or Ndebele.",
+  "landing.how.s1.body":
+    "Press the SOS button. Share symptoms with the AI in English, Shona or Ndebele.",
   "landing.how.s2.title": "AI triage",
-  "landing.how.s2.body": "The assistant assesses severity, gives first aid, and generates a hospital handoff.",
+  "landing.how.s2.body":
+    "The assistant assesses severity, gives first aid, and generates a hospital handoff.",
   "landing.how.s3.title": "Coordinated response",
-  "landing.how.s3.body": "The nearest suitable hospital is notified and the ambulance is dispatched with your report.",
+  "landing.how.s3.body":
+    "The nearest suitable hospital is notified and the ambulance is dispatched with your report.",
 
   // Features
   "landing.features.eyebrow": "Features",
@@ -86,7 +94,8 @@ const en: Dict = {
   "landing.benefits.eyebrow": "Benefits",
   "landing.benefits.title": "Built for everyone in the emergency chain",
   "landing.benefits.b1.title": "For patients",
-  "landing.benefits.b1.body": "Faster help, in your language, with the hospital that fits your case.",
+  "landing.benefits.b1.body":
+    "Faster help, in your language, with the hospital that fits your case.",
   "landing.benefits.b2.title": "For hospitals",
   "landing.benefits.b2.body": "Structured handoff reports arrive before the patient does.",
   "landing.benefits.b3.title": "For ambulances",
@@ -97,7 +106,8 @@ const en: Dict = {
   // AI Technology
   "landing.ai.eyebrow": "AI Technology",
   "landing.ai.title": "Triage that thinks like a clinician.",
-  "landing.ai.body": "Our AI is trained to ask the right questions, weigh red flags, and produce a structured handoff. It works alongside human dispatchers, not instead of them.",
+  "landing.ai.body":
+    "Our AI is trained to ask the right questions, weigh red flags, and produce a structured handoff. It works alongside human dispatchers, not instead of them.",
   "landing.ai.p1": "Severity classification (Low → Critical)",
   "landing.ai.p2": "First-aid instructions while help is on the way",
   "landing.ai.p3": "Structured hospital handoff (vitals, allergies, timeline)",
@@ -113,30 +123,38 @@ const en: Dict = {
   "landing.ai.chat.u1": "Chest pain for 20 minutes, sweating.",
   "landing.ai.chat.a1.pre": "Severity: ",
   "landing.ai.chat.a1.sev": "Critical",
-  "landing.ai.chat.a1.post": ". Sit upright, chew aspirin if not allergic, stay still. Dispatching to Parirenyatwa Cardiology in 6 min.",
+  "landing.ai.chat.a1.post":
+    ". Sit upright, chew aspirin if not allergic, stay still. Dispatching to Parirenyatwa Cardiology in 6 min.",
   "landing.ai.chat.u2": "I don't know what to do.",
-  "landing.ai.chat.a2": "It's okay. Sit down and stay calm. The ambulance is on its way. Let's go through what to do.",
+  "landing.ai.chat.a2":
+    "It's okay. Sit down and stay calm. The ambulance is on its way. Let's go through what to do.",
   "landing.tst.1.name": "Dr. Tendai M.",
   "landing.tst.1.role": "Emergency Physician, Parirenyatwa",
-  "landing.tst.1.quote": "The AI handoff report saves us critical minutes. Patients arrive with context already documented.",
+  "landing.tst.1.quote":
+    "The AI handoff report saves us critical minutes. Patients arrive with context already documented.",
   "landing.tst.2.name": "Rutendo S.",
   "landing.tst.2.role": "Patient, Harare",
-  "landing.tst.2.quote": "When my father collapsed, LifeLine+ dispatched an ambulance and matched us with the right hospital in minutes.",
+  "landing.tst.2.quote":
+    "When my father collapsed, LifeLine+ dispatched an ambulance and matched us with the right hospital in minutes.",
   "landing.tst.3.name": "Blessing N.",
   "landing.tst.3.role": "Paramedic, Bulawayo",
   "landing.tst.3.quote": "AI-prioritized calls mean I know exactly what to prepare for on the way.",
   "landing.faq.eyebrow": "FAQ",
   "landing.faq.title": "Frequently asked questions",
   "landing.faq.q1": "Is LifeLine+ available across Zimbabwe?",
-  "landing.faq.a1": "We are onboarding hospitals city by city. Today we cover Harare, Bulawayo, Mutare, Gweru, Masvingo and Victoria Falls with more coming.",
+  "landing.faq.a1":
+    "We are onboarding hospitals city by city. Today we cover Harare, Bulawayo, Mutare, Gweru, Masvingo and Victoria Falls with more coming.",
   "landing.faq.q2": "Does the AI replace medical professionals?",
-  "landing.faq.a2": "No. The AI supports dispatchers and hospital staff with faster triage and structured handoffs. All care decisions remain human.",
+  "landing.faq.a2":
+    "No. The AI supports dispatchers and hospital staff with faster triage and structured handoffs. All care decisions remain human.",
   "landing.faq.q3": "How is my data protected?",
-  "landing.faq.a3": "Records are encrypted, access is scoped by role, and you control what is shared during an emergency.",
+  "landing.faq.a3":
+    "Records are encrypted, access is scoped by role, and you control what is shared during an emergency.",
   "landing.faq.q4": "Which languages are supported?",
   "landing.faq.a4": "English, Shona (chiShona) and Ndebele (isiNdebele).",
   "landing.faq.q5": "Do I need a smartphone?",
-  "landing.faq.a5": "LifeLine+ works on any modern browser, and we support SMS fallback for low-bandwidth areas.",
+  "landing.faq.a5":
+    "LifeLine+ works on any modern browser, and we support SMS fallback for low-bandwidth areas.",
   "landing.footer.tagline": "AI-powered emergency healthcare coordination. Care · Support · Hope.",
   "landing.footer.product": "Product",
   "landing.footer.company": "Company",
@@ -200,7 +218,8 @@ const en: Dict = {
   "dash.viewLive": "view live status",
   "dash.ready": "Emergency ready",
   "dash.needHelp": "Need urgent help?",
-  "dash.needHelpBody": "Press SOS to start AI triage, share your location, and dispatch the nearest ambulance.",
+  "dash.needHelpBody":
+    "Press SOS to start AI triage, share your location, and dispatch the nearest ambulance.",
   "dash.sos": "SOS",
   "dash.profile": "Medical profile",
   "dash.bloodType": "Blood type",
@@ -284,12 +303,15 @@ const en: Dict = {
   "asst.startVoice": "Start voice input",
   "asst.placeholder": "Describe what's happening...",
   "asst.emergencyTitle": "Emergency?",
-  "asst.emergencyBody": "If this is life-threatening, use the SOS flow, it dispatches an ambulance.",
+  "asst.emergencyBody":
+    "If this is life-threatening, use the SOS flow, it dispatches an ambulance.",
   "asst.startSos": "Start SOS",
   "asst.voiceTitle": "Voice input",
-  "asst.voiceBody": "Tap the microphone and speak. When you stop, your words are transcribed and sent.",
+  "asst.voiceBody":
+    "Tap the microphone and speak. When you stop, your words are transcribed and sent.",
   "asst.replay": "Replay last response",
-  "asst.disclaimer": "LifeLine+ AI supports English, Shona, and Ndebele. This assistant does not replace professional medical advice.",
+  "asst.disclaimer":
+    "LifeLine+ AI supports English, Shona, and Ndebele. This assistant does not replace professional medical advice.",
   "asst.transcribing": "Transcribing your voice…",
   "asst.micDenied": "Microphone access denied. Please allow it in your browser settings.",
   "asst.micUnavailable": "Microphone not available on this device.",
@@ -322,7 +344,8 @@ const en: Dict = {
   "emerg.new.recordVideo": "Record video",
   "emerg.new.uploadVideo": "Upload video",
   "emerg.new.remove": "Remove",
-  "emerg.new.mediaTooLarge": "That file is too large. Please choose a smaller photo or shorter clip.",
+  "emerg.new.mediaTooLarge":
+    "That file is too large. Please choose a smaller photo or shorter clip.",
   "emerg.new.mediaTooMany": "Maximum 3 attachments.",
   "emerg.new.mediaProcessing": "Preparing media...",
   "emerg.new.severity": "How severe is it?",
@@ -430,13 +453,16 @@ const en: Dict = {
   "ministry.units.incoming": "incoming",
   "ministry.units.occupancy": "occupancy",
   "ministry.insight.1.title": "Respiratory spike in Harare Metro",
-  "ministry.insight.1.body": "Respiratory-related emergencies are up 22% week-over-week in Harare's high-density suburbs. Consider pre-positioning oxygen supplies at Parirenyatwa and Sally Mugabe.",
+  "ministry.insight.1.body":
+    "Respiratory-related emergencies are up 22% week-over-week in Harare's high-density suburbs. Consider pre-positioning oxygen supplies at Parirenyatwa and Sally Mugabe.",
   "ministry.insight.1.tag": "Trend",
   "ministry.insight.2.title": "Ambulance shortfall in Mat. South",
-  "ministry.insight.2.body": "Response times in Matabeleland South exceed 15 min for 34% of dispatches. Reallocating 2 ambulances from Bulawayo urban would reduce median ETA by ~3.4 min.",
+  "ministry.insight.2.body":
+    "Response times in Matabeleland South exceed 15 min for 34% of dispatches. Reallocating 2 ambulances from Bulawayo urban would reduce median ETA by ~3.4 min.",
   "ministry.insight.2.tag": "Resource",
   "ministry.insight.3.title": "Cardiac cluster near Chitungwiza",
-  "ministry.insight.3.body": "AI detected a statistically significant cluster of cardiac events near Chitungwiza in the last 72h. Recommend a targeted screening campaign.",
+  "ministry.insight.3.body":
+    "AI detected a statistically significant cluster of cardiac events near Chitungwiza in the last 72h. Recommend a targeted screening campaign.",
   "ministry.insight.3.tag": "Cluster",
 
   // Emergency detail
@@ -452,7 +478,8 @@ const en: Dict = {
   "emergency.detail.receiving": "Receiving hospital",
   "emergency.detail.assigning": "Assigning...",
   "emergency.detail.live": "Live updates every 5s",
-  "emergency.detail.demo": "Auto-progressing for demo realism. In production this reflects real dispatch signals.",
+  "emergency.detail.demo":
+    "Auto-progressing for demo realism. In production this reflects real dispatch signals.",
   "emergency.detail.loading": "Loading emergency...",
   "emergency.status.requested": "Requested",
   "emergency.status.assessed": "Assessed",
@@ -473,7 +500,8 @@ const en: Dict = {
 
 const sn: Dict = {
   "welcome.title": "Sarudza mutauro wako",
-  "welcome.subtitle": "LifeLine+ inotaura Chirungu, chiShona nechiNdebele. Sarudza wauri kunyatsonzwisisa, unogona kuchinja chero nguva.",
+  "welcome.subtitle":
+    "LifeLine+ inotaura Chirungu, chiShona nechiNdebele. Sarudza wauri kunyatsonzwisisa, unogona kuchinja chero nguva.",
   "welcome.continue": "Enderera mberi",
 
   "common.signIn": "Pinda",
@@ -498,16 +526,19 @@ const sn: Dict = {
   "landing.hero.badge": "AI for Impact Zimbabwe",
   "landing.hero.title1": "Sekondi imwe neimwe inokosha.",
   "landing.hero.title2": "Kurapwa kwemamergency kunotungamirwa neAI.",
-  "landing.hero.body": "LifeLine+ inobatanidza varwere, zvipatara, ne ambulance ichishandisa AI kuderedza nguva yekusvika kwerubatsiro nekuvandudza mhedzisiro yevarwere.",
+  "landing.hero.body":
+    "LifeLine+ inobatanidza varwere, zvipatara, ne ambulance ichishandisa AI kuderedza nguva yekusvika kwerubatsiro nekuvandudza mhedzisiro yevarwere.",
   "landing.hero.cta.sos": "Kumbira rubatsiro rwemamergency",
   "landing.hero.cta.more": "Dzidza zvakawanda",
   "landing.hero.stat.response": "Nguva yekusvika",
   "landing.hero.stat.hospitals": "Zvipatara zvebatana",
   "landing.hero.stat.languages": "Mitauro",
   "landing.preview.triage.title": "AI Triage",
-  "landing.preview.triage.body": "Kukura kwedambudziko kunoongororwa mumaminetsi mashoma kubva kuzviratidzo zvako.",
+  "landing.preview.triage.body":
+    "Kukura kwedambudziko kunoongororwa mumaminetsi mashoma kubva kuzviratidzo zvako.",
   "landing.preview.nearest.title": "Chipatara Chiri Pedyo",
-  "landing.preview.nearest.body": "Chinosarudzwa nekuda kwehunyanzvi, chinhambwe, uye mibhedha iripo.",
+  "landing.preview.nearest.body":
+    "Chinosarudzwa nekuda kwehunyanzvi, chinhambwe, uye mibhedha iripo.",
   "landing.preview.dispatch.title": "Kutumira Nguva Ino",
   "landing.preview.dispatch.body": "Tevera ambulance yako kubva pakutumirwa kusvika yasvika.",
 
@@ -516,11 +547,14 @@ const sn: Dict = {
   "landing.how.sub": "Matanho matatu akabatanidzwa, achiendeswa neAI uye akabatanidzwa nenetiweki.",
   "landing.how.step": "Danho",
   "landing.how.s1.title": "Kumbira rubatsiro",
-  "landing.how.s1.body": "Dzvanya bhatani reSOS. Taura zviratidzo neAI muChirungu, chiShona kana chiNdebele.",
+  "landing.how.s1.body":
+    "Dzvanya bhatani reSOS. Taura zviratidzo neAI muChirungu, chiShona kana chiNdebele.",
   "landing.how.s2.title": "AI triage",
-  "landing.how.s2.body": "Mubatsiri anoongorora kukura, anopa rubatsiro rwekutanga, uye anogadzira gwaro rechipatara.",
+  "landing.how.s2.body":
+    "Mubatsiri anoongorora kukura, anopa rubatsiro rwekutanga, uye anogadzira gwaro rechipatara.",
   "landing.how.s3.title": "Rubatsiro rwakarongeka",
-  "landing.how.s3.body": "Chipatara chiri pedyo chinozivisiwa uye ambulance inotumirwa nemushumo wako.",
+  "landing.how.s3.body":
+    "Chipatara chiri pedyo chinozivisiwa uye ambulance inotumirwa nemushumo wako.",
 
   "landing.features.eyebrow": "Zvinoita",
   "landing.features.title": "Chirongwa chizere chekurapa nhamburiko",
@@ -531,7 +565,8 @@ const sn: Dict = {
   "landing.features.f3.title": "Kusarudza Chipatara Chakakwana",
   "landing.features.f3.body": "Kunosarudzwa nechinhambwe, hunyanzvi, nemibhedha iripo.",
   "landing.features.f4.title": "Zvinyorwa zvechiremba zvakachengetedzwa",
-  "landing.features.f4.body": "Mhando yeropa, allergies, uye nhoroondo zvinogovaniswa chete kana zvichidiwa.",
+  "landing.features.f4.body":
+    "Mhando yeropa, allergies, uye nhoroondo zvinogovaniswa chete kana zvichidiwa.",
   "landing.features.f5.title": "Zviziviso zvakasiyana-siyana",
   "landing.features.f5.body": "Mune app, SMS, uye izwi kuti kubatana kwekurapwa kuvepo.",
   "landing.features.f6.title": "Kuongorora hutano",
@@ -550,7 +585,8 @@ const sn: Dict = {
 
   "landing.ai.eyebrow": "Tekinoroji ye-AI",
   "landing.ai.title": "Triage inofunga sechiremba.",
-  "landing.ai.body": "AI yedu yakadzidziswa kubvunza mibvunzo yakakodzera, kuyera ngozi, uye kubudisa gwaro rakarongeka. Inoshanda pamwe nevanhu, kwete pachinzvimbo chavo.",
+  "landing.ai.body":
+    "AI yedu yakadzidziswa kubvunza mibvunzo yakakodzera, kuyera ngozi, uye kubudisa gwaro rakarongeka. Inoshanda pamwe nevanhu, kwete pachinzvimbo chavo.",
   "landing.ai.p1": "Kuronga kukura (Kudzikira → Kukomba)",
   "landing.ai.p2": "Mirairo yerubatsiro rwekutanga",
   "landing.ai.p3": "Gwaro rechipatara rakarongeka",
@@ -565,31 +601,40 @@ const sn: Dict = {
   "landing.ai.chat.u1": "Ndave nemarwadzo pachipfuva kwemaminetsi makumi maviri, ndichidikitira.",
   "landing.ai.chat.a1.pre": "Kukura: ",
   "landing.ai.chat.a1.sev": "Kwakakomba",
-  "landing.ai.chat.a1.post": ". Gara wakati twii, tsenga aspirin kana usina allergy, gara wakadzikama. Tiri kutumira kuParirenyatwa Cardiology mumaminetsi matanhatu.",
+  "landing.ai.chat.a1.post":
+    ". Gara wakati twii, tsenga aspirin kana usina allergy, gara wakadzikama. Tiri kutumira kuParirenyatwa Cardiology mumaminetsi matanhatu.",
   "landing.ai.chat.u2": "Handizivi kuti ndoita sei.",
-  "landing.ai.chat.a2": "Zvakanaka. Gara pasi, iva wakadzikama. Ambulance yatouya. Handeyi tione zvatinofanira kuita.",
+  "landing.ai.chat.a2":
+    "Zvakanaka. Gara pasi, iva wakadzikama. Ambulance yatouya. Handeyi tione zvatinofanira kuita.",
   "landing.tst.1.name": "Chiremba Tendai M.",
   "landing.tst.1.role": "Chiremba weNhamo, Parirenyatwa",
-  "landing.tst.1.quote": "Mishumo yeAI inotichengetera maminetsi anokosha. Varwere vanosvika mashoko atonyorwa.",
+  "landing.tst.1.quote":
+    "Mishumo yeAI inotichengetera maminetsi anokosha. Varwere vanosvika mashoko atonyorwa.",
   "landing.tst.2.name": "Rutendo S.",
   "landing.tst.2.role": "Murwere, Harare",
-  "landing.tst.2.quote": "Baba vangu pavakadonha, LifeLine+ yakatumira ambulance ndokutibatanidza nechipatara chakakodzera mumaminetsi.",
+  "landing.tst.2.quote":
+    "Baba vangu pavakadonha, LifeLine+ yakatumira ambulance ndokutibatanidza nechipatara chakakodzera mumaminetsi.",
   "landing.tst.3.name": "Blessing N.",
   "landing.tst.3.role": "Paramedic, Bulawayo",
-  "landing.tst.3.quote": "Nhare dzine ranga reAI zvinoreva kuti ndinoziva chaizvo zvekugadzirira munzira.",
+  "landing.tst.3.quote":
+    "Nhare dzine ranga reAI zvinoreva kuti ndinoziva chaizvo zvekugadzirira munzira.",
   "landing.faq.eyebrow": "Mibvunzo",
   "landing.faq.title": "Mibvunzo inobvunzwa kazhinji",
   "landing.faq.q1": "LifeLine+ iripo muZimbabwe yose here?",
-  "landing.faq.a1": "Tiri kupinza zvipatara guta rimwe kubva kune rimwe. Nhasi tinofukidza Harare, Bulawayo, Mutare, Gweru, Masvingo neVictoria Falls.",
+  "landing.faq.a1":
+    "Tiri kupinza zvipatara guta rimwe kubva kune rimwe. Nhasi tinofukidza Harare, Bulawayo, Mutare, Gweru, Masvingo neVictoria Falls.",
   "landing.faq.q2": "AI inotsiva vanachiremba here?",
-  "landing.faq.a2": "Kwete. AI inobatsira vanotumira uye vashandi vezvipatara netriage yekukurumidza. Kuronga kwese kwekurapwa kuchiri kwevanhu.",
+  "landing.faq.a2":
+    "Kwete. AI inobatsira vanotumira uye vashandi vezvipatara netriage yekukurumidza. Kuronga kwese kwekurapwa kuchiri kwevanhu.",
   "landing.faq.q3": "Data yangu inodzivirirwa sei?",
-  "landing.faq.a3": "Zvinyorwa zvakavharwa nekripto, kuwana kunoenderana nebasa, uye iwe unosarudza zvinogovaniswa panguva yemamergency.",
+  "landing.faq.a3":
+    "Zvinyorwa zvakavharwa nekripto, kuwana kunoenderana nebasa, uye iwe unosarudza zvinogovaniswa panguva yemamergency.",
   "landing.faq.q4": "Mitauro ipi inotsigirwa?",
   "landing.faq.a4": "Chirungu, chiShona uye chiNdebele.",
   "landing.faq.q5": "Ndinoda smartphone here?",
   "landing.faq.a5": "LifeLine+ inoshanda pachero browser, uye tinotsigira SMS pane dzimwe nzvimbo.",
-  "landing.footer.tagline": "Kurongedzera kwekurapa kwemamergency kwakatungamirwa neAI. Kurera · Rutsigiro · Tarisiro.",
+  "landing.footer.tagline":
+    "Kurongedzera kwekurapa kwemamergency kwakatungamirwa neAI. Kurera · Rutsigiro · Tarisiro.",
   "landing.footer.product": "Chirongwa",
   "landing.footer.company": "Kambani",
   "landing.footer.emergency": "Nhamo",
@@ -649,7 +694,8 @@ const sn: Dict = {
   "dash.viewLive": "ona nguva ino",
   "dash.ready": "Takagadzirira mamergency",
   "dash.needHelp": "Unoda rubatsiro rwekukurumidza?",
-  "dash.needHelpBody": "Dzvanya SOS kutanga triage, kuratidza kwauri, uye kutumira ambulance iri pedyo.",
+  "dash.needHelpBody":
+    "Dzvanya SOS kutanga triage, kuratidza kwauri, uye kutumira ambulance iri pedyo.",
   "dash.sos": "SOS",
   "dash.profile": "Zvinyorwa zvechiremba",
   "dash.bloodType": "Mhando yeropa",
@@ -730,7 +776,8 @@ const sn: Dict = {
   "asst.voiceTitle": "Kutaura",
   "asst.voiceBody": "Dzvanya maikorofoni utaure. Kana wapedza, mashoko ako anonyorwa oendeswa.",
   "asst.replay": "Dzokorora mhinduro yekupedzisira",
-  "asst.disclaimer": "LifeLine+ AI inotsigira Chirungu, chiShona, neisiNdebele. Mubatsiri uyu haatsivi zano rechiremba.",
+  "asst.disclaimer":
+    "LifeLine+ AI inotsigira Chirungu, chiShona, neisiNdebele. Mubatsiri uyu haatsivi zano rechiremba.",
   "asst.transcribing": "Kushandura izwi rako kuita mashoko…",
   "asst.micDenied": "Maikorofoni haabvumidzwe. Bvumidza mune settings dzebrowser.",
   "asst.micUnavailable": "Maikorofoni haiwanikwe padhivhaisi iyi.",
@@ -753,7 +800,8 @@ const sn: Dict = {
   "emerg.new.describe": "Tsanangura nemashoko ako",
   "emerg.new.describePh": "Tiudze zviri kuitika...",
   "emerg.new.media": "Wedzera mufananidzo kana vhidhiyo pfupi (zvisingamanikidzwe)",
-  "emerg.new.mediaHint": "Kusvika mifananidzo mitatu kana kavhidhiyo kasingapfuuri masekonzi 10. Kunobatsira AI kuona kukuvara.",
+  "emerg.new.mediaHint":
+    "Kusvika mifananidzo mitatu kana kavhidhiyo kasingapfuuri masekonzi 10. Kunobatsira AI kuona kukuvara.",
   "emerg.new.addPhoto": "Wedzera mufananidzo",
   "emerg.new.addVideo": "Wedzera vhidhiyo",
   "emerg.new.takePhoto": "Tora mufananidzo",
@@ -761,7 +809,8 @@ const sn: Dict = {
   "emerg.new.recordVideo": "Rekodha vhidhiyo",
   "emerg.new.uploadVideo": "Tumira vhidhiyo",
   "emerg.new.remove": "Bvisa",
-  "emerg.new.mediaTooLarge": "Faira iri rakakura. Sarudza mufananidzo mudiki kana kavhidhiyo kapfupi.",
+  "emerg.new.mediaTooLarge":
+    "Faira iri rakakura. Sarudza mufananidzo mudiki kana kavhidhiyo kapfupi.",
   "emerg.new.mediaTooMany": "Zvakawanda zvingasvika kuzvitatu chete.",
   "emerg.new.mediaProcessing": "Kugadzirira midhiya...",
   "emerg.new.severity": "Zvakakomba sei?",
@@ -867,13 +916,16 @@ const sn: Dict = {
   "ministry.units.incoming": "iri kuuya",
   "ministry.units.occupancy": "kuzara",
   "ministry.insight.1.title": "Kuwedzera kwezvirwere zvekufema muHarare",
-  "ministry.insight.1.body": "Mamergency ezvekufema akwira 22% muvhiki muHarare. Isai oxygen paParirenyatwa neSally Mugabe.",
+  "ministry.insight.1.body":
+    "Mamergency ezvekufema akwira 22% muvhiki muHarare. Isai oxygen paParirenyatwa neSally Mugabe.",
   "ministry.insight.1.tag": "Muitiro",
   "ministry.insight.2.title": "Kushomeka kweambulance muMat. South",
-  "ministry.insight.2.body": "Nguva yekusvika muMatabeleland South inodarika 15 min pa 34% yezvikumbiro. Kupa maambulance 2 kubva kuBulawayo kunoderedza ETA ne3.4 min.",
+  "ministry.insight.2.body":
+    "Nguva yekusvika muMatabeleland South inodarika 15 min pa 34% yezvikumbiro. Kupa maambulance 2 kubva kuBulawayo kunoderedza ETA ne3.4 min.",
   "ministry.insight.2.tag": "Zvivakwa",
   "ministry.insight.3.title": "Cardiac cluster pedyo neChitungwiza",
-  "ministry.insight.3.body": "AI yaona cluster yehutano hwemoyo pedyo neChitungwiza mumaawa 72. Tinokurudzira kunyorera vanhu.",
+  "ministry.insight.3.body":
+    "AI yaona cluster yehutano hwemoyo pedyo neChitungwiza mumaawa 72. Tinokurudzira kunyorera vanhu.",
   "ministry.insight.3.tag": "Cluster",
 
   "emergency.detail.back": "Dashboard",
@@ -888,7 +940,8 @@ const sn: Dict = {
   "emergency.detail.receiving": "Chipatara chinogamuchira",
   "emergency.detail.assigning": "Kuronga...",
   "emergency.detail.live": "Kuvandudzwa pese pese pa5s",
-  "emergency.detail.demo": "Kufambira mberi kwedemo. Muzvechokwadi izvi zvinoratidza zviratidzo zvechokwadi.",
+  "emergency.detail.demo":
+    "Kufambira mberi kwedemo. Muzvechokwadi izvi zvinoratidza zviratidzo zvechokwadi.",
   "emergency.detail.loading": "Kurodha emergency...",
   "emergency.status.requested": "Yakumbirwa",
   "emergency.status.assessed": "Yaongororwa",
@@ -908,7 +961,8 @@ const sn: Dict = {
 
 const nd: Dict = {
   "welcome.title": "Khetha ulimi lwakho",
-  "welcome.subtitle": "I-LifeLine+ ikhuluma isiNgisi, isiShona, le-isiNdebele. Khetha lolo ozizwa ukhululekile ngalo, ungaluguqula noma nini.",
+  "welcome.subtitle":
+    "I-LifeLine+ ikhuluma isiNgisi, isiShona, le-isiNdebele. Khetha lolo ozizwa ukhululekile ngalo, ungaluguqula noma nini.",
   "welcome.continue": "Qhubeka",
 
   "common.signIn": "Ngena",
@@ -933,7 +987,8 @@ const nd: Dict = {
   "landing.hero.badge": "AI for Impact Zimbabwe",
   "landing.hero.title1": "Isekhondi ngayinye iyabaluleka.",
   "landing.hero.title2": "Ukwelapha okuphuthumayo okuqhutshwa yi-AI.",
-  "landing.hero.body": "I-LifeLine+ ixhuma iziguli, izibhedlela, kanye nama-ambulensi kusetshenziswa i-AI ukuze kwehliswe isikhathi sokusabela nokuthuthukisa imiphumela yeziguli.",
+  "landing.hero.body":
+    "I-LifeLine+ ixhuma iziguli, izibhedlela, kanye nama-ambulensi kusetshenziswa i-AI ukuze kwehliswe isikhathi sokusabela nokuthuthukisa imiphumela yeziguli.",
   "landing.hero.cta.sos": "Cela usizo oluphuthumayo",
   "landing.hero.cta.more": "Funda okuningi",
   "landing.hero.stat.response": "Isikhathi sokusabela",
@@ -951,11 +1006,14 @@ const nd: Dict = {
   "landing.how.sub": "Izinyathelo ezintathu ezixhunywe yi-AI kwinethiwekhi.",
   "landing.how.step": "Isinyathelo",
   "landing.how.s1.title": "Cela usizo",
-  "landing.how.s1.body": "Cindezela inkinobho ye-SOS. Xoxa ne-AI ngesiNgisi, isiShona noma isiNdebele.",
+  "landing.how.s1.body":
+    "Cindezela inkinobho ye-SOS. Xoxa ne-AI ngesiNgisi, isiShona noma isiNdebele.",
   "landing.how.s2.title": "I-AI triage",
-  "landing.how.s2.body": "Umsizi uhlola ubukhulu, unikeza uncedo lokuqala, futhi wenza umbiko wesibhedlela.",
+  "landing.how.s2.body":
+    "Umsizi uhlola ubukhulu, unikeza uncedo lokuqala, futhi wenza umbiko wesibhedlela.",
   "landing.how.s3.title": "Impendulo ehleliwe",
-  "landing.how.s3.body": "Isibhedlela esiseduze siyaziswa futhi i-ambulensi ithunyelwa nombiko wakho.",
+  "landing.how.s3.body":
+    "Isibhedlela esiseduze siyaziswa futhi i-ambulensi ithunyelwa nombiko wakho.",
 
   "landing.features.eyebrow": "Izici",
   "landing.features.title": "Inkundla ephelele yokunakekelwa okuphuthumayo",
@@ -966,7 +1024,8 @@ const nd: Dict = {
   "landing.features.f3.title": "Ukukhethwa Kwesibhedlela Okuhlakaniphile",
   "landing.features.f3.body": "Sikhethwa ngebanga, ubuchwepheshe, nemibhede.",
   "landing.features.f4.title": "Amarekhodi Ezokwelapha Aphephile",
-  "landing.features.f4.body": "Uhlobo lwegazi, ukungezwani nemithi, nomlando kuphela lapho kudingeka.",
+  "landing.features.f4.body":
+    "Uhlobo lwegazi, ukungezwani nemithi, nomlando kuphela lapho kudingeka.",
   "landing.features.f5.title": "Izaziso ezahlukene",
   "landing.features.f5.body": "Kuhlanganisa ku-app, i-SMS, nezwi.",
   "landing.features.f6.title": "Ukuhlaziywa Kwezempilo",
@@ -985,7 +1044,8 @@ const nd: Dict = {
 
   "landing.ai.eyebrow": "Ubuchwepheshe be-AI",
   "landing.ai.title": "I-triage ecabanga njengodokotela.",
-  "landing.ai.body": "I-AI yethu iqeqeshelwe ukubuza imibuzo efanele, iqondanise nezimpawu ezibhekelelwayo, futhi ikhiphe umbiko ohleliwe. Isebenza nabantu, hhayi esikhundleni sabo.",
+  "landing.ai.body":
+    "I-AI yethu iqeqeshelwe ukubuza imibuzo efanele, iqondanise nezimpawu ezibhekelelwayo, futhi ikhiphe umbiko ohleliwe. Isebenza nabantu, hhayi esikhundleni sabo.",
   "landing.ai.p1": "Ukukala ubukhulu (Phansi → Nzima kakhulu)",
   "landing.ai.p2": "Iziyalo zoncedo lokuqala",
   "landing.ai.p3": "Umbiko ohleliwe wesibhedlela",
@@ -1000,26 +1060,33 @@ const nd: Dict = {
   "landing.ai.chat.u1": "Ubuhlungu esifubeni imizuzu engu-20, ngijuluka.",
   "landing.ai.chat.a1.pre": "Izinga: ",
   "landing.ai.chat.a1.sev": "Kubucayi",
-  "landing.ai.chat.a1.post": ". Hlala uqondile, hlafuna i-aspirin uma ungenayo i-allergy, ungakhukhuli. Sithumela e-Parirenyatwa Cardiology emizuzwini engu-6.",
+  "landing.ai.chat.a1.post":
+    ". Hlala uqondile, hlafuna i-aspirin uma ungenayo i-allergy, ungakhukhuli. Sithumela e-Parirenyatwa Cardiology emizuzwini engu-6.",
   "landing.ai.chat.u2": "Angazi ukuthi ngenzeni.",
-  "landing.ai.chat.a2": "Kulungile. Hlala phansi, uzole. I-ambulensi isendleleni. Asihambeni ngokumele ukwenze.",
+  "landing.ai.chat.a2":
+    "Kulungile. Hlala phansi, uzole. I-ambulensi isendleleni. Asihambeni ngokumele ukwenze.",
   "landing.tst.1.name": "Dkt. Tendai M.",
   "landing.tst.1.role": "Udokotela Wesimo Esiphuthumayo, Parirenyatwa",
-  "landing.tst.1.quote": "Umbiko we-AI usisiza sithole imizuzu ebalulekile. Iziguli zifika sekunemininingwane elotshiwe.",
+  "landing.tst.1.quote":
+    "Umbiko we-AI usisiza sithole imizuzu ebalulekile. Iziguli zifika sekunemininingwane elotshiwe.",
   "landing.tst.2.name": "Rutendo S.",
   "landing.tst.2.role": "Isiguli, Harare",
-  "landing.tst.2.quote": "Ubaba wami ewile, i-LifeLine+ ithumele i-ambulensi yasixhumanisa nesibhedlela esifanele emizuzwini.",
+  "landing.tst.2.quote":
+    "Ubaba wami ewile, i-LifeLine+ ithumele i-ambulensi yasixhumanisa nesibhedlela esifanele emizuzwini.",
   "landing.tst.3.name": "Blessing N.",
   "landing.tst.3.role": "Umsizi, Bulawayo",
-  "landing.tst.3.quote": "Izingcingo ezibekelwe phambili yi-AI zisho ukuthi ngiyazi ngempela ukulungiselela ini endleleni.",
+  "landing.tst.3.quote":
+    "Izingcingo ezibekelwe phambili yi-AI zisho ukuthi ngiyazi ngempela ukulungiselela ini endleleni.",
   "landing.faq.eyebrow": "Imibuzo",
   "landing.faq.title": "Imibuzo evame ukubuzwa",
   "landing.faq.q1": "I-LifeLine+ iyatholakala kulo lonke iZimbabwe?",
-  "landing.faq.a1": "Sifaka izibhedlela idolobha ngedolobha. Namuhla sikhona eHarare, Bulawayo, Mutare, Gweru, Masvingo, naseVictoria Falls.",
+  "landing.faq.a1":
+    "Sifaka izibhedlela idolobha ngedolobha. Namuhla sikhona eHarare, Bulawayo, Mutare, Gweru, Masvingo, naseVictoria Falls.",
   "landing.faq.q2": "Ingabe i-AI ithatha indawo yodokotela?",
   "landing.faq.a2": "Cha. I-AI iseka abasebenzi. Zonke izinqumo zokwelapha zisele kubantu.",
   "landing.faq.q3": "Idatha yami ivikelwa kanjani?",
-  "landing.faq.a3": "Amarekhodi abethelwe, ukufinyelela kuncikile emsebenzini, futhi ulawula okwabelwana.",
+  "landing.faq.a3":
+    "Amarekhodi abethelwe, ukufinyelela kuncikile emsebenzini, futhi ulawula okwabelwana.",
   "landing.faq.q4": "Yiziphi izilimi ezisekelwayo?",
   "landing.faq.a4": "IsiNgisi, isiShona, ne-isiNdebele.",
   "landing.faq.q5": "Ngidinga i-smartphone?",
@@ -1084,7 +1151,8 @@ const nd: Dict = {
   "dash.viewLive": "buka isimo",
   "dash.ready": "Ukulungela ukuphuthuma",
   "dash.needHelp": "Udinga usizo olusheshayo?",
-  "dash.needHelpBody": "Cindezela i-SOS ukuze kuqale i-triage, kwabelane ngendawo, futhi kuthunyelwe i-ambulensi eseduze.",
+  "dash.needHelpBody":
+    "Cindezela i-SOS ukuze kuqale i-triage, kwabelane ngendawo, futhi kuthunyelwe i-ambulensi eseduze.",
   "dash.sos": "I-SOS",
   "dash.profile": "Iphrofayela yezempilo",
   "dash.bloodType": "Uhlobo lwegazi",
@@ -1165,7 +1233,8 @@ const nd: Dict = {
   "asst.voiceTitle": "Ilizwi",
   "asst.voiceBody": "Cindezela imakrofoni ukhulume. Nxa uqedile, amazwi akho ayabhalwa athunyelwe.",
   "asst.replay": "Phinda impendulo yokugcina",
-  "asst.disclaimer": "I-LifeLine+ AI isekela isiNgisi, isiShona, le-isiNdebele. Umsizi lo katshintshi iseluleko sikadokotela.",
+  "asst.disclaimer":
+    "I-LifeLine+ AI isekela isiNgisi, isiShona, le-isiNdebele. Umsizi lo katshintshi iseluleko sikadokotela.",
   "asst.transcribing": "Kuphendulelwa ilizwi lakho…",
   "asst.micDenied": "Imakrofoni ivimbelwe. Ivumele kuzilungiselelo zebhrawuza.",
   "asst.micUnavailable": "Imakrofoni ayikho kule idivayisi.",
@@ -1188,7 +1257,8 @@ const nd: Dict = {
   "emerg.new.describe": "Chaza ngamazwi akho",
   "emerg.new.describePh": "Sitshele ukuthi kwenzakalani...",
   "emerg.new.media": "Engeza isithombe kumbe ividiyo emfitshane (akuqinisekanga)",
-  "emerg.new.mediaHint": "Kufika kuzithombe ezintathu kumbe ividiyo engaphansi kwemizuzwana eyi-10. Kuncedisa i-AI ibone ukulimala.",
+  "emerg.new.mediaHint":
+    "Kufika kuzithombe ezintathu kumbe ividiyo engaphansi kwemizuzwana eyi-10. Kuncedisa i-AI ibone ukulimala.",
   "emerg.new.addPhoto": "Engeza isithombe",
   "emerg.new.addVideo": "Engeza ividiyo",
   "emerg.new.takePhoto": "Thatha isithombe",
@@ -1196,7 +1266,8 @@ const nd: Dict = {
   "emerg.new.recordVideo": "Qopha ividiyo",
   "emerg.new.uploadVideo": "Layisha ividiyo",
   "emerg.new.remove": "Susa",
-  "emerg.new.mediaTooLarge": "Ifayela likhulu kakhulu. Khetha isithombe esincane kumbe ividiyo emfitshane.",
+  "emerg.new.mediaTooLarge":
+    "Ifayela likhulu kakhulu. Khetha isithombe esincane kumbe ividiyo emfitshane.",
   "emerg.new.mediaTooMany": "Ungangeza okuphezulu okuthathu kuphela.",
   "emerg.new.mediaProcessing": "Kulungiswa imidiya...",
   "emerg.new.severity": "Kunzima kangakanani?",
@@ -1302,13 +1373,16 @@ const nd: Dict = {
   "ministry.units.incoming": "ezizayo",
   "ministry.units.occupancy": "ukuzaliseka",
   "ministry.insight.1.title": "Ukukhula kwezifo zokuphefumula eHarare",
-  "ministry.insight.1.body": "Izimo zokuphefumula zikhule ngo-22% eHarare. Beka i-oxygen e-Parirenyatwa nase-Sally Mugabe.",
+  "ministry.insight.1.body":
+    "Izimo zokuphefumula zikhule ngo-22% eHarare. Beka i-oxygen e-Parirenyatwa nase-Sally Mugabe.",
   "ministry.insight.1.tag": "Umgudu",
   "ministry.insight.2.title": "Ukushoda kwama-ambulensi eMat. South",
-  "ministry.insight.2.body": "Isikhathi sokusabela eMatabeleland South sedlula 15 min ku-34%. Ukudlulisa ama-ambulensi angu-2 kusuka eBulawayo kunciphisa ETA nge-3.4 min.",
+  "ministry.insight.2.body":
+    "Isikhathi sokusabela eMatabeleland South sedlula 15 min ku-34%. Ukudlulisa ama-ambulensi angu-2 kusuka eBulawayo kunciphisa ETA nge-3.4 min.",
   "ministry.insight.2.tag": "Izinsiza",
   "ministry.insight.3.title": "Iqoqo lezenhliziyo eChitungwiza",
-  "ministry.insight.3.body": "I-AI ithole iqoqo lezehlakalo zenhliziyo eduze kwaseChitungwiza emahoreni angu-72. Sincoma umkhankaso wokuhlola.",
+  "ministry.insight.3.body":
+    "I-AI ithole iqoqo lezehlakalo zenhliziyo eduze kwaseChitungwiza emahoreni angu-72. Sincoma umkhankaso wokuhlola.",
   "ministry.insight.3.tag": "Iqoqo",
 
   "emergency.detail.back": "I-Dashboard",
@@ -1323,7 +1397,8 @@ const nd: Dict = {
   "emergency.detail.receiving": "Isibhedlela esamukelayo",
   "emergency.detail.assigning": "Kuyabelwa...",
   "emergency.detail.live": "Izibuyekezo njalo emasekhondini angu-5",
-  "emergency.detail.demo": "Kuqhubekela phambili ngokuzenzakalelayo kwedemo. Ekusetshenzisweni kwangempela lokhu kuveza izimpawu zangempela.",
+  "emergency.detail.demo":
+    "Kuqhubekela phambili ngokuzenzakalelayo kwedemo. Ekusetshenzisweni kwangempela lokhu kuveza izimpawu zangempela.",
   "emergency.detail.loading": "Kulayishwa isimo esiphuthumayo...",
   "emergency.status.requested": "Kuceliwe",
   "emergency.status.assessed": "Kuhloliwe",

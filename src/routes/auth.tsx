@@ -30,8 +30,16 @@ function AuthPage() {
     // Fresh session on every visit: sign out any lingering user and clear
     // profile info persisted from a previous demo run.
     (async () => {
-      try { await supabase.auth.signOut(); } catch { /* ignore */ }
-      try { window.localStorage.removeItem("lifeline.displayName"); } catch { /* ignore */ }
+      try {
+        await supabase.auth.signOut();
+      } catch {
+        /* ignore */
+      }
+      try {
+        window.localStorage.removeItem("lifeline.displayName");
+      } catch {
+        /* ignore */
+      }
     })();
   }, []);
 
@@ -45,7 +53,7 @@ function AuthPage() {
     const email = "demo@lifelineplus.app";
     const password = "lifeline-demo-2026";
     try {
-      let { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         const signUp = await supabase.auth.signUp({ email, password });
         if (signUp.error && !/registered|exists/i.test(signUp.error.message)) throw signUp.error;
@@ -55,26 +63,33 @@ function AuthPage() {
       try {
         await supabase.auth.updateUser({ data: { full_name: trimmed } });
         window.localStorage.setItem("lifeline.displayName", trimmed);
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       // Fresh session: wipe any lingering emergency requests from prior demo runs.
       try {
         const { data: u } = await supabase.auth.getUser();
         if (u.user) {
           await supabase.from("emergency_requests").delete().eq("patient_id", u.user.id);
-          await supabase.from("profiles").update({
-            full_name: trimmed,
-            phone: null,
-            blood_type: null,
-            allergies: [],
-            medications: [],
-            dob: null,
-          }).eq("id", u.user.id);
+          await supabase
+            .from("profiles")
+            .update({
+              full_name: trimmed,
+              phone: null,
+              blood_type: null,
+              allergies: [],
+              medications: [],
+              dob: null,
+            })
+            .eq("id", u.user.id);
           await supabase.from("emergency_contacts").delete().eq("user_id", u.user.id);
           await supabase.from("medical_records").delete().eq("user_id", u.user.id);
           await supabase.from("appointments").delete().eq("user_id", u.user.id);
           await supabase.from("notifications").delete().eq("user_id", u.user.id);
         }
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       toast.success(t("auth.toast.welcome"));
       navigate({ to: "/dashboard", replace: true });
     } catch (e) {
@@ -87,14 +102,22 @@ function AuthPage() {
   return (
     <div className="min-h-dvh gradient-hero">
       <header className="mx-auto flex max-w-7xl items-center justify-between px-4 py-6 md:px-8">
-        <Link to="/"><LifeLineLogo /></Link>
+        <Link to="/">
+          <LifeLineLogo />
+        </Link>
         <div className="flex items-center gap-3">
           <LanguagePill />
-          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">← {t("common.backHome")}</Link>
+          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+            ← {t("common.backHome")}
+          </Link>
         </div>
       </header>
       <div className="mx-auto flex max-w-md flex-col px-4 pb-16 pt-4 md:pt-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass elevated rounded-3xl border p-6 md:p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass elevated rounded-3xl border p-6 md:p-8"
+        >
           <div className="mb-6 text-center">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <HeartPulse className="h-6 w-6" />
@@ -112,10 +135,16 @@ function AuthPage() {
               placeholder={t("auth.fullName")}
               autoComplete="name"
               className="h-12"
-              onKeyDown={(e) => { if (e.key === "Enter") handleDemoSignIn(); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleDemoSignIn();
+              }}
             />
           </div>
-          <Button onClick={handleDemoSignIn} className="mt-4 h-12 w-full text-base" disabled={busy || !name.trim()}>
+          <Button
+            onClick={handleDemoSignIn}
+            className="mt-4 h-12 w-full text-base"
+            disabled={busy || !name.trim()}
+          >
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.action.signin")}
           </Button>
           <p className="mt-4 text-center text-xs text-muted-foreground">{t("auth.demoNote")}</p>

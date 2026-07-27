@@ -14,14 +14,42 @@ export const Route = createFileRoute("/_authenticated/ambulance")({
 type Status = "pending" | "accepted" | "enroute" | "arrived" | "completed";
 
 const CASES = [
-  { id: 1 as const, severity: "critical" as const, eta: 6, pickupLat: -17.8292, pickupLng: 31.0522, destLat: -17.8072, destLng: 31.0498 },
-  { id: 2 as const, severity: "high" as const, eta: 12, pickupLat: -17.8380, pickupLng: 31.0459, destLat: -17.8195, destLng: 31.0355 },
-  { id: 3 as const, severity: "medium" as const, eta: 18, pickupLat: -17.8199, pickupLng: 31.0447, destLat: -17.8149, destLng: 31.0431 },
+  {
+    id: 1 as const,
+    severity: "critical" as const,
+    eta: 6,
+    pickupLat: -17.8292,
+    pickupLng: 31.0522,
+    destLat: -17.8072,
+    destLng: 31.0498,
+  },
+  {
+    id: 2 as const,
+    severity: "high" as const,
+    eta: 12,
+    pickupLat: -17.838,
+    pickupLng: 31.0459,
+    destLat: -17.8195,
+    destLng: 31.0355,
+  },
+  {
+    id: 3 as const,
+    severity: "medium" as const,
+    eta: 18,
+    pickupLat: -17.8199,
+    pickupLng: 31.0447,
+    destLat: -17.8149,
+    destLng: 31.0431,
+  },
 ];
 
 function AmbulancePage() {
   const t = useT();
-  const [statuses, setStatuses] = useState<Record<number, Status>>({ 1: "pending", 2: "pending", 3: "pending" });
+  const [statuses, setStatuses] = useState<Record<number, Status>>({
+    1: "pending",
+    2: "pending",
+    3: "pending",
+  });
 
   const next: Record<Status, Status | null> = {
     pending: "accepted",
@@ -70,11 +98,21 @@ function AmbulancePage() {
           const nxt = next[status];
           const statusLabel = t(`amb.status.${status}`);
           const advanceLabel =
-            status === "pending" ? t("amb.accept") :
-            status === "accepted" ? t("amb.markEnroute") :
-            status === "enroute" ? t("amb.markArrived") :
-            status === "arrived" ? t("amb.markCompleted") : null;
-          const StatusIcon = status === "completed" ? CheckCircle2 : status === "enroute" || status === "accepted" ? Truck : PlayCircle;
+            status === "pending"
+              ? t("amb.accept")
+              : status === "accepted"
+                ? t("amb.markEnroute")
+                : status === "enroute"
+                  ? t("amb.markArrived")
+                  : status === "arrived"
+                    ? t("amb.markCompleted")
+                    : null;
+          const StatusIcon =
+            status === "completed"
+              ? CheckCircle2
+              : status === "enroute" || status === "accepted"
+                ? Truck
+                : PlayCircle;
           return (
             <div key={c.id} className="rounded-2xl border border-border bg-card p-5 elevated">
               <div className="flex items-center justify-between">
@@ -83,9 +121,15 @@ function AmbulancePage() {
                   <StatusIcon className="h-3 w-3" /> {statusLabel}
                 </span>
               </div>
-              <div className="mt-3 flex items-center gap-2 text-sm"><MapPin className="h-4 w-4 text-primary" /> {dest}</div>
-              <div className="mt-1 text-xs text-muted-foreground">{t("amb.pickup")}: {pickup}</div>
-              <div className="mt-1 text-xs text-muted-foreground">{t("dash.eta")} {c.eta} {t("dash.min")}</div>
+              <div className="mt-3 flex items-center gap-2 text-sm">
+                <MapPin className="h-4 w-4 text-primary" /> {dest}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {t("amb.pickup")}: {pickup}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {t("dash.eta")} {c.eta} {t("dash.min")}
+              </div>
               <p className="mt-3 text-sm text-muted-foreground">{note}</p>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <button

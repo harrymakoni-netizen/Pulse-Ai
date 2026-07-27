@@ -1,15 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { streamChat, type ChatMessage } from "@/lib/ai-gateway.server";
 
-type IncomingMessage = { role: "user" | "assistant" | "system"; content: string; images?: string[] };
+type IncomingMessage = {
+  role: "user" | "assistant" | "system";
+  content: string;
+  images?: string[];
+};
 
 export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = (await request.json()) as { messages?: IncomingMessage[]; language?: "en"|"sn"|"nd" };
+        const body = (await request.json()) as {
+          messages?: IncomingMessage[];
+          language?: "en" | "sn" | "nd";
+        };
         const lang = body.language ?? "en";
-        const langName = { en: "English", sn: "Shona (chiShona)", nd: "Ndebele (isiNdebele)" }[lang];
+        const langName = { en: "English", sn: "Shona (chiShona)", nd: "Ndebele (isiNdebele)" }[
+          lang
+        ];
         const incoming = body.messages ?? [];
         const hasImages = incoming.some((m) => m.images && m.images.length > 0);
         const system: ChatMessage = {
@@ -63,18 +72,28 @@ Be honest about your limits. You do not replace a clinician.`,
                 buf += decoder.decode(value, { stream: true });
                 let idx;
                 while ((idx = buf.indexOf("\n")) !== -1) {
-                  const line = buf.slice(0, idx).trim(); buf = buf.slice(idx + 1);
+                  const line = buf.slice(0, idx).trim();
+                  buf = buf.slice(idx + 1);
                   if (!line.startsWith("data:")) continue;
                   const payload = line.slice(5).trim();
-                  if (payload === "[DONE]") { controller.close(); return; }
+                  if (payload === "[DONE]") {
+                    controller.close();
+                    return;
+                  }
                   try {
-                    const json = JSON.parse(payload) as { choices?: Array<{ delta?: { content?: string } }> };
+                    const json = JSON.parse(payload) as {
+                      choices?: Array<{ delta?: { content?: string } }>;
+                    };
                     const delta = json.choices?.[0]?.delta?.content;
                     if (delta) controller.enqueue(encoder.encode(delta));
-                  } catch { /* ignore */ }
+                  } catch {
+                    /* ignore */
+                  }
                 }
               }
-            } catch (e) { controller.error(e); }
+            } catch (e) {
+              controller.error(e);
+            }
             controller.close();
           },
         });

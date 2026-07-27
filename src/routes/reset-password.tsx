@@ -26,7 +26,9 @@ function ResetPassword() {
       navigate({ to: "/dashboard" });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed");
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   }
   return (
     <div className="min-h-dvh gradient-hero">
@@ -36,8 +38,17 @@ function ResetPassword() {
           <h1 className="font-display text-2xl font-semibold">Set a new password</h1>
           <form onSubmit={submit} className="mt-4 space-y-3">
             <Label htmlFor="pwd">New password</Label>
-            <Input id="pwd" type="password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} />
-            <Button type="submit" className="w-full" disabled={busy}>Update password</Button>
+            <Input
+              id="pwd"
+              type="password"
+              minLength={6}
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button type="submit" className="w-full" disabled={busy}>
+              Update password
+            </Button>
           </form>
         </div>
       </div>

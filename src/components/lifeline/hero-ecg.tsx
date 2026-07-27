@@ -15,7 +15,11 @@ export function HeroEcg({ accelerate = false }: { accelerate?: boolean }) {
 
   useEffect(() => {
     if (pathRef.current) {
-      try { setLen(Math.ceil(pathRef.current.getTotalLength())); } catch { /* noop */ }
+      try {
+        setLen(Math.ceil(pathRef.current.getTotalLength()));
+      } catch {
+        /* noop */
+      }
     }
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduced(mq.matches);
@@ -41,10 +45,7 @@ export function HeroEcg({ accelerate = false }: { accelerate?: boolean }) {
     "L 900 100 L 1000 100";
 
   return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none relative w-full overflow-hidden"
-    >
+    <div aria-hidden="true" className="pointer-events-none relative w-full overflow-hidden">
       <svg
         viewBox="0 0 1000 200"
         preserveAspectRatio="none"
@@ -67,7 +68,14 @@ export function HeroEcg({ accelerate = false }: { accelerate?: boolean }) {
         </defs>
 
         {/* Faint static baseline (always visible) */}
-        <path d={d} fill="none" stroke="url(#ecg-fade)" strokeOpacity="0.18" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
+        <path
+          d={d}
+          fill="none"
+          stroke="url(#ecg-fade)"
+          strokeOpacity="0.18"
+          strokeWidth="1.2"
+          vectorEffect="non-scaling-stroke"
+        />
 
         {/* Animated glowing trace */}
         <path

@@ -49,7 +49,9 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
   const path = useRouterState({ select: (s) => s.location.pathname });
   const t = useT();
 
-  useEffect(() => { setOpen(false); }, [path]);
+  useEffect(() => {
+    setOpen(false);
+  }, [path]);
 
   async function signOut() {
     await qc.cancelQueries();
@@ -62,14 +64,32 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
     <div className="min-h-dvh bg-background">
       {/* Sidebar (desktop) */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-border bg-sidebar md:flex md:flex-col">
-        <div className="flex h-16 items-center justify-between px-6"><LifeLineLogo /><LanguagePill /></div>
+        <div className="flex h-16 items-center justify-between px-6">
+          <LifeLineLogo />
+          <LanguagePill />
+        </div>
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 pb-4">
           {navItems.map((item) => (
-            <NavItem key={item.to} to={item.to} label={t(item.key)} Icon={item.icon} emphasis={"emphasis" in item ? item.emphasis : false} active={path.startsWith(item.to)} />
+            <NavItem
+              key={item.to}
+              to={item.to}
+              label={t(item.key)}
+              Icon={item.icon}
+              emphasis={"emphasis" in item ? item.emphasis : false}
+              active={path.startsWith(item.to)}
+            />
           ))}
-          <div className="mt-4 px-3 pb-1 pt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("nav.roleGroup")}</div>
+          <div className="mt-4 px-3 pb-1 pt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {t("nav.roleGroup")}
+          </div>
           {roleNavItems.map((item) => (
-            <NavItem key={item.to} to={item.to} label={t(item.key)} Icon={item.icon} active={path.startsWith(item.to)} />
+            <NavItem
+              key={item.to}
+              to={item.to}
+              label={t(item.key)}
+              Icon={item.icon}
+              active={path.startsWith(item.to)}
+            />
           ))}
         </nav>
         <div className="border-t border-border p-3">
@@ -87,7 +107,12 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
         <LifeLineLogo />
         <div className="flex items-center gap-2">
           <LanguagePill />
-          <Button variant="ghost" size="icon" onClick={() => setOpen((v) => !v)} aria-label={t("nav.menu")}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={t("nav.menu")}
+          >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
@@ -96,9 +121,18 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
         <div className="fixed inset-x-0 top-14 z-30 border-b border-border bg-background/95 p-3 backdrop-blur md:hidden">
           <nav className="space-y-0.5">
             {[...navItems, ...roleNavItems].map((item) => (
-              <NavItem key={item.to} to={item.to} label={t(item.key)} Icon={item.icon} active={path.startsWith(item.to)} />
+              <NavItem
+                key={item.to}
+                to={item.to}
+                label={t(item.key)}
+                Icon={item.icon}
+                active={path.startsWith(item.to)}
+              />
             ))}
-            <button onClick={signOut} className="mt-2 flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary">
+            <button
+              onClick={signOut}
+              className="mt-2 flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary"
+            >
               <LogOut className="h-4 w-4" /> {t("common.signOut")}
             </button>
           </nav>
@@ -107,7 +141,9 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
 
       <main className="md:pl-64">
         <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
-          {title ? <h1 className="mb-6 font-display text-2xl font-semibold md:text-3xl">{title}</h1> : null}
+          {title ? (
+            <h1 className="mb-6 font-display text-2xl font-semibold md:text-3xl">{title}</h1>
+          ) : null}
           {children}
         </div>
       </main>
@@ -115,13 +151,27 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
   );
 }
 
-function NavItem({ to, label, Icon, active, emphasis }: { to: string; label: string; Icon: React.ComponentType<{ className?: string }>; active?: boolean; emphasis?: boolean }) {
+function NavItem({
+  to,
+  label,
+  Icon,
+  active,
+  emphasis,
+}: {
+  to: string;
+  label: string;
+  Icon: React.ComponentType<{ className?: string }>;
+  active?: boolean;
+  emphasis?: boolean;
+}) {
   return (
     <Link
       to={to}
       className={cn(
         "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-        active ? "bg-primary/10 font-medium text-primary" : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+        active
+          ? "bg-primary/10 font-medium text-primary"
+          : "text-muted-foreground hover:bg-secondary hover:text-foreground",
         emphasis && !active && "text-[color:var(--alert)]",
       )}
     >

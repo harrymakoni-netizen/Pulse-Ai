@@ -8,7 +8,12 @@ type Props = {
   className?: string;
 };
 
-export function LifeLineLogo({ size = 36, emergency = false, showWordmark = true, className }: Props) {
+export function LifeLineLogo({
+  size = 36,
+  emergency = false,
+  showWordmark = true,
+  className,
+}: Props) {
   return (
     <div className={cn("inline-flex items-center gap-2", className)}>
       <div
@@ -19,7 +24,13 @@ export function LifeLineLogo({ size = 36, emergency = false, showWordmark = true
         style={{ width: size + 4, height: size + 4 }}
         aria-hidden="true"
       >
-        <img src={logoAsset.url} alt="" width={size} height={size} className="rounded-full object-contain" />
+        <img
+          src={logoAsset.url}
+          alt=""
+          width={size}
+          height={size}
+          className="rounded-full object-contain"
+        />
       </div>
       {showWordmark ? (
         <span className="font-display text-lg font-semibold tracking-tight text-foreground">
