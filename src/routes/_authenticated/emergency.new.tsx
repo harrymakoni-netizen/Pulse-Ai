@@ -199,16 +199,8 @@ function NewEmergency() {
               <p className="mt-0.5 text-xs text-muted-foreground">{t("emerg.new.mediaHint")}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-                  <Camera className="h-3.5 w-3.5" /> {t("emerg.new.takePhoto")}
-                  <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
-                </label>
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
                   <Camera className="h-3.5 w-3.5" /> {t("emerg.new.uploadPhoto")}
                   <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
-                </label>
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-                  <Video className="h-3.5 w-3.5" /> {t("emerg.new.recordVideo")}
-                  <input type="file" accept="video/*" capture="environment" className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
                 </label>
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
                   <Video className="h-3.5 w-3.5" /> {t("emerg.new.uploadVideo")}
