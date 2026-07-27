@@ -116,6 +116,107 @@ const en: Dict = {
   "landing.ai.live": "Assistant · live",
   "landing.ai.whyAiCta": "Why AI?",
 
+  // About AI page
+  "aboutAi.eyebrow": "AI Technology",
+  "aboutAi.title": "Why AI, and not just a form?",
+  "aboutAi.subtitle":
+    "LifeLine+ is submitted under the AI4I Development track. The Challenge explicitly penalises 'AI as a label'. This page documents where AI is doing real work and where simpler logic is deliberately used instead.",
+
+  "aboutAi.problems.title": "The three problems AI solves here",
+  "aboutAi.problems.1.title": "Multimodal severity",
+  "aboutAi.problems.1.body":
+    "A patient can upload a photo of a wound or a short video. A rules engine cannot judge if a burn is second- or third-degree; Gemini vision can, and it feeds that observation into the severity score.",
+  "aboutAi.problems.2.title": "Free-text symptoms",
+  "aboutAi.problems.2.body":
+    "Patients describe symptoms in English, Shona and Ndebele, often mixing languages. Keyword matching misses 'inhliziyo iyaphimisela' but the model reads intent, negation and colloquialisms.",
+  "aboutAi.problems.3.title": "Structured handoff",
+  "aboutAi.problems.3.body":
+    "Hospitals receive a clinical summary, red flags and recommended specialty in English, generated from the patient's local-language description. That translation-plus-summarisation task is what LLMs do best.",
+
+  "aboutAi.pipeline.title": "How the AI pipeline works",
+  "aboutAi.pipeline.1.title": "Capture",
+  "aboutAi.pipeline.1.body":
+    "The patient describes symptoms by text or voice, selects tags, and optionally uploads photos or video.",
+  "aboutAi.pipeline.2.title": "Perceive",
+  "aboutAi.pipeline.2.body":
+    "Vision layers describe wounds, rashes, swelling or breathing effort from the uploaded media.",
+  "aboutAi.pipeline.3.title": "Reason",
+  "aboutAi.pipeline.3.body":
+    "The model weighs red flags, pain level, age and history against a clinical severity rubric.",
+  "aboutAi.pipeline.4.title": "Match",
+  "aboutAi.pipeline.4.body":
+    "A SQL query ranks hospitals by distance, specialty and beds. AI does not replace this step.",
+  "aboutAi.pipeline.5.title": "Handoff",
+  "aboutAi.pipeline.5.body":
+    "A structured report is generated for the receiving hospital: severity, red flags, first aid given, allergies and recommended specialty.",
+
+  "aboutAi.compare.title": "Rules-only vs LifeLine+ (side by side)",
+  "aboutAi.compare.task": "Task",
+  "aboutAi.compare.baseline": "Rules / SQL baseline",
+  "aboutAi.compare.ai": "LifeLine+ with AI",
+  "aboutAi.compare.rows.1.task": "Assess a wound from a photo",
+  "aboutAi.compare.rows.1.baseline": "Impossible - no visual understanding.",
+  "aboutAi.compare.rows.1.ai":
+    "Gemini vision reads bleeding, swelling, depth and colour into the severity score.",
+  "aboutAi.compare.rows.2.task": "Understand Shona/Ndebele free text",
+  "aboutAi.compare.rows.2.baseline":
+    "Requires per-phrase keyword lists that break on typos or code-switching.",
+  "aboutAi.compare.rows.2.ai":
+    "Handles negation, mixed languages and colloquialisms out of the box.",
+  "aboutAi.compare.rows.3.task": "Generate a clinical hospital handoff",
+  "aboutAi.compare.rows.3.baseline":
+    "Templated string with slot-filling - no reasoning about what the ED needs to know.",
+  "aboutAi.compare.rows.3.ai":
+    "Structured English report with red flags and specialty, ready for the receiving team.",
+  "aboutAi.compare.rows.4.task": "Real-time first-aid guidance",
+  "aboutAi.compare.rows.4.baseline":
+    "Static decision tree, hard to keep current across every symptom combination.",
+  "aboutAi.compare.rows.4.ai":
+    "Instructions tailored to the exact reported symptoms and history in the patient's language.",
+
+  "aboutAi.notAi.title": "Where we deliberately do NOT use AI",
+  "aboutAi.notAi.1.title": "Hospital ranking",
+  "aboutAi.notAi.1.body":
+    "is a scored SQL query over haversine distance, specialty match and bed availability - no model needed.",
+  "aboutAi.notAi.2.title": "Status transitions",
+  "aboutAi.notAi.2.body": "(dispatched, en_route, arrived) are a plain state machine.",
+  "aboutAi.notAi.3.title": "Offline fallback triage",
+  "aboutAi.notAi.3.body":
+    "is rule-based on-device, so a patient still gets a severity band when the AI Gateway is unreachable.",
+
+  "aboutAi.model.title": "Model & data",
+  "aboutAi.model.name": "Model",
+  "aboutAi.model.nameValue":
+    "Google Gemini 3.6 Flash via the Lovable AI Gateway. Chosen for native vision, sub-2s latency and multilingual coverage of Bantu languages.",
+  "aboutAi.model.data": "Data used at inference",
+  "aboutAi.model.dataValue":
+    "Only the current SOS payload: selected symptom tags, free-text description, pain score, age, optional photos/video frames. No training on patient data, no PII shared beyond the active request.",
+  "aboutAi.model.latency": "Latency target",
+  "aboutAi.model.latencyValue":
+    "Under 2 seconds for text triage; under 6 seconds for multimodal assessment with one image.",
+  "aboutAi.model.temp": "Output control",
+  "aboutAi.model.tempValue":
+    "Temperature 0.3 with a strict Zod JSON schema to constrain output and reduce hallucination.",
+
+  "aboutAi.safety.title": "Safety & guardrails",
+  "aboutAi.safety.1.title": "Human in the loop",
+  "aboutAi.safety.1.body":
+    "AI recommends; dispatchers and hospital staff decide. The handoff is a decision-support document, not a diagnosis.",
+  "aboutAi.safety.2.title": "Severity-first routing",
+  "aboutAi.safety.2.body":
+    "Critical cases are flagged immediately and bypass the queue so they reach the nearest capable hospital first.",
+  "aboutAi.safety.3.title": "Schema-bound output",
+  "aboutAi.safety.3.body":
+    "Every model response is validated against a typed Zod schema before it reaches the patient or hospital UI.",
+  "aboutAi.safety.4.title": "Offline fallback",
+  "aboutAi.safety.4.body":
+    "If the AI Gateway is unreachable, a deterministic rule-based triage runs on-device so the patient is never left without guidance.",
+
+  "aboutAi.fallback.title": "What happens when the AI is unreachable?",
+  "aboutAi.fallback.body":
+    "If the network drops or the AI Gateway is rate-limited, LifeLine+ falls back to a deterministic, on-device rule-based triage. The result is clearly labelled as offline triage, and hospital staff re-assess on arrival. The app keeps working even when connectivity does not.",
+
+  "aboutAi.cta.try": "Try the AI assistant",
 
   // Partners / Testimonials / FAQ
   "landing.partners.eyebrow": "Partner Hospitals",
