@@ -319,7 +319,7 @@ function AboutAi() {
   );
 }
 
-function Card({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
+export function Card({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
   return (
     <div className="rounded-2xl border border-border bg-card p-5">
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -331,7 +331,7 @@ function Card({ icon, title, body }: { icon: React.ReactNode; title: string; bod
   );
 }
 
-function SafetyCard({
+export function SafetyCard({
   icon,
   title,
   body,
@@ -351,7 +351,7 @@ function SafetyCard({
   );
 }
 
-function Step({
+export function Step({
   n,
   icon,
   title,
