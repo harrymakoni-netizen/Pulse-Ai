@@ -64,7 +64,7 @@ Medical history: ${data.medicalHistory || "n/a"}`;
       : userMsg;
 
     const raw = await callChat({
-      model: data.images.length ? "google/gemini-3.6-flash" : "google/gemini-3.1-flash-lite",
+      model: "google/gemini-3.6-flash",
       messages: [
         { role: "system", content: system },
         { role: "user", content: userContent },
