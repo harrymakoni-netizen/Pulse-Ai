@@ -118,7 +118,7 @@ const T = {
 const ttsLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
 
 function AssistantPage() {
-  const { lang } = useI18n();
+  const { lang, t: tGlobal } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -179,8 +179,8 @@ function AssistantPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next, language: lang }),
       }, {
-        onQueued: () => toast.info("…"),
-        onRetry: () => toast.info("…"),
+        onQueued: () => toast.info(tGlobal("ai.queued")),
+        onRetry: () => toast.info(tGlobal("ai.retrying")),
       });
       if (!res.ok || !res.body) throw new Error("AI unavailable");
       const reader = res.body.getReader();
