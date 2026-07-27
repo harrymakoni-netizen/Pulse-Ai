@@ -1431,6 +1431,14 @@ const nd: Dict = {
   "ai.queued": "Ulindile emugceni we-AI...",
   "ai.retrying": "I-AI imatasatasa, siyazama futhi...",
   "ai.failed": "I-AI igcwele. Zama futhi kancane.",
+
+  "emerg.new.consentTitle": "Ngiyavuma ukucutshungulwa kwedatha",
+  "emerg.new.consentBody":
+    "Ngiyavuma ukuthi i-LifeLine+ isebenzise izimpawu, izithombe, amavidiyo lendawo engiyabelanayo ngenhloso ye-AI triage lokwedluliselwa esibhedlela, ngokuvumelana lomthetho we-Zimbabwe Data Protection Act [Chapter 12:07]. Ngingayihoxisa noma nini.",
+  "emerg.new.consentLabel": "Imvume yokusetshenziswa kwedatha",
+  "emerg.new.fallbackUsed": "Sisebenza ngaphandle kwe-inthanethi. Sisebenzisa i-triage yasefonini.",
+  "emerg.new.fallbackBanner":
+    "Lolu hlolo lwenziwe yindlela yemithetho yasefonini ngoba i-AI Gateway ibingafinyeleleki. Abasebenzi bezempilo bazoxilonga futhi ekufikeni.",
 };
 
 export const DICT: Record<Lang, Dict> = { en, sn, nd };

@@ -514,6 +514,7 @@ function SiteFooter() {
               [t("landing.nav.how"), "#how"],
               [t("landing.nav.features"), "#features"],
               [t("landing.nav.ai"), "#ai"],
+              ["Why AI?", "/about/ai"],
               [t("landing.nav.faq"), "#faq"],
             ]}
           />
