@@ -12,6 +12,7 @@ import { DICT, LANG_META, type Lang } from "./translations";
 import { Globe, Check } from "lucide-react";
 
 const STORAGE_KEY = "lifeline.lang";
+const STORAGE_CHOSEN_KEY = "lifeline.hasChosen";
 
 type Ctx = {
   lang: Lang;
