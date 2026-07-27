@@ -17,7 +17,22 @@ import {
   ArrowRight,
   Star,
   ChevronDown,
+  Brain,
+  Database,
+  Layers,
+  CheckCircle2,
+  XCircle,
+  Workflow,
+  ScanEye,
+  MessageSquareText,
+  Stethoscope,
+  MapPin,
+  FileText,
+  Lock,
+  WifiOff,
+  ServerOff,
 } from "lucide-react";
+import { Card, Step, SafetyCard } from "./about.ai";
 
 export const Route = createFileRoute("/")({
   component: Landing,
