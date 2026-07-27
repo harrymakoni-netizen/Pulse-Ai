@@ -342,7 +342,13 @@ function AiTechnology() {
                 </li>
               ))}
             </ul>
+            <Button asChild variant="outline" className="mt-6 gap-2">
+              <Link to="/about/ai">
+                {t("landing.ai.whyAiCta")} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
+
           <div className="glass elevated rounded-3xl border p-2">
             <div className="rounded-2xl bg-card p-6">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
