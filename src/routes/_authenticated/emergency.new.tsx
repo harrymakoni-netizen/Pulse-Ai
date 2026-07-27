@@ -19,8 +19,6 @@ import { useServerFn as tanUseServerFn } from "@tanstack/react-start";
 import { useI18n } from "@/i18n";
 import { runAi } from "@/lib/ai-queue";
 import { compressImage, extractVideoFrames } from "@/lib/media";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useId } from "react";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
