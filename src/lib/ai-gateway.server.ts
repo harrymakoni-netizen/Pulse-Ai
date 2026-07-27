@@ -2,9 +2,13 @@
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1";
 
+export type ChatContentPart =
+  | { type: "text"; text: string }
+  | { type: "image_url"; image_url: { url: string } };
+
 export type ChatMessage = {
   role: "system" | "user" | "assistant";
-  content: string;
+  content: string | ChatContentPart[];
 };
 
 function getKey(): string {
