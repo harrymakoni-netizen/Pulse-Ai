@@ -35,6 +35,9 @@ import { useServerFn as tanUseServerFn } from "@tanstack/react-start";
 import { useI18n } from "@/i18n";
 import { runAi } from "@/lib/ai-queue";
 import { compressImage, extractVideoFrames } from "@/lib/media";
+import { ruleBasedTriage } from "@/lib/triage-fallback";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
@@ -76,6 +79,11 @@ function NewEmergency() {
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [assessment, setAssessment] = useState<AiAssessment | null>(null);
+  const [fallbackUsed, setFallbackUsed] = useState(false);
+  const [consent, setConsent] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("lifeline.consent.v1") === "1";
+  });
   const navigate = useNavigate();
 
   const hospitals = useQuery({ queryKey: ["hospitals"], queryFn: () => listHospitals() });
@@ -93,10 +101,24 @@ function NewEmergency() {
         language,
         images,
       };
-      return await runAi(() => assessFn({ data: payload }), {
-        onQueued: () => toast.info(t("ai.queued")),
-        onRetry: () => toast.info(t("ai.retrying")),
-      });
+      try {
+        const result = await runAi(() => assessFn({ data: payload }), {
+          onQueued: () => toast.info(t("ai.queued")),
+          onRetry: () => toast.info(t("ai.retrying")),
+        });
+        setFallbackUsed(false);
+        return result;
+      } catch (err) {
+        // On-device rule-based fallback so the patient still gets a result
+        // if the AI Gateway is unreachable (offline, rate-limited, timeout).
+        const msg = err instanceof Error ? err.message : String(err ?? "");
+        if (/429|busy|rate.?limit|load failed|failed to fetch|network|timeout|503/i.test(msg)) {
+          setFallbackUsed(true);
+          toast.warning(t("emerg.new.fallbackUsed"));
+          return ruleBasedTriage(payload);
+        }
+        throw err;
+      }
     },
     onSuccess: (data) => {
       setAssessment(data);
@@ -327,10 +349,33 @@ function NewEmergency() {
               )}
             </div>
 
+            <div className="mt-4 rounded-xl border border-border bg-secondary/40 p-4">
+              <label className="flex cursor-pointer items-start gap-3">
+                <Checkbox
+                  checked={consent}
+                  onCheckedChange={(v) => {
+                    const next = v === true;
+                    setConsent(next);
+                    if (typeof window !== "undefined") {
+                      window.localStorage.setItem("lifeline.consent.v1", next ? "1" : "0");
+                    }
+                  }}
+                  aria-label={t("emerg.new.consentLabel")}
+                />
+                <div className="text-xs leading-relaxed">
+                  <div className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+                    <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                    {t("emerg.new.consentTitle")}
+                  </div>
+                  <p className="mt-1 text-muted-foreground">{t("emerg.new.consentBody")}</p>
+                </div>
+              </label>
+            </div>
+
             <Footer
               t={t}
               next={() => setStep(2)}
-              nextDisabled={symptoms.length === 0 && !symptomsText.trim()}
+              nextDisabled={!consent || (symptoms.length === 0 && !symptomsText.trim())}
             />
           </StepWrap>
         )}
