@@ -496,6 +496,15 @@ const en: Dict = {
   "ai.queued": "Waiting in line for AI...",
   "ai.retrying": "AI is busy, retrying...",
   "ai.failed": "AI is overloaded. Please try again in a moment.",
+
+  // Consent + offline fallback
+  "emerg.new.consentTitle": "I consent to data processing",
+  "emerg.new.consentBody":
+    "I agree that LifeLine+ may process the symptoms, photos, video frames and location I share for the purpose of AI triage and hospital handoff, in line with the Zimbabwe Data Protection Act [Chapter 12:07]. I can withdraw at any time.",
+  "emerg.new.consentLabel": "Consent to data processing",
+  "emerg.new.fallbackUsed": "Working offline. Using on-device triage.",
+  "emerg.new.fallbackBanner":
+    "This assessment was produced by the on-device rule-based fallback because the AI Gateway was unreachable. Hospital staff will re-triage on arrival.",
 };
 
 const sn: Dict = {
@@ -957,6 +966,14 @@ const sn: Dict = {
   "ai.queued": "Wakamirira mumutsara weAI...",
   "ai.retrying": "AI ine basa, tichaedza zvakare...",
   "ai.failed": "AI yakazara. Edzazve mune chinguva chidiki.",
+
+  "emerg.new.consentTitle": "Ndinobvumidza kushandiswa kwe data",
+  "emerg.new.consentBody":
+    "Ndinobvuma kuti LifeLine+ ishandise zviratidzo, mifananidzo, vhidhiyo nenzvimbo yandinopa kuti iite triage yeAI uye kutumira kuchipatara, zvichienderana neZimbabwe Data Protection Act [Chapter 12:07]. Ndinogona kudzosa mvumo chero nguva.",
+  "emerg.new.consentLabel": "Mvumo yekushandisa data",
+  "emerg.new.fallbackUsed": "Kushanda pasina internet. Tiri kushandisa triage yepafoni.",
+  "emerg.new.fallbackBanner":
+    "Ongororo iyi yakabudiswa nemitemo yepafoni nekuti AI Gateway haina kusvika. Vashandi vechipatara vachaongororazve pakusvika.",
 };
 
 const nd: Dict = {

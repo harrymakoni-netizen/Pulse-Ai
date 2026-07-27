@@ -502,6 +502,11 @@ function NewEmergency() {
               animate={{ opacity: 1, y: 0 }}
               className="grid gap-4"
             >
+              {fallbackUsed && (
+                <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-300">
+                  {t("emerg.new.fallbackBanner")}
+                </div>
+              )}
               <div className="rounded-2xl border border-border p-5">
                 <div className="flex items-center justify-between">
                   <SeverityBadge severity={assessment.severity} />
