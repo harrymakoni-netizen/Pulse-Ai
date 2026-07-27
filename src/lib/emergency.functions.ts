@@ -10,6 +10,11 @@ const AssessInput = z.object({
   age: z.number().optional(),
   medicalHistory: z.string().optional().default(""),
   language: z.enum(["en", "sn", "nd"]).default("en"),
+  images: z
+    .array(z.string().startsWith("data:"))
+    .max(3)
+    .optional()
+    .default([]),
 });
 
 export type AiAssessment = {
@@ -29,6 +34,7 @@ export const assessEmergency = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => AssessInput.parse(input))
   .handler(async ({ data }): Promise<AiAssessment> => {
     const system = `You are LifeLine+ AI Triage, a medical emergency triage assistant for Zimbabwe. You are calm, precise, and safety-first.
+If the user attaches photos, examine them for visible bleeding, swelling, burns, rash, deformity, wound depth, discoloration, or other clinical signs and factor those observations into severity, firstAid, redFlags, and hospitalReport. If image quality is poor or the image is unrelated to the reported symptoms, note that briefly in the summary but still assess based on the text.
 Return ONLY a valid JSON object matching this TypeScript type:
 {
   "severity": "low" | "medium" | "high" | "critical",
@@ -50,11 +56,18 @@ Pain level (0-10): ${data.painLevel ?? "n/a"}
 Age: ${data.age ?? "n/a"}
 Medical history: ${data.medicalHistory || "n/a"}`;
 
+    const userContent = data.images.length
+      ? [
+          { type: "text" as const, text: userMsg },
+          ...data.images.map((url) => ({ type: "image_url" as const, image_url: { url } })),
+        ]
+      : userMsg;
+
     const raw = await callChat({
-      model: "google/gemini-3.1-flash-lite",
+      model: data.images.length ? "google/gemini-3.6-flash" : "google/gemini-3.1-flash-lite",
       messages: [
         { role: "system", content: system },
-        { role: "user", content: userMsg },
+        { role: "user", content: userContent },
       ],
       responseFormat: { type: "json_object" },
       temperature: 0.3,

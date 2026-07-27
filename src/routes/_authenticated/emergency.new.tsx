@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { HeartPulse, MapPin, ShieldAlert, Sparkles, Hospital, Loader2, Check, ChevronRight } from "lucide-react";
+import { HeartPulse, MapPin, ShieldAlert, Sparkles, Hospital, Loader2, Check, ChevronRight, Camera, Video, X } from "lucide-react";
 import { SeverityBadge } from "@/components/lifeline/severity-badge";
 import { EcgLoader } from "@/components/lifeline/ecg-loader";
 import { listHospitals } from "@/lib/hospitals.functions";
@@ -50,6 +50,8 @@ function NewEmergency() {
   const [step, setStep] = useState<Step>(1);
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [symptomsText, setSymptomsText] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [mediaBusy, setMediaBusy] = useState(false);
   const [painLevel, setPainLevel] = useState(5);
   const [age, setAge] = useState<number | "">("");
   const [history, setHistory] = useState("");
@@ -66,7 +68,7 @@ function NewEmergency() {
   const assess = useMutation({
     mutationFn: async () => {
       const payload = {
-        symptoms, symptomsText, painLevel, age: typeof age === "number" ? age : undefined, medicalHistory: history, language,
+        symptoms, symptomsText, painLevel, age: typeof age === "number" ? age : undefined, medicalHistory: history, language, images,
       };
       return await runAi(() => assessFn({ data: payload }), {
         onQueued: () => toast.info(t("ai.queued")),
@@ -135,6 +137,34 @@ function NewEmergency() {
     return scored.slice(0, 3);
   }, [hospitals.data, coords, assessment]);
 
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setMediaBusy(true);
+    try {
+      const next: string[] = [];
+      for (const file of Array.from(files)) {
+        if (images.length + next.length >= 3) { toast.error(t("emerg.new.mediaTooMany")); break; }
+        if (file.type.startsWith("video/")) {
+          if (file.size > 25 * 1024 * 1024) { toast.error(t("emerg.new.mediaTooLarge")); continue; }
+          const frames = await extractVideoFrames(file, 2);
+          for (const f of frames) {
+            if (images.length + next.length >= 3) break;
+            next.push(f);
+          }
+        } else if (file.type.startsWith("image/")) {
+          if (file.size > 10 * 1024 * 1024) { toast.error(t("emerg.new.mediaTooLarge")); continue; }
+          const compressed = await compressImage(file, 1280, 0.82);
+          next.push(compressed);
+        }
+      }
+      if (next.length) setImages((prev) => [...prev, ...next].slice(0, 3));
+    } catch {
+      toast.error(t("emerg.new.mediaTooLarge"));
+    } finally {
+      setMediaBusy(false);
+    }
+  }
+
   return (
     <AppShell>
       <div className="mb-8">
@@ -162,6 +192,37 @@ function NewEmergency() {
             </div>
             <Label htmlFor="txt">{t("emerg.new.describe")}</Label>
             <Textarea id="txt" rows={4} placeholder={t("emerg.new.describePh")} value={symptomsText} onChange={(e) => setSymptomsText(e.target.value)} className="mt-1.5" />
+
+            <div className="mt-4 rounded-xl border border-dashed border-border p-4">
+              <div className="text-sm font-medium">{t("emerg.new.media")}</div>
+              <p className="mt-0.5 text-xs text-muted-foreground">{t("emerg.new.mediaHint")}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
+                  <Camera className="h-3.5 w-3.5" /> {t("emerg.new.addPhoto")}
+                  <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
+                </label>
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
+                  <Video className="h-3.5 w-3.5" /> {t("emerg.new.addVideo")}
+                  <input type="file" accept="video/*" capture="environment" className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
+                </label>
+                {mediaBusy && <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"><Loader2 className="h-3 w-3 animate-spin" /> {t("emerg.new.mediaProcessing")}</span>}
+              </div>
+              {images.length > 0 && (
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  {images.map((src, i) => (
+                    <div key={i} className="relative overflow-hidden rounded-lg border border-border">
+                      <img src={src} alt="attachment" className="h-24 w-full object-cover" />
+                      <button type="button" onClick={() => setImages((prev) => prev.filter((_, j) => j !== i))}
+                        aria-label={t("emerg.new.remove")}
+                        className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white hover:bg-black/80">
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Footer t={t} next={() => setStep(2)} nextDisabled={symptoms.length === 0 && !symptomsText.trim()} />
           </StepWrap>
         )}
@@ -304,4 +365,50 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; const dLat = ((lat2-lat1)*Math.PI)/180; const dLon = ((lon2-lon1)*Math.PI)/180;
   const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
   return 2*R*Math.asin(Math.sqrt(a));
+}
+
+async function compressImage(file: File, maxSize = 1280, quality = 0.82): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
+  const w = Math.round(bitmap.width * scale);
+  const h = Math.round(bitmap.height * scale);
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d")!;
+  ctx.drawImage(bitmap, 0, 0, w, h);
+  bitmap.close?.();
+  return canvas.toDataURL("image/jpeg", quality);
+}
+
+async function extractVideoFrames(file: File, count = 2): Promise<string[]> {
+  const url = URL.createObjectURL(file);
+  try {
+    const video = document.createElement("video");
+    video.src = url; video.muted = true; video.playsInline = true; video.preload = "auto";
+    await new Promise<void>((resolve, reject) => {
+      video.onloadedmetadata = () => resolve();
+      video.onerror = () => reject(new Error("video load failed"));
+    });
+    const duration = Math.min(video.duration || 0, 10);
+    const times = count === 1 ? [duration * 0.5] : [duration * 0.25, duration * 0.7];
+    const frames: string[] = [];
+    const w = Math.min(1280, video.videoWidth);
+    const scale = w / video.videoWidth;
+    const h = Math.round(video.videoHeight * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext("2d")!;
+    for (const time of times) {
+      await new Promise<void>((resolve) => {
+        const onSeek = () => { video.removeEventListener("seeked", onSeek); resolve(); };
+        video.addEventListener("seeked", onSeek);
+        video.currentTime = Math.max(0, Math.min(time, (video.duration || 0) - 0.05));
+      });
+      ctx.drawImage(video, 0, 0, w, h);
+      frames.push(canvas.toDataURL("image/jpeg", 0.82));
+    }
+    return frames;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
