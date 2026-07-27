@@ -19,8 +19,6 @@ import { useServerFn as tanUseServerFn } from "@tanstack/react-start";
 import { useI18n } from "@/i18n";
 import { runAi } from "@/lib/ai-queue";
 import { compressImage, extractVideoFrames } from "@/lib/media";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useId } from "react";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
@@ -367,29 +365,11 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
 function MediaButton({ kind, label, onFiles }: { kind: "image" | "video"; label: string; onFiles: (f: FileList | null) => void }) {
   const Icon = kind === "image" ? Camera : Video;
   const accept = kind === "image" ? "image/*" : "video/*";
-  const captureId = useId();
-  const pickId = useId();
-  const handle = (e: React.ChangeEvent<HTMLInputElement>) => { onFiles(e.target.files); e.target.value = ""; };
   return (
-    <>
-      <Popover>
-        <PopoverTrigger asChild>
-          <button type="button" className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-            <Icon className="h-3.5 w-3.5" /> {label}
-          </button>
-        </PopoverTrigger>
-        <PopoverContent align="start" className="w-52 p-1">
-          <label htmlFor={captureId} className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent">
-            <Camera className="h-4 w-4" /> {kind === "image" ? "Take photo" : "Record video"}
-          </label>
-          <label htmlFor={pickId} className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent">
-            <Video className="h-4 w-4" /> {kind === "image" ? "Choose from gallery" : "Choose from files"}
-          </label>
-        </PopoverContent>
-      </Popover>
-      <input id={captureId} type="file" accept={accept} capture="environment" multiple={kind === "image"} className="hidden" onChange={handle} />
-      <input id={pickId} type="file" accept={accept} multiple={kind === "image"} className="hidden" onChange={handle} />
-    </>
+    <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
+      <Icon className="h-3.5 w-3.5" /> {label}
+      <input type="file" accept={accept} multiple={kind === "image"} className="hidden" onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }} />
+    </label>
   );
 }
 
