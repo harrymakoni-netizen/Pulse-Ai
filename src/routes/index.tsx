@@ -586,13 +586,6 @@ function AiTechnology() {
           </div>
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <Button asChild variant="outline" className="gap-2">
-            <Link to="/about/ai">
-              {t("landing.ai.whyAiCta")} <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
       </div>
     </section>
   );
