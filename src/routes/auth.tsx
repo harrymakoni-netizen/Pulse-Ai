@@ -61,6 +61,18 @@ function AuthPage() {
         const { data: u } = await supabase.auth.getUser();
         if (u.user) {
           await supabase.from("emergency_requests").delete().eq("patient_id", u.user.id);
+          await supabase.from("profiles").update({
+            full_name: trimmed,
+            phone: null,
+            blood_type: null,
+            allergies: [],
+            medications: [],
+            dob: null,
+          }).eq("id", u.user.id);
+          await supabase.from("emergency_contacts").delete().eq("user_id", u.user.id);
+          await supabase.from("medical_records").delete().eq("user_id", u.user.id);
+          await supabase.from("appointments").delete().eq("user_id", u.user.id);
+          await supabase.from("notifications").delete().eq("user_id", u.user.id);
         }
       } catch { /* ignore */ }
       toast.success(t("auth.toast.welcome"));
