@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/i18n";
+import { fetchAi } from "@/lib/ai-queue";
 
 export const Route = createFileRoute("/_authenticated/assistant")({
   head: () => ({ meta: [{ title: "AI Assistant · LifeLine+" }] }),
@@ -117,7 +118,7 @@ const T = {
 const ttsLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
 
 function AssistantPage() {
-  const { lang } = useI18n();
+  const { lang, t: tGlobal } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -173,10 +174,13 @@ function AssistantPage() {
     setBusy(true);
     setMessages((m) => [...m, { role: "assistant", content: "" }]);
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetchAi("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next, language: lang }),
+      }, {
+        onQueued: () => toast.info(tGlobal("ai.queued")),
+        onRetry: () => toast.info(tGlobal("ai.retrying")),
       });
       if (!res.ok || !res.body) throw new Error("AI unavailable");
       const reader = res.body.getReader();

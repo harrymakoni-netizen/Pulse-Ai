@@ -19,6 +19,14 @@ Be honest about your limits. You do not replace a clinician.`,
         const messages = [system, ...(body.messages ?? [])];
         const upstream = await streamChat({ messages });
         if (!upstream.ok || !upstream.body) {
+          // Propagate transient statuses so the client queue can back off intelligently.
+          if (upstream.status === 429 || upstream.status === 503) {
+            const ra = upstream.headers.get("retry-after") ?? "2";
+            return new Response("AI busy, please retry", {
+              status: upstream.status,
+              headers: { "retry-after": ra },
+            });
+          }
           return new Response("AI unavailable", { status: 502 });
         }
         // Transform OpenAI SSE stream to plain text token stream
