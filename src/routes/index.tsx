@@ -334,12 +334,35 @@ function AiTechnology() {
     t("landing.ai.p4"),
     t("landing.ai.p5"),
   ];
+  const compareRows = [
+    {
+      task: t("aboutAi.compare.rows.1.task"),
+      baseline: t("aboutAi.compare.rows.1.baseline"),
+      ai: t("aboutAi.compare.rows.1.ai"),
+    },
+    {
+      task: t("aboutAi.compare.rows.2.task"),
+      baseline: t("aboutAi.compare.rows.2.baseline"),
+      ai: t("aboutAi.compare.rows.2.ai"),
+    },
+    {
+      task: t("aboutAi.compare.rows.3.task"),
+      baseline: t("aboutAi.compare.rows.3.baseline"),
+      ai: t("aboutAi.compare.rows.3.ai"),
+    },
+    {
+      task: t("aboutAi.compare.rows.4.task"),
+      baseline: t("aboutAi.compare.rows.4.baseline"),
+      ai: t("aboutAi.compare.rows.4.ai"),
+    },
+  ];
   return (
     <section
       id="ai"
       className="border-t border-border bg-gradient-to-b from-background to-secondary/30 py-20 md:py-28"
     >
       <div className="mx-auto max-w-7xl px-4 md:px-8">
+        {/* Intro + live demo */}
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
             <div className="text-xs font-semibold uppercase tracking-widest text-primary">
@@ -387,6 +410,193 @@ function AiTechnology() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Why AI deep dive */}
+        <div className="mt-20">
+          <div className="mx-auto max-w-2xl text-center">
+            <h3 className="font-display text-2xl font-semibold md:text-3xl">
+              {t("aboutAi.title")}
+            </h3>
+            <p className="mt-3 text-muted-foreground">{t("aboutAi.subtitle")}</p>
+          </div>
+
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            <Card
+              icon={<Layers className="h-5 w-5" />}
+              title={t("aboutAi.problems.1.title")}
+              body={t("aboutAi.problems.1.body")}
+            />
+            <Card
+              icon={<Brain className="h-5 w-5" />}
+              title={t("aboutAi.problems.2.title")}
+              body={t("aboutAi.problems.2.body")}
+            />
+            <Card
+              icon={<ShieldCheck className="h-5 w-5" />}
+              title={t("aboutAi.problems.3.title")}
+              body={t("aboutAi.problems.3.body")}
+            />
+          </div>
+        </div>
+
+        {/* Pipeline */}
+        <div className="mt-16">
+          <h3 className="text-center font-display text-2xl font-semibold">
+            {t("aboutAi.pipeline.title")}
+          </h3>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Step
+              n={1}
+              icon={<MessageSquareText className="h-4 w-4" />}
+              title={t("aboutAi.pipeline.1.title")}
+              body={t("aboutAi.pipeline.1.body")}
+            />
+            <Step
+              n={2}
+              icon={<ScanEye className="h-4 w-4" />}
+              title={t("aboutAi.pipeline.2.title")}
+              body={t("aboutAi.pipeline.2.body")}
+            />
+            <Step
+              n={3}
+              icon={<Stethoscope className="h-4 w-4" />}
+              title={t("aboutAi.pipeline.3.title")}
+              body={t("aboutAi.pipeline.3.body")}
+            />
+            <Step
+              n={4}
+              icon={<MapPin className="h-4 w-4" />}
+              title={t("aboutAi.pipeline.4.title")}
+              body={t("aboutAi.pipeline.4.body")}
+            />
+          </div>
+          <div className="mt-4 rounded-2xl border border-border bg-card p-5">
+            <div className="flex items-start gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <FileText className="h-4 w-4" />
+              </div>
+              <div>
+                <div className="font-semibold">{t("aboutAi.pipeline.5.title")}</div>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t("aboutAi.pipeline.5.body")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Comparison table */}
+        <div className="mt-16">
+          <h3 className="text-center font-display text-2xl font-semibold">
+            {t("aboutAi.compare.title")}
+          </h3>
+          <div className="mt-8 overflow-hidden rounded-2xl border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-secondary/60 text-left">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">{t("aboutAi.compare.task")}</th>
+                  <th className="px-4 py-3 font-semibold">{t("aboutAi.compare.baseline")}</th>
+                  <th className="px-4 py-3 font-semibold">{t("aboutAi.compare.ai")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {compareRows.map((r, i) => (
+                  <tr key={i}>
+                    <td className="px-4 py-3 font-medium">{r.task}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      <div className="flex items-start gap-2">
+                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--alert)]" />
+                        <span>{r.baseline}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-start gap-2">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--emerald-brand)]" />
+                        <span>{r.ai}</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Model & safety */}
+        <div className="mt-16 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <Database className="h-4 w-4" /> {t("aboutAi.model.title")}
+            </div>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div>
+                <div className="text-sm font-semibold">{t("aboutAi.model.name")}</div>
+                <p className="mt-1 text-sm text-muted-foreground">{t("aboutAi.model.nameValue")}</p>
+              </div>
+              <div>
+                <div className="text-sm font-semibold">{t("aboutAi.model.latency")}</div>
+                <p className="mt-1 text-sm text-muted-foreground">{t("aboutAi.model.latencyValue")}</p>
+              </div>
+              <div>
+                <div className="text-sm font-semibold">{t("aboutAi.model.data")}</div>
+                <p className="mt-1 text-sm text-muted-foreground">{t("aboutAi.model.dataValue")}</p>
+              </div>
+              <div>
+                <div className="text-sm font-semibold">{t("aboutAi.model.temp")}</div>
+                <p className="mt-1 text-sm text-muted-foreground">{t("aboutAi.model.tempValue")}</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-display text-xl font-semibold">{t("aboutAi.safety.title")}</h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <SafetyCard
+                icon={<Lock className="h-5 w-5" />}
+                title={t("aboutAi.safety.1.title")}
+                body={t("aboutAi.safety.1.body")}
+              />
+              <SafetyCard
+                icon={<Activity className="h-5 w-5" />}
+                title={t("aboutAi.safety.2.title")}
+                body={t("aboutAi.safety.2.body")}
+              />
+              <SafetyCard
+                icon={<Workflow className="h-5 w-5" />}
+                title={t("aboutAi.safety.3.title")}
+                body={t("aboutAi.safety.3.body")}
+              />
+              <SafetyCard
+                icon={<ServerOff className="h-5 w-5" />}
+                title={t("aboutAi.safety.4.title")}
+                body={t("aboutAi.safety.4.body")}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Offline fallback */}
+        <div className="mt-10 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <WifiOff className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="font-display text-xl font-semibold">{t("aboutAi.fallback.title")}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {t("aboutAi.fallback.body")}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <Button asChild variant="outline" className="gap-2">
+            <Link to="/about/ai">
+              {t("landing.ai.whyAiCta")} <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
