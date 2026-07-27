@@ -36,7 +36,7 @@ Be honest about your limits. You do not replace a clinician.`,
         const messages = [system, ...converted];
         const upstream = await streamChat({
           messages,
-          ...(hasImages ? { model: "google/gemini-3.6-flash" } : {}),
+          model: "google/gemini-3.6-flash",
         });
         if (!upstream.ok || !upstream.body) {
           // Propagate transient statuses so the client queue can back off intelligently.
