@@ -8,11 +8,29 @@ const styles = {
   critical: "bg-[color:var(--alert)]/15 text-[color:var(--alert)] border-[color:var(--alert)]/40",
 } as const;
 
-export function SeverityBadge({ severity, className }: { severity: keyof typeof styles; className?: string }) {
+export function SeverityBadge({
+  severity,
+  className,
+}: {
+  severity: keyof typeof styles;
+  className?: string;
+}) {
   const t = useT();
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium uppercase tracking-wide", styles[severity], className)}>
-      <span className={cn("h-1.5 w-1.5 rounded-full", severity === "critical" ? "pulse-alert" : "pulse-calm")} style={{ background: "currentColor" }} />
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium uppercase tracking-wide",
+        styles[severity],
+        className,
+      )}
+    >
+      <span
+        className={cn(
+          "h-1.5 w-1.5 rounded-full",
+          severity === "critical" ? "pulse-alert" : "pulse-calm",
+        )}
+        style={{ background: "currentColor" }}
+      />
       {t(`severity.${severity}`)}
     </span>
   );

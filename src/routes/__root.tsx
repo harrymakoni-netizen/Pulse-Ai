@@ -48,7 +48,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">{t("err.crash.title")}</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+          {t("err.crash.title")}
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("err.crash.body")}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -78,18 +80,41 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "LifeLine+ · AI-Powered Emergency Healthcare for Zimbabwe" },
-      { name: "description", content: "LifeLine+ connects patients, hospitals, and ambulances using AI to reduce emergency response times and save lives across Zimbabwe." },
+      {
+        name: "description",
+        content:
+          "LifeLine+ connects patients, hospitals, and ambulances using AI to reduce emergency response times and save lives across Zimbabwe.",
+      },
       { name: "author", content: "LifeLine+" },
       { name: "theme-color", content: "#1565C0" },
       { property: "og:title", content: "LifeLine+ · AI-Powered Emergency Healthcare for Zimbabwe" },
-      { property: "og:description", content: "LifeLine+ connects patients, hospitals, and ambulances using AI to reduce emergency response times and save lives across Zimbabwe." },
+      {
+        property: "og:description",
+        content:
+          "LifeLine+ connects patients, hospitals, and ambulances using AI to reduce emergency response times and save lives across Zimbabwe.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@LifeLinePlus" },
-      { name: "twitter:title", content: "LifeLine+ · AI-Powered Emergency Healthcare for Zimbabwe" },
-      { name: "twitter:description", content: "LifeLine+ connects patients, hospitals, and ambulances using AI to reduce emergency response times and save lives across Zimbabwe." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a0ecc2f-e750-4a58-b4d1-3322caa88a1c" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a0ecc2f-e750-4a58-b4d1-3322caa88a1c" },
+      {
+        name: "twitter:title",
+        content: "LifeLine+ · AI-Powered Emergency Healthcare for Zimbabwe",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "LifeLine+ connects patients, hospitals, and ambulances using AI to reduce emergency response times and save lives across Zimbabwe.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a0ecc2f-e750-4a58-b4d1-3322caa88a1c",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a0ecc2f-e750-4a58-b4d1-3322caa88a1c",
+      },
     ],
     links: [
       {

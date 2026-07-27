@@ -29,7 +29,7 @@ function HospitalsPage() {
     navigator.geolocation?.getCurrentPosition(
       (pos) => setLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
       () => setLoc({ lat: -17.8252, lng: 31.0335 }), // Harare fallback
-      { timeout: 6000 }
+      { timeout: 6000 },
     );
   }, []);
 
@@ -37,8 +37,16 @@ function HospitalsPage() {
     const base = hospitals.data ?? [];
     return base
       .map((h) => ({ ...h, distanceKm: loc ? haversine(loc.lat, loc.lng, h.lat, h.lng) : null }))
-      .filter((h) => (!onlyER || h.has_emergency) && h.available_beds >= minBeds && (h.distanceKm === null || h.distanceKm <= maxKm) && (q === "" || h.name.toLowerCase().includes(q.toLowerCase()) || h.city.toLowerCase().includes(q.toLowerCase())))
-      .sort((a,b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999));
+      .filter(
+        (h) =>
+          (!onlyER || h.has_emergency) &&
+          h.available_beds >= minBeds &&
+          (h.distanceKm === null || h.distanceKm <= maxKm) &&
+          (q === "" ||
+            h.name.toLowerCase().includes(q.toLowerCase()) ||
+            h.city.toLowerCase().includes(q.toLowerCase())),
+      )
+      .sort((a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999));
   }, [hospitals.data, loc, maxKm, onlyER, minBeds, q]);
 
   return (
@@ -52,42 +60,87 @@ function HospitalsPage() {
         <aside className="space-y-4 rounded-2xl border border-border bg-card p-5">
           <div>
             <Label>{t("hosp.search")}</Label>
-            <Input placeholder={t("hosp.searchPh")} value={q} onChange={(e) => setQ(e.target.value)} className="mt-1.5" />
+            <Input
+              placeholder={t("hosp.searchPh")}
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              className="mt-1.5"
+            />
           </div>
           <div>
-            <Label>{t("hosp.maxDistance")}: {maxKm} km</Label>
-            <Slider min={5} max={500} step={5} value={[maxKm]} onValueChange={(v) => setMaxKm(v[0] ?? 200)} className="mt-3" />
+            <Label>
+              {t("hosp.maxDistance")}: {maxKm} km
+            </Label>
+            <Slider
+              min={5}
+              max={500}
+              step={5}
+              value={[maxKm]}
+              onValueChange={(v) => setMaxKm(v[0] ?? 200)}
+              className="mt-3"
+            />
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="er">{t("hosp.emergencyCapable")}</Label>
             <Switch id="er" checked={onlyER} onCheckedChange={setOnlyER} />
           </div>
           <div>
-            <Label>{t("hosp.minBeds")}: {minBeds}</Label>
-            <Slider min={0} max={100} step={5} value={[minBeds]} onValueChange={(v) => setMinBeds(v[0] ?? 0)} className="mt-3" />
+            <Label>
+              {t("hosp.minBeds")}: {minBeds}
+            </Label>
+            <Slider
+              min={0}
+              max={100}
+              step={5}
+              value={[minBeds]}
+              onValueChange={(v) => setMinBeds(v[0] ?? 0)}
+              className="mt-3"
+            />
           </div>
         </aside>
 
         <div className="space-y-4">
           <HospitalMap items={list} center={loc} />
-          {hospitals.isLoading ? <EcgLoader label={t("hosp.loading")} /> : (
+          {hospitals.isLoading ? (
+            <EcgLoader label={t("hosp.loading")} />
+          ) : (
             <ul className="grid gap-3 md:grid-cols-2">
               {list.map((h) => (
                 <li key={h.id} className="rounded-2xl border border-border bg-card p-4">
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="font-medium">{h.name}</div>
-                      <div className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {h.city}{h.distanceKm !== null ? ` · ${h.distanceKm.toFixed(1)} km` : ""}</div>
+                      <div className="text-xs text-muted-foreground flex items-center gap-1">
+                        <MapPin className="h-3 w-3" /> {h.city}
+                        {h.distanceKm !== null ? ` · ${h.distanceKm.toFixed(1)} km` : ""}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-amber-500"><Star className="h-3 w-3 fill-current" /> {h.rating}</div>
+                    <div className="flex items-center gap-1 text-xs text-amber-500">
+                      <Star className="h-3 w-3 fill-current" /> {h.rating}
+                    </div>
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1">
-                    {h.specialties.slice(0,4).map(s => <span key={s} className="rounded-full bg-secondary px-2 py-0.5 text-[10px]">{s}</span>)}
+                    {h.specialties.slice(0, 4).map((s) => (
+                      <span key={s} className="rounded-full bg-secondary px-2 py-0.5 text-[10px]">
+                        {s}
+                      </span>
+                    ))}
                   </div>
                   <div className="mt-3 flex items-center justify-between text-xs">
-                    <span className="flex items-center gap-1 text-muted-foreground"><BedDouble className="h-3 w-3" /> {h.available_beds}/{h.total_beds} {t("hosp.beds")}</span>
-                    {h.has_emergency && <span className="inline-flex items-center gap-1 text-[color:var(--alert)]"><HeartPulse className="h-3 w-3" /> ER</span>}
-                    {h.phone && <a className="text-primary flex items-center gap-1" href={`tel:${h.phone}`}><Phone className="h-3 w-3" /> {t("common.call")}</a>}
+                    <span className="flex items-center gap-1 text-muted-foreground">
+                      <BedDouble className="h-3 w-3" /> {h.available_beds}/{h.total_beds}{" "}
+                      {t("hosp.beds")}
+                    </span>
+                    {h.has_emergency && (
+                      <span className="inline-flex items-center gap-1 text-[color:var(--alert)]">
+                        <HeartPulse className="h-3 w-3" /> ER
+                      </span>
+                    )}
+                    {h.phone && (
+                      <a className="text-primary flex items-center gap-1" href={`tel:${h.phone}`}>
+                        <Phone className="h-3 w-3" /> {t("common.call")}
+                      </a>
+                    )}
                   </div>
                 </li>
               ))}
@@ -100,15 +153,33 @@ function HospitalsPage() {
 }
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 6371; const dLat = ((lat2-lat1)*Math.PI)/180; const dLon = ((lon2-lon1)*Math.PI)/180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-  return 2*R*Math.asin(Math.sqrt(a));
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
 }
 
 // Client-only map (Leaflet uses window)
 import { lazy, Suspense } from "react";
 const LeafletMap = lazy(() => import("@/components/lifeline/hospital-map"));
-function HospitalMap({ items, center }: { items: Array<{ id: string; name: string; lat: number; lng: number; city: string; has_emergency: boolean; available_beds: number }>; center: { lat: number; lng: number } | null }) {
+function HospitalMap({
+  items,
+  center,
+}: {
+  items: Array<{
+    id: string;
+    name: string;
+    lat: number;
+    lng: number;
+    city: string;
+    has_emergency: boolean;
+    available_beds: number;
+  }>;
+  center: { lat: number; lng: number } | null;
+}) {
   const t = useT();
   return (
     <div className="h-72 overflow-hidden rounded-2xl border border-border md:h-96">

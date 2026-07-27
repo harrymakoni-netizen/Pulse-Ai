@@ -75,11 +75,7 @@ const severitySplit = [
   { key: "low", value: 21, color: "#10B981" },
 ];
 
-const aiInsights = [
-  { id: 1 as const },
-  { id: 2 as const },
-  { id: 3 as const },
-];
+const aiInsights = [{ id: 1 as const }, { id: 2 as const }, { id: 3 as const }];
 
 function MinistryDashboard() {
   const t = useT();
@@ -89,10 +85,30 @@ function MinistryDashboard() {
   const avgEta = (provinces.reduce((s, p) => s + p.avgEta, 0) / provinces.length).toFixed(1);
 
   const kpis = [
-    { icon: Activity, label: t("ministry.kpi.active"), value: totalActive, sub: t("ministry.kpi.active.sub") },
-    { icon: BedDouble, label: t("ministry.kpi.beds"), value: totalBeds, sub: t("ministry.kpi.beds.sub") },
-    { icon: Ambulance, label: t("ministry.kpi.amb"), value: totalAmbulances, sub: t("ministry.kpi.amb.sub") },
-    { icon: Timer, label: t("ministry.kpi.response"), value: `${avgEta} ${t("ministry.min")}`, sub: t("ministry.kpi.response.sub") },
+    {
+      icon: Activity,
+      label: t("ministry.kpi.active"),
+      value: totalActive,
+      sub: t("ministry.kpi.active.sub"),
+    },
+    {
+      icon: BedDouble,
+      label: t("ministry.kpi.beds"),
+      value: totalBeds,
+      sub: t("ministry.kpi.beds.sub"),
+    },
+    {
+      icon: Ambulance,
+      label: t("ministry.kpi.amb"),
+      value: totalAmbulances,
+      sub: t("ministry.kpi.amb.sub"),
+    },
+    {
+      icon: Timer,
+      label: t("ministry.kpi.response"),
+      value: `${avgEta} ${t("ministry.min")}`,
+      sub: t("ministry.kpi.response.sub"),
+    },
   ];
   const severityData = severitySplit.map((s) => ({ ...s, name: t(`severity.${s.key}`) }));
 
@@ -111,7 +127,9 @@ function MinistryDashboard() {
             {t("ministry.title")}
           </div>
         </div>
-        <h1 className="mt-1 font-display text-2xl font-semibold md:text-3xl">{t("ministry.title")}</h1>
+        <h1 className="mt-1 font-display text-2xl font-semibold md:text-3xl">
+          {t("ministry.title")}
+        </h1>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{t("ministry.sub")}</p>
       </motion.div>
 
@@ -154,12 +172,15 @@ function MinistryDashboard() {
                   <div>
                     <div className="text-sm font-medium">{p.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {p.ambulances} {t("ministry.units.ambulances")} · {p.beds} {t("ministry.units.beds")} · {p.avgEta} {t("ministry.units.minEta")}
+                      {p.ambulances} {t("ministry.units.ambulances")} · {p.beds}{" "}
+                      {t("ministry.units.beds")} · {p.avgEta} {t("ministry.units.minEta")}
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="font-display text-lg font-semibold">{p.active}</div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("ministry.units.active")}</div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      {t("ministry.units.active")}
+                    </div>
                   </div>
                 </div>
               );
@@ -168,7 +189,11 @@ function MinistryDashboard() {
         </Panel>
 
         {/* Severity pie */}
-        <Panel icon={<Flame className="h-4 w-4" />} title={t("ministry.panel.severity")} sub={t("ministry.panel.severity.sub")}>
+        <Panel
+          icon={<Flame className="h-4 w-4" />}
+          title={t("ministry.panel.severity")}
+          sub={t("ministry.panel.severity.sub")}
+        >
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -214,25 +239,50 @@ function MinistryDashboard() {
                 <XAxis dataKey="day" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
                 <YAxis tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
                 <Tooltip contentStyle={{ borderRadius: 8, borderColor: "var(--border)" }} />
-                <Area type="monotone" dataKey="emergencies" stroke="#1565C0" fill="url(#req)" strokeWidth={2} />
-                <Area type="monotone" dataKey="responded" stroke="#10B981" fill="url(#resp)" strokeWidth={2} />
+                <Area
+                  type="monotone"
+                  dataKey="emergencies"
+                  stroke="#1565C0"
+                  fill="url(#req)"
+                  strokeWidth={2}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="responded"
+                  stroke="#10B981"
+                  fill="url(#resp)"
+                  strokeWidth={2}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </Panel>
 
         {/* Response bars */}
-        <Panel icon={<Timer className="h-4 w-4" />} title={t("ministry.panel.avgResp")} sub={t("ministry.panel.avgResp.sub")}>
+        <Panel
+          icon={<Timer className="h-4 w-4" />}
+          title={t("ministry.panel.avgResp")}
+          sub={t("ministry.panel.avgResp.sub")}
+        >
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={provinces} layout="vertical" margin={{ left: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
                 <XAxis type="number" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} width={80} stroke="var(--muted-foreground)" />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  tick={{ fontSize: 10 }}
+                  width={80}
+                  stroke="var(--muted-foreground)"
+                />
                 <Tooltip contentStyle={{ borderRadius: 8, borderColor: "var(--border)" }} />
                 <Bar dataKey="avgEta" radius={[0, 6, 6, 0]}>
                   {provinces.map((p) => (
-                    <Cell key={p.name} fill={p.avgEta > 12 ? "#E11D48" : p.avgEta > 9 ? "#F59E0B" : "#10B981"} />
+                    <Cell
+                      key={p.name}
+                      fill={p.avgEta > 12 ? "#E11D48" : p.avgEta > 9 ? "#F59E0B" : "#10B981"}
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -255,27 +305,59 @@ function MinistryDashboard() {
                 <YAxis tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
                 <Tooltip contentStyle={{ borderRadius: 8, borderColor: "var(--border)" }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Line type="monotone" dataKey="respiratory" stroke="#1565C0" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="cardiac" stroke="#E11D48" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="trauma" stroke="#F59E0B" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="obstetric" stroke="#10B981" strokeWidth={2} dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey="respiratory"
+                  stroke="#1565C0"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="cardiac"
+                  stroke="#E11D48"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="trauma"
+                  stroke="#F59E0B"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="obstetric"
+                  stroke="#10B981"
+                  strokeWidth={2}
+                  dot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </Panel>
 
         {/* AI Insights */}
-        <Panel icon={<Sparkles className="h-4 w-4" />} title={t("ministry.panel.ai")} sub={t("ministry.panel.ai.sub")}>
+        <Panel
+          icon={<Sparkles className="h-4 w-4" />}
+          title={t("ministry.panel.ai")}
+          sub={t("ministry.panel.ai.sub")}
+        >
           <ul className="space-y-3">
             {aiInsights.map((insight) => (
               <li key={insight.id} className="rounded-xl border border-border bg-background/50 p-3">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="text-sm font-medium">{t(`ministry.insight.${insight.id}.title`)}</div>
+                  <div className="text-sm font-medium">
+                    {t(`ministry.insight.${insight.id}.title`)}
+                  </div>
                   <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary">
                     {t(`ministry.insight.${insight.id}.tag`)}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">{t(`ministry.insight.${insight.id}.body`)}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t(`ministry.insight.${insight.id}.body`)}
+                </p>
               </li>
             ))}
           </ul>
@@ -307,11 +389,15 @@ function MinistryDashboard() {
                 <div className="mt-2 flex items-baseline justify-between">
                   <div>
                     <div className="font-display text-lg font-semibold">{h.beds}</div>
-                    <div className="text-[10px] uppercase text-muted-foreground">{t("ministry.units.bedsFree")}</div>
+                    <div className="text-[10px] uppercase text-muted-foreground">
+                      {t("ministry.units.bedsFree")}
+                    </div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-medium">{h.incoming}</div>
-                    <div className="text-[10px] uppercase text-muted-foreground">{t("ministry.units.incoming")}</div>
+                    <div className="text-[10px] uppercase text-muted-foreground">
+                      {t("ministry.units.incoming")}
+                    </div>
                   </div>
                 </div>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
@@ -319,11 +405,18 @@ function MinistryDashboard() {
                     className="h-full rounded-full"
                     style={{
                       width: `${h.occupancy}%`,
-                      background: h.occupancy > 80 ? "var(--alert)" : h.occupancy > 70 ? "#F59E0B" : "var(--emerald-brand)",
+                      background:
+                        h.occupancy > 80
+                          ? "var(--alert)"
+                          : h.occupancy > 70
+                            ? "#F59E0B"
+                            : "var(--emerald-brand)",
                     }}
                   />
                 </div>
-                <div className="mt-1 text-[10px] text-muted-foreground">{h.occupancy}% {t("ministry.units.occupancy")}</div>
+                <div className="mt-1 text-[10px] text-muted-foreground">
+                  {h.occupancy}% {t("ministry.units.occupancy")}
+                </div>
               </div>
             ))}
           </div>

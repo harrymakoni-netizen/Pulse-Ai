@@ -4,7 +4,8 @@ export async function compressImage(file: File, maxSize = 1280, quality = 0.82):
   const w = Math.round(bitmap.width * scale);
   const h = Math.round(bitmap.height * scale);
   const canvas = document.createElement("canvas");
-  canvas.width = w; canvas.height = h;
+  canvas.width = w;
+  canvas.height = h;
   const ctx = canvas.getContext("2d")!;
   ctx.drawImage(bitmap, 0, 0, w, h);
   bitmap.close?.();
@@ -15,7 +16,10 @@ export async function extractVideoFrames(file: File, count = 2): Promise<string[
   const url = URL.createObjectURL(file);
   try {
     const video = document.createElement("video");
-    video.src = url; video.muted = true; video.playsInline = true; video.preload = "auto";
+    video.src = url;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
     await new Promise<void>((resolve, reject) => {
       video.onloadedmetadata = () => resolve();
       video.onerror = () => reject(new Error("video load failed"));
@@ -27,11 +31,15 @@ export async function extractVideoFrames(file: File, count = 2): Promise<string[
     const scale = w / video.videoWidth;
     const h = Math.round(video.videoHeight * scale);
     const canvas = document.createElement("canvas");
-    canvas.width = w; canvas.height = h;
+    canvas.width = w;
+    canvas.height = h;
     const ctx = canvas.getContext("2d")!;
     for (const time of times) {
       await new Promise<void>((resolve) => {
-        const onSeek = () => { video.removeEventListener("seeked", onSeek); resolve(); };
+        const onSeek = () => {
+          video.removeEventListener("seeked", onSeek);
+          resolve();
+        };
         video.addEventListener("seeked", onSeek);
         video.currentTime = Math.max(0, Math.min(time, (video.duration || 0) - 0.05));
       });

@@ -44,7 +44,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       const chosen = window.localStorage.getItem(STORAGE_CHOSEN_KEY);
       if (isLang(stored)) setLangState(stored);
       if (chosen === "true") setHasChosen(true);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const setLang = useCallback((l: Lang) => {
@@ -53,7 +55,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, l);
       window.localStorage.setItem(STORAGE_CHOSEN_KEY, "true");
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     if (typeof document !== "undefined") document.documentElement.lang = l;
   }, []);
 
@@ -94,7 +98,9 @@ export function LanguagePill({ className = "" }: { className?: string }) {
     function onDoc(e: MouseEvent) {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     }
-    function onKey(e: KeyboardEvent) { if (e.key === "Escape") setOpen(false); }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
     document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
     return () => {
@@ -128,14 +134,19 @@ export function LanguagePill({ className = "" }: { className?: string }) {
                 type="button"
                 role="option"
                 aria-selected={lang === l}
-                onClick={() => { setLang(l); setOpen(false); }}
+                onClick={() => {
+                  setLang(l);
+                  setOpen(false);
+                }}
                 className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-secondary ${
                   lang === l ? "text-primary" : "text-foreground"
                 }`}
               >
                 <span className="flex flex-col">
                   <span className="font-medium">{LANG_META[l].native}</span>
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{l}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {l}
+                  </span>
                 </span>
                 {lang === l ? <Check className="h-4 w-4" aria-hidden="true" /> : null}
               </button>
@@ -151,7 +162,9 @@ export function LanguagePill({ className = "" }: { className?: string }) {
 export function LanguageWelcome() {
   const { hasChosen, setLang, t } = useI18n();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   if (!mounted || hasChosen) return null;
 
   return (

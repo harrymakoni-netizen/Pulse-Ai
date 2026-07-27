@@ -48,14 +48,20 @@ const T = {
     stopRecording: "Stop and transcribe",
     startVoice: "Start voice input",
     placeholder: "Describe what's happening...",
-    suggestions: ["I have chest pain", "Someone is unconscious", "First aid for a burn", "Signs of a stroke"],
+    suggestions: [
+      "I have chest pain",
+      "Someone is unconscious",
+      "First aid for a burn",
+      "Signs of a stroke",
+    ],
     emergencyTitle: "Emergency?",
     emergencyBody: "If this is life-threatening, use the SOS flow, it dispatches an ambulance.",
     startSos: "Start SOS",
     voiceTitle: "Voice input",
     voiceBody: "Tap the microphone and speak. When you stop, your words are transcribed and sent.",
     replay: "Replay last response",
-    disclaimer: "LifeLine+ AI supports English, Shona, and Ndebele. This assistant does not replace professional medical advice.",
+    disclaimer:
+      "LifeLine+ AI supports English, Shona, and Ndebele. This assistant does not replace professional medical advice.",
     transcribing: "Transcribing your voice…",
     micDenied: "Microphone access denied. Please allow it in your browser settings.",
     micUnavailable: "Microphone not available on this device.",
@@ -83,14 +89,20 @@ const T = {
     stopRecording: "Mira uye shandurira",
     startVoice: "Tanga kutaura",
     placeholder: "Tsanangura zviri kuitika...",
-    suggestions: ["Ndine kurwadziwa pachipfuva", "Munhu haaite kutaura", "Zvekutanga kuita nekutsva", "Zviratidzo zve stroke"],
+    suggestions: [
+      "Ndine kurwadziwa pachipfuva",
+      "Munhu haaite kutaura",
+      "Zvekutanga kuita nekutsva",
+      "Zviratidzo zve stroke",
+    ],
     emergencyTitle: "Mamergency?",
     emergencyBody: "Kana izvi zvichigona kukonzera rufu, shandisa SOS, inodaidza ambulance.",
     startSos: "Tanga SOS",
     voiceTitle: "Kutaura",
     voiceBody: "Dzvanya maikorofoni utaure. Kana wapedza, mashoko ako anonyorwa oendeswa.",
     replay: "Dzokorora mhinduro yekupedzisira",
-    disclaimer: "LifeLine+ AI inotsigira Chirungu, chiShona, neisiNdebele. Mubatsiri uyu haatsivi zano rechiremba.",
+    disclaimer:
+      "LifeLine+ AI inotsigira Chirungu, chiShona, neisiNdebele. Mubatsiri uyu haatsivi zano rechiremba.",
     transcribing: "Kushandura izwi rako kuita mashoko…",
     micDenied: "Maikorofoni haabvumidzwe. Bvumidza mune settings dzebrowser.",
     micUnavailable: "Maikorofoni haiwanikwe padhivhaisi iyi.",
@@ -118,14 +130,20 @@ const T = {
     stopRecording: "Yima uphendulele",
     startVoice: "Qalisa ilizwi",
     placeholder: "Chaza ukuthi kwenzenjani...",
-    suggestions: ["Ngiphethwe yisifuba", "Umuntu ubuthongo", "Uncedo lokuqala lokutsha", "Izimpawu ze-stroke"],
+    suggestions: [
+      "Ngiphethwe yisifuba",
+      "Umuntu ubuthongo",
+      "Uncedo lokuqala lokutsha",
+      "Izimpawu ze-stroke",
+    ],
     emergencyTitle: "Isimo esiphuthumayo?",
     emergencyBody: "Uma kuyingozi empilweni, sebenzisa i-SOS, ithumela i-ambulensi.",
     startSos: "Qalisa i-SOS",
     voiceTitle: "Ilizwi",
     voiceBody: "Cindezela imakrofoni ukhulume. Nxa uqedile, amazwi akho ayabhalwa athunyelwe.",
     replay: "Phinda impendulo yokugcina",
-    disclaimer: "I-LifeLine+ AI isekela isiNgisi, isiShona, le-isiNdebele. Umsizi lo katshintshi iseluleko sikadokotela.",
+    disclaimer:
+      "I-LifeLine+ AI isekela isiNgisi, isiShona, le-isiNdebele. Umsizi lo katshintshi iseluleko sikadokotela.",
     transcribing: "Kuphendulelwa ilizwi lakho…",
     micDenied: "Imakrofoni ivimbelwe. Ivumele kuzilungiselelo zebhrawuza.",
     micUnavailable: "Imakrofoni ayikho kule idivayisi.",
@@ -181,42 +199,55 @@ function AssistantPage() {
     textareaRef.current?.focus();
   }, [busy]);
 
-  useEffect(() => () => {
-    streamRef.current?.getTracks().forEach((tr) => tr.stop());
-    if (timerRef.current) window.clearInterval(timerRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      streamRef.current?.getTracks().forEach((tr) => tr.stop());
+      if (timerRef.current) window.clearInterval(timerRef.current);
+    },
+    [],
+  );
 
-  const speakText = useCallback((text: string) => {
-    if (!ttsEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = ttsLang[lang] || "en-US";
-    utterance.rate = 0.95;
-    window.speechSynthesis.speak(utterance);
-  }, [ttsEnabled, lang]);
+  const speakText = useCallback(
+    (text: string) => {
+      if (!ttsEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = ttsLang[lang] || "en-US";
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
+    },
+    [ttsEnabled, lang],
+  );
 
   async function send(text: string) {
     const trimmed = text.trim();
     if ((!trimmed && images.length === 0) || busy) return;
     const attached = images;
-    const next: Msg[] = [...messages, { role: "user", content: trimmed || "(image attached)", images: attached }];
+    const next: Msg[] = [
+      ...messages,
+      { role: "user", content: trimmed || "(image attached)", images: attached },
+    ];
     setMessages(next);
     setInput("");
     setImages([]);
     setBusy(true);
     setMessages((m) => [...m, { role: "assistant", content: "" }]);
     try {
-      const res = await fetchAi("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: next.map((m) => ({ role: m.role, content: m.content, images: m.images })),
-          language: lang,
-        }),
-      }, {
-        onQueued: () => toast.info(tGlobal("ai.queued")),
-        onRetry: () => toast.info(tGlobal("ai.retrying")),
-      });
+      const res = await fetchAi(
+        "/api/chat",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: next.map((m) => ({ role: m.role, content: m.content, images: m.images })),
+            language: lang,
+          }),
+        },
+        {
+          onQueued: () => toast.info(tGlobal("ai.queued")),
+          onRetry: () => toast.info(tGlobal("ai.retrying")),
+        },
+      );
       if (!res.ok || !res.body) throw new Error("AI unavailable");
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -247,16 +278,25 @@ function AssistantPage() {
     try {
       const next: string[] = [];
       for (const file of Array.from(files)) {
-        if (images.length + next.length >= 3) { toast.error(t.mediaTooMany); break; }
+        if (images.length + next.length >= 3) {
+          toast.error(t.mediaTooMany);
+          break;
+        }
         if (file.type.startsWith("video/")) {
-          if (file.size > 25 * 1024 * 1024) { toast.error(t.mediaTooLarge); continue; }
+          if (file.size > 25 * 1024 * 1024) {
+            toast.error(t.mediaTooLarge);
+            continue;
+          }
           const frames = await extractVideoFrames(file, 2);
           for (const f of frames) {
             if (images.length + next.length >= 3) break;
             next.push(f);
           }
         } else if (file.type.startsWith("image/")) {
-          if (file.size > 10 * 1024 * 1024) { toast.error(t.mediaTooLarge); continue; }
+          if (file.size > 10 * 1024 * 1024) {
+            toast.error(t.mediaTooLarge);
+            continue;
+          }
           const compressed = await compressImage(file, 1280, 0.82);
           next.push(compressed);
         }
@@ -278,7 +318,10 @@ function AssistantPage() {
   }
 
   async function startRecording() {
-    if (!hasMic) { toast.error(t.micUnavailable); return; }
+    if (!hasMic) {
+      toast.error(t.micUnavailable);
+      return;
+    }
     try {
       window.speechSynthesis?.cancel();
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -293,11 +336,17 @@ function AssistantPage() {
       recorder.onstop = async () => {
         streamRef.current?.getTracks().forEach((tr) => tr.stop());
         streamRef.current = null;
-        if (timerRef.current) { window.clearInterval(timerRef.current); timerRef.current = null; }
+        if (timerRef.current) {
+          window.clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
         setIsRecording(false);
         if (cancelledRef.current) return;
         const blob = new Blob(chunksRef.current, { type: mimeType || "audio/webm" });
-        if (blob.size < 2048) { toast.error(t.tooShort); return; }
+        if (blob.size < 2048) {
+          toast.error(t.tooShort);
+          return;
+        }
         await transcribeAndSend(blob);
       };
       recorder.start();
@@ -316,12 +365,20 @@ function AssistantPage() {
 
   function stopRecording() {
     cancelledRef.current = false;
-    try { recorderRef.current?.stop(); } catch { /* noop */ }
+    try {
+      recorderRef.current?.stop();
+    } catch {
+      /* noop */
+    }
   }
 
   function cancelRecording() {
     cancelledRef.current = true;
-    try { recorderRef.current?.stop(); } catch { /* noop */ }
+    try {
+      recorderRef.current?.stop();
+    } catch {
+      /* noop */
+    }
   }
 
   async function transcribeAndSend(blob: Blob) {
@@ -334,7 +391,10 @@ function AssistantPage() {
       if (!res.ok) throw new Error(await res.text());
       const data = (await res.json()) as { text?: string };
       const text = (data.text ?? "").trim();
-      if (!text) { toast.error(t.transcribeFailed); return; }
+      if (!text) {
+        toast.error(t.transcribeFailed);
+        return;
+      }
       await send(text);
     } catch (e) {
       toast.error(e instanceof Error && e.message ? e.message : t.transcribeFailed);
@@ -353,7 +413,9 @@ function AssistantPage() {
       {/* Header */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-widest text-primary">{t.eyebrow}</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-primary">
+            {t.eyebrow}
+          </div>
           <h1 className="mt-1 font-display text-2xl font-semibold">{t.title}</h1>
         </div>
         <div className="flex items-center gap-2">
@@ -420,7 +482,12 @@ function AssistantPage() {
                   {m.images && m.images.length > 0 && (
                     <div className="mb-2 flex flex-wrap gap-1.5">
                       {m.images.map((src, j) => (
-                        <img key={j} src={src} alt="attachment" className="h-20 w-20 rounded-lg object-cover" />
+                        <img
+                          key={j}
+                          src={src}
+                          alt="attachment"
+                          className="h-20 w-20 rounded-lg object-cover"
+                        />
                       ))}
                     </div>
                   )}
@@ -453,7 +520,8 @@ function AssistantPage() {
                       </span>
                       <span className="font-medium">{t.listening(langNames[lang])}</span>
                       <span className="ml-auto tabular-nums text-xs text-muted-foreground">
-                        {String(Math.floor(elapsed / 60)).padStart(2, "0")}:{String(elapsed % 60).padStart(2, "0")}
+                        {String(Math.floor(elapsed / 60)).padStart(2, "0")}:
+                        {String(elapsed % 60).padStart(2, "0")}
                       </span>
                     </div>
                     <div className="mt-3 flex items-center gap-2">
@@ -485,7 +553,10 @@ function AssistantPage() {
               {images.length > 0 && (
                 <div className="mb-2 flex flex-wrap gap-2">
                   {images.map((src, i) => (
-                    <div key={i} className="relative overflow-hidden rounded-lg border border-border">
+                    <div
+                      key={i}
+                      className="relative overflow-hidden rounded-lg border border-border"
+                    >
                       <img src={src} alt="attachment" className="h-16 w-16 object-cover" />
                       <button
                         type="button"
@@ -505,44 +576,76 @@ function AssistantPage() {
                 </div>
               )}
               <div className="flex items-end gap-2">
-              {hasMic && (
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="ghost"
-                  onClick={startRecording}
-                  aria-label={t.startVoice}
-                  disabled={busy}
-                  className="shrink-0"
+                {hasMic && (
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    onClick={startRecording}
+                    aria-label={t.startVoice}
+                    disabled={busy}
+                    className="shrink-0"
+                  >
+                    <Mic className="h-4 w-4" />
+                  </Button>
+                )}
+                <label
+                  className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  aria-label={t.uploadPhoto}
                 >
-                  <Mic className="h-4 w-4" />
+                  <Camera className="h-4 w-4" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      handleFiles(e.target.files);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+                <label
+                  className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  aria-label={t.uploadVideo}
+                >
+                  <Video className="h-4 w-4" />
+                  <input
+                    type="file"
+                    accept="video/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      handleFiles(e.target.files);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+                <Textarea
+                  ref={textareaRef}
+                  rows={1}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      send(input);
+                    }
+                  }}
+                  placeholder={t.placeholder}
+                  className="min-h-11 resize-none"
+                />
+                <Button
+                  type="submit"
+                  size="icon"
+                  disabled={busy || (!input.trim() && images.length === 0)}
+                  aria-label={t.send}
+                >
+                  {busy ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
                 </Button>
-              )}
-              <label className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label={t.uploadPhoto}>
-                <Camera className="h-4 w-4" />
-                <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
-              </label>
-              <label className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label={t.uploadVideo}>
-                <Video className="h-4 w-4" />
-                <input type="file" accept="video/*" className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
-              </label>
-              <Textarea
-                ref={textareaRef}
-                rows={1}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    send(input);
-                  }
-                }}
-                placeholder={t.placeholder}
-                className="min-h-11 resize-none"
-              />
-              <Button type="submit" size="icon" disabled={busy || (!input.trim() && images.length === 0)} aria-label={t.send}>
-                {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              </Button>
               </div>
             </form>
           )}
@@ -552,7 +655,10 @@ function AssistantPage() {
           <div className="rounded-2xl border border-border bg-card p-5">
             <div className="text-sm font-medium">{t.emergencyTitle}</div>
             <p className="mt-1 text-xs text-muted-foreground">{t.emergencyBody}</p>
-            <Button asChild className="mt-3 w-full bg-[color:var(--alert)] hover:bg-[color:var(--alert)]/90">
+            <Button
+              asChild
+              className="mt-3 w-full bg-[color:var(--alert)] hover:bg-[color:var(--alert)]/90"
+            >
               <a href="/emergency/new">{t.startSos}</a>
             </Button>
           </div>
@@ -566,13 +672,20 @@ function AssistantPage() {
 
           {ttsEnabled && messages.some((m) => m.role === "assistant" && m.content) && (
             <div className="rounded-2xl border border-border bg-card p-5">
-              <Button variant="outline" size="sm" className="w-full gap-2" onClick={replayLastAssistant}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full gap-2"
+                onClick={replayLastAssistant}
+              >
                 <RotateCcw className="h-3.5 w-3.5" /> {t.replay}
               </Button>
             </div>
           )}
 
-          <div className="rounded-2xl border border-border bg-card p-5 text-xs text-muted-foreground">{t.disclaimer}</div>
+          <div className="rounded-2xl border border-border bg-card p-5 text-xs text-muted-foreground">
+            {t.disclaimer}
+          </div>
         </aside>
       </div>
     </AppShell>
@@ -583,8 +696,14 @@ function Dots() {
   return (
     <span className="inline-flex gap-1">
       <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground" />
-      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground" style={{ animationDelay: "150ms" }} />
-      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground" style={{ animationDelay: "300ms" }} />
+      <span
+        className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground"
+        style={{ animationDelay: "150ms" }}
+      />
+      <span
+        className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground"
+        style={{ animationDelay: "300ms" }}
+      />
     </span>
   );
 }

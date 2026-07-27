@@ -85,13 +85,20 @@ export async function runAi<T>(fn: () => Promise<T>, events?: QueueEvents): Prom
  * Fetch wrapper for streaming endpoints. Retries only if the response headers
  * indicate a transient failure (before any body is consumed).
  */
-export async function fetchAi(input: RequestInfo | URL, init?: RequestInit, events?: QueueEvents): Promise<Response> {
+export async function fetchAi(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+  events?: QueueEvents,
+): Promise<Response> {
   return runAi(async () => {
     const res = await fetch(input, init);
     if (res.status === 429 || res.status === 503) {
       const ra = Number(res.headers.get("retry-after"));
       const retryAfterMs = Number.isFinite(ra) && ra > 0 ? ra * 1000 : undefined;
-      const err = new Error(`AI busy (${res.status})`) as Error & { __retryable: boolean; retryAfterMs?: number };
+      const err = new Error(`AI busy (${res.status})`) as Error & {
+        __retryable: boolean;
+        retryAfterMs?: number;
+      };
       err.__retryable = true;
       err.retryAfterMs = retryAfterMs;
       throw err;

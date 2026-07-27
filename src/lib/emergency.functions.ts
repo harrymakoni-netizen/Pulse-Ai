@@ -10,11 +10,7 @@ const AssessInput = z.object({
   age: z.number().optional(),
   medicalHistory: z.string().optional().default(""),
   language: z.enum(["en", "sn", "nd"]).default("en"),
-  images: z
-    .array(z.string().startsWith("data:"))
-    .max(3)
-    .optional()
-    .default([]),
+  images: z.array(z.string().startsWith("data:")).max(3).optional().default([]),
 });
 
 export type AiAssessment = {
@@ -131,11 +127,24 @@ export const createEmergencyRequest = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
 
-    const events: Array<{ request_id: string; status: "requested" | "assessed" | "hospital_notified"; note: string }> = [
+    const events: Array<{
+      request_id: string;
+      status: "requested" | "assessed" | "hospital_notified";
+      note: string;
+    }> = [
       { request_id: row.id, status: "requested", note: "Emergency requested by patient" },
-      { request_id: row.id, status: "assessed", note: `AI triage complete: severity ${data.severity}` },
+      {
+        request_id: row.id,
+        status: "assessed",
+        note: `AI triage complete: severity ${data.severity}`,
+      },
     ];
-    if (data.hospitalId) events.push({ request_id: row.id, status: "hospital_notified", note: "Nearest hospital notified" });
+    if (data.hospitalId)
+      events.push({
+        request_id: row.id,
+        status: "hospital_notified",
+        note: "Nearest hospital notified",
+      });
     await supabase.from("emergency_events").insert(events);
 
     return { id: row.id as string };
@@ -164,6 +173,8 @@ export const advanceEmergency = createServerFn({ method: "POST" })
       .eq("id", data.id)
       .eq("patient_id", userId);
     if (updErr) throw new Error(updErr.message);
-    await supabase.from("emergency_events").insert({ request_id: data.id, status: data.status, note: noteMap[data.status] });
+    await supabase
+      .from("emergency_events")
+      .insert({ request_id: data.id, status: data.status, note: noteMap[data.status] });
     return { ok: true };
   });

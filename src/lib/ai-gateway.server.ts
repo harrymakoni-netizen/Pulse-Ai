@@ -41,12 +41,16 @@ export async function callChat(opts: {
     const text = await res.text();
     if (res.status === 429 || res.status === 503) {
       const ra = Number(res.headers.get("retry-after"));
-      const err = new Error(`AI busy (${res.status})`) as Error & { __retryable: boolean; retryAfterMs?: number };
+      const err = new Error(`AI busy (${res.status})`) as Error & {
+        __retryable: boolean;
+        retryAfterMs?: number;
+      };
       err.__retryable = true;
       if (Number.isFinite(ra) && ra > 0) err.retryAfterMs = ra * 1000;
       throw err;
     }
-    if (res.status === 402) throw new Error("AI credits exhausted. Please add credits to continue.");
+    if (res.status === 402)
+      throw new Error("AI credits exhausted. Please add credits to continue.");
     throw new Error(`AI gateway error ${res.status}: ${text.slice(0, 300)}`);
   }
   const data = (await res.json()) as {

@@ -16,7 +16,13 @@ export const Route = createFileRoute("/api/transcribe")({
         upstream.append("model", "openai/gpt-4o-transcribe");
         // Name file for its container so the provider infers format
         const type = (file as Blob).type || "audio/webm";
-        const ext = type.includes("wav") ? "wav" : type.includes("mp4") ? "mp4" : type.includes("mpeg") ? "mp3" : "webm";
+        const ext = type.includes("wav")
+          ? "wav"
+          : type.includes("mp4")
+            ? "mp4"
+            : type.includes("mpeg")
+              ? "mp3"
+              : "webm";
         upstream.append("file", file, `recording.${ext}`);
         // Only pass bare ISO-639-1 codes; skip sn/nd (auto-detect works better).
         if (language === "en") upstream.append("language", "en");
@@ -34,7 +40,9 @@ export const Route = createFileRoute("/api/transcribe")({
             headers: { "content-type": "application/json" },
           });
         } catch {
-          return new Response(JSON.stringify({ text }), { headers: { "content-type": "application/json" } });
+          return new Response(JSON.stringify({ text }), {
+            headers: { "content-type": "application/json" },
+          });
         }
       },
     },
