@@ -1,63 +1,42 @@
-## Goal
+## Recommendation
 
-On first visit, greet the user with a centered welcome modal to pick English, Shona, or Ndebele. Remember the choice, translate every page of LifeLine+ to it, and let them change language later from the header.
+Client-side queue + retry is a good choice for a demo — but on its own it only hides bursts, it doesn't prevent them. When 300 tabs all fire at once, the gateway still sees 300 requests in the same second and returns 429s; the client just retries. That works, but users wait 5–15s with a spinner and no feedback.
 
-## User experience
+I'd suggest **client queue + retry with backoff, paired with a tiny server-side smoother**. Together they give the smoothest demo experience without touching billing or infra.
 
-1. First-ever visit → dimmed backdrop, LifeLine+ logo, headline "Choose your language / Sarudza mutauro / Khetha ulimi", three large language cards (EN / SN / ND with native names + a short line each), Continue button.
-2. Choice persists in `localStorage` under `lifeline.lang`. Modal never reappears unless the user clears storage.
-3. A compact EN/SN/ND switcher lives in the top-right of the app header (AppShell) and on the landing page nav — clicking updates the app instantly.
-4. Every user-facing string on every page (landing, auth, dashboard, hospitals, hospital, ambulance, ministry, appointments, records, notifications, emergency new/detail, settings, admin, assistant, 404/error) renders through the active language.
+## What I'll build
 
-## Technical approach
+### 1. Client-side request queue (`src/lib/ai-queue.ts`)
+- Small singleton queue wrapping calls to `assessEmergency` and `/api/chat`.
+- Max N concurrent in-flight requests per browser tab (e.g. 2). Extra calls wait in FIFO.
+- Exponential backoff with jitter on 429/503: 1s → 2s → 4s → 8s, max 4 retries.
+- On final failure, surface a clear translated toast ("AI busy, please try again") instead of a raw error.
 
-### 1. i18n infrastructure (new)
+### 2. UX feedback during wait
+- In `emergency.new.tsx` and `assistant.tsx`, show queue position / "AI is thinking…" state so users see progress instead of a frozen button.
+- Keep the SOS button disabled while queued so users don't double-fire.
 
-```text
-src/i18n/
-  index.tsx         ← LanguageProvider + useT() hook + <LanguagePicker/>
-  translations.ts   ← flat dictionary: t[lang][key] = string
-```
+### 3. Light server-side smoother (`/api/chat` + `assessEmergency`)
+- Per-request 429 detection: if the gateway returns 429, translate it into a structured `{ retryAfterMs }` response so the client backs off intelligently instead of guessing.
+- No queue on the server (edge workers are stateless); just clean error propagation.
 
-- `LanguageProvider` reads `localStorage.lifeline.lang` (SSR-safe: default "en" on server, hydrate real value in `useEffect`), exposes `{ lang, setLang, t }` via React context.
-- `useT()` returns a `t(key, vars?)` function. Missing keys fall back to English so nothing renders blank.
-- Mount `<LanguageProvider>` in `src/routes/__root.tsx` so it wraps every route.
-- `<LanguagePicker />` is a Radix Dialog shown when `localStorage.lifeline.lang` is unset after hydration; on selection it writes storage and closes.
+### 4. i18n
+- Add 4 new keys (EN/SN/ND): `ai.busy`, `ai.retrying`, `ai.queued`, `ai.failed`.
 
-### 2. Header language switcher
+## What I won't change
 
-- Add a small pill toggle (EN/SN/ND) into `src/components/lifeline/app-shell.tsx` header, and into the landing page nav in `src/routes/index.tsx`. Both call `setLang()` from context.
+- No changes to the AI model, prompts, or triage logic.
+- No infra/billing changes.
+- No demo fallback (option 3) — happy to add later if you want a guaranteed "never fails on stage" mode.
 
-### 3. Translate every route
+## Realistic outcome after this
 
-Replace hard-coded strings with `t("key")` in:
+- 300 concurrent triages spread over ~10–20 seconds: all succeed, users see a brief "AI is thinking…" state.
+- 300 in the exact same instant: still all succeed, worst-case wait ~8–12s for the last few users.
+- Zero raw error toasts on stage under normal burst conditions.
 
-- Landing: `src/routes/index.tsx`
-- Auth: `src/routes/auth.tsx`, `src/routes/reset-password.tsx`
-- Authenticated shell + pages: `src/components/lifeline/app-shell.tsx`, `dashboard.tsx`, `hospitals.tsx`, `hospital.tsx`, `ambulance.tsx`, `ministry.tsx`, `appointments.tsx`, `records.tsx`, `notifications.tsx`, `emergency.new.tsx`, `emergency.$id.tsx`, `settings.tsx`, `admin.tsx`
-- Existing `assistant.tsx`: migrate its local `T` dictionary into the shared `translations.ts` and use `useT()`.
-- Error/not-found boundaries in `__root.tsx` and route files.
+## Technical notes
 
-Keys are grouped by page (`landing.hero.title`, `dashboard.stats.activeCases`, …) to keep the dictionary readable. All three languages provided for every key.
-
-### 4. AI chat language sync
-
-`assistant.tsx` already sends `language` to `/api/chat`. Wire the same `lang` from context so the AI replies in the active language everywhere.
-
-### 5. Dates / numbers
-
-Format via `Intl.DateTimeFormat` / `Intl.NumberFormat` using a locale map (`en: "en-ZW"`, `sn: "sn-ZW"`, `nd: "nd-ZW"`) exposed by the provider as `locale`.
-
-## Out of scope (this pass)
-
-- Translating dynamic content that comes from the database (hospital names, user-entered notes) — those stay as written.
-- RTL support (not needed for these languages).
-- Server-side language negotiation via `Accept-Language`; we rely on the client picker.
-
-## Verification
-
-- Load site fresh (clear localStorage) → welcome modal appears, picking Shona translates the landing page immediately.
-- Navigate through dashboard, hospitals, ministry, assistant, settings → all copy is in Shona.
-- Switch to Ndebele from the header pill → every page updates without reload.
-- Reload → chosen language persists, modal does not reappear.
-- Playwright screenshot pass across desktop + mobile in all three languages on the landing page and dashboard.
+- Queue lives in module scope so it's shared across components in one tab (each browser has its own queue — that's fine, the gateway limit is global so per-tab throttling still helps).
+- Backoff reads `Retry-After` header when present, falls back to exponential.
+- All existing call sites (`assessEmergency`, `useChat` transport, transcribe) route through the queue with a single wrapper.
