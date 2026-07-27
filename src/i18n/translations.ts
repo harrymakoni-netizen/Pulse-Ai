@@ -114,6 +114,8 @@ const en: Dict = {
   "landing.ai.p4": "Multi-lingual: English · Shona · Ndebele",
   "landing.ai.p5": "Predictive analytics for outbreak signals",
   "landing.ai.live": "Assistant · live",
+  "landing.ai.whyAiCta": "Why AI?",
+
 
   // Partners / Testimonials / FAQ
   "landing.partners.eyebrow": "Partner Hospitals",
@@ -602,6 +604,8 @@ const sn: Dict = {
   "landing.ai.p4": "Mitauro yakawanda: Chirungu · chiShona · chiNdebele",
   "landing.ai.p5": "Kuongorora kuti tarisiro ivepo",
   "landing.ai.live": "Mubatsiri · zviripo",
+  "landing.ai.whyAiCta": "Sei AI?",
+
 
   "landing.partners.eyebrow": "Zvipatara zvebatana",
   "landing.partners.title": "Yakabatana nezvinhu zvikuru zvemamergency muZimbabwe",
@@ -1069,6 +1073,8 @@ const nd: Dict = {
   "landing.ai.p4": "Izilimi eziningi: isiNgisi · isiShona · isiNdebele",
   "landing.ai.p5": "Ukuhlaziywa kokubikezela",
   "landing.ai.live": "Umsizi · manje",
+  "landing.ai.whyAiCta": "Kungani i-AI?",
+
 
   "landing.partners.eyebrow": "Izibhedlela ezibambisana",
   "landing.partners.title": "Zixhume nezikhungo ezikhulu zeZimbabwe",
