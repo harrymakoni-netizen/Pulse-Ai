@@ -875,6 +875,11 @@ const sn: Dict = {
   "emergency.status.transporting": "Kutakura murwere",
   "emergency.status.completed": "Zvapera",
   "emergency.status.cancelled": "Yakanzurwa",
+
+  "ai.busy": "AI iri kufunga...",
+  "ai.queued": "Wakamirira mumutsara weAI...",
+  "ai.retrying": "AI ine basa, tichaedza zvakare...",
+  "ai.failed": "AI yakazara. Edzazve mune chinguva chidiki.",
 };
 
 const nd: Dict = {
@@ -1293,6 +1298,11 @@ const nd: Dict = {
   "emergency.status.transporting": "Kuthuthwa isiguli",
   "emergency.status.completed": "Kuphelile",
   "emergency.status.cancelled": "Kukhanseliwe",
+
+  "ai.busy": "I-AI iyacabanga...",
+  "ai.queued": "Ulindile emugceni we-AI...",
+  "ai.retrying": "I-AI imatasatasa, siyazama futhi...",
+  "ai.failed": "I-AI igcwele. Zama futhi kancane.",
 };
 
 export const DICT: Record<Lang, Dict> = { en, sn, nd };
