@@ -11,6 +11,17 @@ import {
   ArrowLeft,
   CheckCircle2,
   XCircle,
+  Workflow,
+  ScanEye,
+  MessageSquareText,
+  Stethoscope,
+  MapPin,
+  FileText,
+  Lock,
+  WifiOff,
+  ServerOff,
+  Activity,
+  ArrowRight,
 } from "lucide-react";
 
 export const Route = createFileRoute("/about/ai")({
@@ -54,54 +65,120 @@ function AboutAi() {
       <main className="mx-auto max-w-4xl px-4 py-16 md:px-8">
         <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
-          AI justification
+          {t("aboutAi.eyebrow")}
         </div>
         <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight md:text-5xl">
-          Why AI, and not just a form?
+          {t("aboutAi.title")}
         </h1>
         <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-          LifeLine+ is submitted under the AI4I Development track. The Challenge explicitly
-          penalises "AI as a label". This page documents where AI is doing real work and where
-          simpler logic is deliberately used instead.
+          {t("aboutAi.subtitle")}
         </p>
 
-        <section className="mt-12">
-          <h2 className="font-display text-2xl font-semibold">The three problems AI solves here</h2>
+        <section className="mt-14">
+          <h2 className="font-display text-2xl font-semibold">
+            {t("aboutAi.problems.title")}
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <Card
               icon={<Layers className="h-5 w-5" />}
-              title="Multimodal severity"
-              body="A patient can upload a photo of a wound or a short video. A rules engine cannot judge if a burn is second- or third-degree; Gemini vision can, and it feeds that observation into the severity score."
+              title={t("aboutAi.problems.1.title")}
+              body={t("aboutAi.problems.1.body")}
             />
             <Card
               icon={<Brain className="h-5 w-5" />}
-              title="Free-text symptoms"
-              body="Patients describe symptoms in English, Shona and Ndebele, often mixing languages. Keyword matching misses 'inhliziyo iyaphimisela' but the model reads intent, negation and colloquialisms."
+              title={t("aboutAi.problems.2.title")}
+              body={t("aboutAi.problems.2.body")}
             />
             <Card
               icon={<ShieldCheck className="h-5 w-5" />}
-              title="Structured handoff"
-              body="Hospitals receive a clinical summary, red flags and recommended specialty in English, generated from the patient's local-language description. That translation-plus-summarisation task is what LLMs do best."
+              title={t("aboutAi.problems.3.title")}
+              body={t("aboutAi.problems.3.body")}
             />
           </div>
         </section>
 
         <section className="mt-14">
           <h2 className="font-display text-2xl font-semibold">
-            Rules-only vs LifeLine+ (side by side)
+            {t("aboutAi.pipeline.title")}
+          </h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Step
+              n={1}
+              icon={<MessageSquareText className="h-4 w-4" />}
+              title={t("aboutAi.pipeline.1.title")}
+              body={t("aboutAi.pipeline.1.body")}
+            />
+            <Step
+              n={2}
+              icon={<ScanEye className="h-4 w-4" />}
+              title={t("aboutAi.pipeline.2.title")}
+              body={t("aboutAi.pipeline.2.body")}
+            />
+            <Step
+              n={3}
+              icon={<Stethoscope className="h-4 w-4" />}
+              title={t("aboutAi.pipeline.3.title")}
+              body={t("aboutAi.pipeline.3.body")}
+            />
+            <Step
+              n={4}
+              icon={<MapPin className="h-4 w-4" />}
+              title={t("aboutAi.pipeline.4.title")}
+              body={t("aboutAi.pipeline.4.body")}
+            />
+          </div>
+          <div className="mt-4 rounded-2xl border border-border bg-card p-5">
+            <div className="flex items-start gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <FileText className="h-4 w-4" />
+              </div>
+              <div>
+                <div className="font-semibold">{t("aboutAi.pipeline.5.title")}</div>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t("aboutAi.pipeline.5.body")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-14">
+          <h2 className="font-display text-2xl font-semibold">
+            {t("aboutAi.compare.title")}
           </h2>
           <div className="mt-6 overflow-hidden rounded-2xl border border-border">
             <table className="w-full text-sm">
               <thead className="bg-secondary/60 text-left">
                 <tr>
-                  <th className="px-4 py-3 font-semibold">Task</th>
-                  <th className="px-4 py-3 font-semibold">Rules / SQL baseline</th>
-                  <th className="px-4 py-3 font-semibold">LifeLine+ with AI</th>
+                  <th className="px-4 py-3 font-semibold">{t("aboutAi.compare.task")}</th>
+                  <th className="px-4 py-3 font-semibold">{t("aboutAi.compare.baseline")}</th>
+                  <th className="px-4 py-3 font-semibold">{t("aboutAi.compare.ai")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {ROWS.map((r) => (
-                  <tr key={r.task}>
+                {[
+                  {
+                    task: t("aboutAi.compare.rows.1.task"),
+                    baseline: t("aboutAi.compare.rows.1.baseline"),
+                    ai: t("aboutAi.compare.rows.1.ai"),
+                  },
+                  {
+                    task: t("aboutAi.compare.rows.2.task"),
+                    baseline: t("aboutAi.compare.rows.2.baseline"),
+                    ai: t("aboutAi.compare.rows.2.ai"),
+                  },
+                  {
+                    task: t("aboutAi.compare.rows.3.task"),
+                    baseline: t("aboutAi.compare.rows.3.baseline"),
+                    ai: t("aboutAi.compare.rows.3.ai"),
+                  },
+                  {
+                    task: t("aboutAi.compare.rows.4.task"),
+                    baseline: t("aboutAi.compare.rows.4.baseline"),
+                    ai: t("aboutAi.compare.rows.4.ai"),
+                  },
+                ].map((r, i) => (
+                  <tr key={i}>
                     <td className="px-4 py-3 font-medium">{r.task}</td>
                     <td className="px-4 py-3 text-muted-foreground">
                       <div className="flex items-start gap-2">
@@ -123,28 +200,29 @@ function AboutAi() {
         </section>
 
         <section className="mt-14">
-          <h2 className="font-display text-2xl font-semibold">Where we deliberately do NOT use AI</h2>
+          <h2 className="font-display text-2xl font-semibold">
+            {t("aboutAi.notAi.title")}
+          </h2>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--emerald-brand)]" />
               <span>
-                <strong className="text-foreground">Hospital ranking</strong> is a scored SQL query
-                over haversine distance, specialty match and bed availability - no model needed.
+                <strong className="text-foreground">{t("aboutAi.notAi.1.title")}</strong>{" "}
+                {t("aboutAi.notAi.1.body")}
               </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--emerald-brand)]" />
               <span>
-                <strong className="text-foreground">Status transitions</strong> (dispatched,
-                en_route, arrived) are a plain state machine.
+                <strong className="text-foreground">{t("aboutAi.notAi.2.title")}</strong>{" "}
+                {t("aboutAi.notAi.2.body")}
               </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--emerald-brand)]" />
               <span>
-                <strong className="text-foreground">Offline fallback triage</strong> is rule-based
-                on-device, so a patient still gets a severity band when the AI Gateway is
-                unreachable.
+                <strong className="text-foreground">{t("aboutAi.notAi.3.title")}</strong>{" "}
+                {t("aboutAi.notAi.3.body")}
               </span>
             </li>
           </ul>
@@ -152,31 +230,88 @@ function AboutAi() {
 
         <section className="mt-14 rounded-2xl border border-border bg-card p-6">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            <Database className="h-4 w-4" /> Model &amp; data
+            <Database className="h-4 w-4" /> {t("aboutAi.model.title")}
           </div>
-          <div className="mt-3 grid gap-4 md:grid-cols-2">
+          <div className="mt-4 grid gap-6 md:grid-cols-2">
             <div>
-              <div className="text-sm font-semibold">Model</div>
+              <div className="text-sm font-semibold">{t("aboutAi.model.name")}</div>
               <p className="mt-1 text-sm text-muted-foreground">
-                Google Gemini 3.6 Flash via the Lovable AI Gateway. Chosen for native vision, sub-2s
-                latency and multilingual coverage of Bantu languages. Temperature 0.3 with a strict
-                JSON schema to constrain output.
+                {t("aboutAi.model.nameValue")}
               </p>
             </div>
             <div>
-              <div className="text-sm font-semibold">Data used at inference</div>
+              <div className="text-sm font-semibold">{t("aboutAi.model.data")}</div>
               <p className="mt-1 text-sm text-muted-foreground">
-                Only the current SOS payload: selected symptom tags, free-text description, pain
-                score, age, optional photos/video frames. No training on patient data, no PII shared
-                beyond the active request.
+                {t("aboutAi.model.dataValue")}
+              </p>
+            </div>
+            <div>
+              <div className="text-sm font-semibold">{t("aboutAi.model.latency")}</div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t("aboutAi.model.latencyValue")}
+              </p>
+            </div>
+            <div>
+              <div className="text-sm font-semibold">{t("aboutAi.model.temp")}</div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t("aboutAi.model.tempValue")}
               </p>
             </div>
           </div>
         </section>
 
-        <div className="mt-12 flex justify-center">
+        <section className="mt-14">
+          <h2 className="font-display text-2xl font-semibold">
+            {t("aboutAi.safety.title")}
+          </h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <SafetyCard
+              icon={<Lock className="h-5 w-5" />}
+              title={t("aboutAi.safety.1.title")}
+              body={t("aboutAi.safety.1.body")}
+            />
+            <SafetyCard
+              icon={<Activity className="h-5 w-5" />}
+              title={t("aboutAi.safety.2.title")}
+              body={t("aboutAi.safety.2.body")}
+            />
+            <SafetyCard
+              icon={<Workflow className="h-5 w-5" />}
+              title={t("aboutAi.safety.3.title")}
+              body={t("aboutAi.safety.3.body")}
+            />
+            <SafetyCard
+              icon={<ServerOff className="h-5 w-5" />}
+              title={t("aboutAi.safety.4.title")}
+              body={t("aboutAi.safety.4.body")}
+            />
+          </div>
+        </section>
+
+        <section className="mt-14 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <WifiOff className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="font-display text-xl font-semibold">{t("aboutAi.fallback.title")}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {t("aboutAi.fallback.body")}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <Link to="/auth">
+            <Button size="lg" className="gap-2">
+              {t("aboutAi.cta.try")} <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
           <Link to="/">
-            <Button size="lg">Back to LifeLine+</Button>
+            <Button variant="outline" size="lg">
+              {t("common.backHome")}
+            </Button>
           </Link>
         </div>
       </main>
@@ -184,33 +319,55 @@ function AboutAi() {
   );
 }
 
-const ROWS: Array<{ task: string; baseline: string; ai: string }> = [
-  {
-    task: "Assess a wound from a photo",
-    baseline: "Impossible - no visual understanding.",
-    ai: "Gemini vision reads bleeding, swelling, depth and colour into the severity score.",
-  },
-  {
-    task: "Understand Shona/Ndebele free text",
-    baseline: "Requires per-phrase keyword lists that break on typos or code-switching.",
-    ai: "Handles negation, mixed languages and colloquialisms out of the box.",
-  },
-  {
-    task: "Generate a clinical hospital handoff",
-    baseline: "Templated string with slot-filling - no reasoning about what the ED needs to know.",
-    ai: "Structured English report with red flags and specialty, ready for the receiving team.",
-  },
-  {
-    task: "Real-time first-aid guidance",
-    baseline: "Static decision tree, hard to keep current across every symptom combination.",
-    ai: "Instructions tailored to the exact reported symptoms and history in the patient's language.",
-  },
-];
-
 function Card({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
   return (
     <div className="rounded-2xl border border-border bg-card p-5">
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        {icon}
+      </div>
+      <div className="mt-3 font-semibold">{title}</div>
+      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+    </div>
+  );
+}
+
+function SafetyCard({
+  icon,
+  title,
+  body,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-5">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-foreground">
+        {icon}
+      </div>
+      <div className="mt-3 font-semibold">{title}</div>
+      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+    </div>
+  );
+}
+
+function Step({
+  n,
+  icon,
+  title,
+  body,
+}: {
+  n: number;
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="relative rounded-2xl border border-border bg-card p-5">
+      <div className="absolute -top-3 left-5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+        {n}
+      </div>
+      <div className="mt-2 flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
         {icon}
       </div>
       <div className="mt-3 font-semibold">{title}</div>
