@@ -19,6 +19,13 @@ import { useServerFn as tanUseServerFn } from "@tanstack/react-start";
 import { useI18n } from "@/i18n";
 import { runAi } from "@/lib/ai-queue";
 import { compressImage, extractVideoFrames } from "@/lib/media";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useRef } from "react";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
@@ -198,14 +205,8 @@ function NewEmergency() {
               <div className="text-sm font-medium">{t("emerg.new.media")}</div>
               <p className="mt-0.5 text-xs text-muted-foreground">{t("emerg.new.mediaHint")}</p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-                  <Camera className="h-3.5 w-3.5" /> {t("emerg.new.uploadPhoto")}
-                  <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
-                </label>
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
-                  <Video className="h-3.5 w-3.5" /> {t("emerg.new.uploadVideo")}
-                  <input type="file" accept="video/*" className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
-                </label>
+                <MediaButton kind="image" label={t("emerg.new.uploadPhoto")} onFiles={handleFiles} />
+                <MediaButton kind="video" label={t("emerg.new.uploadVideo")} onFiles={handleFiles} />
                 {mediaBusy && <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"><Loader2 className="h-3 w-3 animate-spin" /> {t("emerg.new.mediaProcessing")}</span>}
               </div>
               {images.length > 0 && (
@@ -366,5 +367,33 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; const dLat = ((lat2-lat1)*Math.PI)/180; const dLon = ((lon2-lon1)*Math.PI)/180;
   const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
   return 2*R*Math.asin(Math.sqrt(a));
+}
+
+function MediaButton({ kind, label, onFiles }: { kind: "image" | "video"; label: string; onFiles: (f: FileList | null) => void }) {
+  const captureRef = useRef<HTMLInputElement>(null);
+  const pickRef = useRef<HTMLInputElement>(null);
+  const Icon = kind === "image" ? Camera : Video;
+  const accept = kind === "image" ? "image/*" : "video/*";
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button type="button" className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary">
+            <Icon className="h-3.5 w-3.5" /> {label}
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); captureRef.current?.click(); }}>
+            <Camera className="mr-2 h-4 w-4" /> {kind === "image" ? "Take photo" : "Record video"}
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); pickRef.current?.click(); }}>
+            <Video className="mr-2 h-4 w-4" /> {kind === "image" ? "Choose from gallery" : "Choose video"}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <input ref={captureRef} type="file" accept={accept} capture="environment" multiple={kind === "image"} className="hidden" onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }} />
+      <input ref={pickRef} type="file" accept={accept} multiple={kind === "image"} className="hidden" onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }} />
+    </>
+  );
 }
 
