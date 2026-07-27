@@ -1331,7 +1331,7 @@ const nd: Dict = {
   "aboutAi.compare.rows.4.baseline":
     "Isihlahla esimisiwe, sibanzima ukugcina sihambisana nezimpawu zonke.",
   "aboutAi.compare.rows.4.ai":
-    "Imiyalo ehlelwe ngendlela yomuntu ngolimi lwakhe, ibhekene nendleya yakhe.",
+    "Imiyalo ehlelwe ngendlela yomuntu ngolimi lwakhe, ibhekene nendlela yakhe.",
 
   "aboutAi.notAi.title": "Lapho sengqondweni asisetshenzisi i-AI",
   "aboutAi.notAi.1.title": "Ukuhlolisisa izibhedlela",
