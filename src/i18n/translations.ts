@@ -707,6 +707,106 @@ const sn: Dict = {
   "landing.ai.live": "Mubatsiri · zviripo",
   "landing.ai.whyAiCta": "Sei AI?",
 
+  // About AI page
+  "aboutAi.eyebrow": "Tekinoroji ye-AI",
+  "aboutAi.title": "Sei AI, kwete fomu chete?",
+  "aboutAi.subtitle":
+    "LifeLine+ inopihwa pasi peAI4I Development track. Challenge inoranga 'AI sezita'. Peji rino rinoita document kuti AI iri kuita basa rechokwadi ripi, uye kuti logic nyore yakashandiswa pachinzvimbo chaiyo.",
+
+  "aboutAi.problems.title": "Matatatu dambudziko AI inogadzirisa pano",
+  "aboutAi.problems.1.title": "Kukura kwemifananidzo",
+  "aboutAi.problems.1.body":
+    "Murwere anogona kuisa mufananidzo wemuviri kana vhidhiyo pfupi. Injanji yemitemo haigoni kuongorora kana kupisa kuri second-degree kana third-degree; Gemini vision inogona, uye inopa cherechedzo icho ku-score yekukura.",
+  "aboutAi.problems.2.title": "Mashoko asina mutero wezviratidzo",
+  "aboutAi.problems.2.body":
+    "Vavakweru vanotsanangura zviratidzo muChirungu, chiShona nechiNdebele, kazhinji vachisarudza mitauro. Kuwana mazwi anorasika 'inhliziyo iyaphimisela' asi model inoverenga chido, kurambana uye kutaura kwemagariro.",
+  "aboutAi.problems.3.title": "Kubudiswa kwechokwadi",
+  "aboutAi.problems.3.body":
+    "Zvipatara tinogamuchira mhedzisiro yechiremba, ngozi uye hunyanzvi muChirungu, yakabudiswa kubva kutsanangudzo yemutauro wemunhu. Iyo basa yokushandura uye kukotamisa ndiyo LLMs inoitira zvakanaka.",
+
+  "aboutAi.pipeline.title": "AI pipeline inoshanda sei",
+  "aboutAi.pipeline.1.title": "Kubata",
+  "aboutAi.pipeline.1.body":
+    "Murwere anotsanangura zviratidzo nemashoko kana izwi, anosarudza matagi, uye anogona kuisa mifananidzo kana vhidhiyo.",
+  "aboutAi.pipeline.2.title": "Koona",
+  "aboutAi.pipeline.2.body":
+    "Vision layers inotsanangura mavanga, mhirizhonga, kukura kwechiri kana kufeffa kubva kumedia yakaiswa.",
+  "aboutAi.pipeline.3.title": "Kufunga",
+  "aboutAi.pipeline.3.body":
+    "Model inoyerera ngozi, kurwadziwa, makore uye nhoroondo zvichienzaniswa nerubric yekukura kwemurwere.",
+  "aboutAi.pipeline.4.title": "Kusarudza",
+  "aboutAi.pipeline.4.body":
+    "SQL query inoongorora zvipatara nechinhambwe, hunyanzvi nemibhedha. AI haitsivi basa iri.",
+  "aboutAi.pipeline.5.title": "Kutumira",
+  "aboutAi.pipeline.5.body":
+    "Mushumo wakakodzera unobudiswa kuchipatara chichagamuchira: kukura, ngozi, rubatsiro rwakapiwa, allergies uye hunyanzvi.",
+
+  "aboutAi.compare.title": "Mitemo chete vs LifeLine+ (mamiriro)",
+  "aboutAi.compare.task": "Basa",
+  "aboutAi.compare.baseline": "Mitemo / SQL baseline",
+  "aboutAi.compare.ai": "LifeLine+ ine AI",
+  "aboutAi.compare.rows.1.task": "Ongorora mavanga kubva pamufananidzo",
+  "aboutAi.compare.rows.1.baseline": "Hazvigoneki - haina kuona.",
+  "aboutAi.compare.rows.1.ai":
+    "Gemini vision inoverenga ropa, kukura, kudzika uye ruvara muchipimo chekukura.",
+  "aboutAi.compare.rows.2.task": "Kunzwisisa mashoko muShona/Ndebele",
+  "aboutAi.compare.rows.2.baseline":
+    "Inoda mazwi ose anogona kurasika pane zvakanyorwa zvisina kurongeka.",
+  "aboutAi.compare.rows.2.ai":
+    "Inogamuchira kurambana, mitauro yakasiyana uye kutaura kwemagariro.",
+  "aboutAi.compare.rows.3.task": "Kugadzira mushumo wechipatara",
+  "aboutAi.compare.rows.3.baseline": "String yakagadzirwa - haifungi zvaanoda kuziva.",
+  "aboutAi.compare.rows.3.ai":
+    "Mushumo muChirungu wakakodzera une ngozi nehunyanzvi, ugadzirire team.",
+  "aboutAi.compare.rows.4.task": "Rubatsiro rwenguva ino rwekutanga",
+  "aboutAi.compare.rows.4.baseline":
+    "Mutero wakasimba, wakasava nyore kugadzirisa zviratidzo zvose.",
+  "aboutAi.compare.rows.4.ai":
+    "Mazano akasiyana-siyana ane nhoroondo yemurwere mumutauro wake.",
+
+  "aboutAi.notAi.title": "Kwatinoda kwete kushandisa AI",
+  "aboutAi.notAi.1.title": "Kuronga kwezvipatara",
+  "aboutAi.notAi.1.body":
+    "ndi SQL query inoita score nechinhambwe, hunyanzvi nemibhedha - haina kushandisa model.",
+  "aboutAi.notAi.2.title": "Kushanduka kwemamiriro",
+  "aboutAi.notAi.2.body": "(yatumirwa, munzira, yasvika) ndi state machine yakasimba.",
+  "aboutAi.notAi.3.title": "Triage isina internet",
+  "aboutAi.notAi.3.body":
+    "inoshandiswa nemitemo yepafoni, kuti murwere awane chigadziko kana AI Gateway isina kusvika.",
+
+  "aboutAi.model.title": "Model & data",
+  "aboutAi.model.name": "Model",
+  "aboutAi.model.nameValue":
+    "Google Gemini 3.6 Flash kubva kuLovable AI Gateway. Yakasarudzwa nekuda kwekuona, nguva pfupi uye mitauro yeBantu.",
+  "aboutAi.model.data": "Data inoshandiswa",
+  "aboutAi.model.dataValue":
+    "Chete payload yanguva ino: matagi, tsanangudzo, score yekurwadziwa, makore, mifananidzo/vhidhiyo. Kwete kudzidziswa nedata yemurwere.",
+  "aboutAi.model.latency": "Target yenguva",
+  "aboutAi.model.latencyValue":
+    "Pasi pemasekondi maviri pamashoko; pasi memasekondi matanhatu pamultimodal ine mufananidzo.",
+  "aboutAi.model.temp": "Kutonga output",
+  "aboutAi.model.tempValue":
+    "Temperature 0.3 ine Zod JSON schema kuti output ienderane uye kuderedza kufunga kwakasina maturo.",
+
+  "aboutAi.safety.title": "Kuchengetedzwa uye guardrails",
+  "aboutAi.safety.1.title": "Vanhu vari mukati",
+  "aboutAi.safety.1.body":
+    "AI inopa zano; vanotumira nevanhu vezvipatara vanosarudza. Mushumo ndewokubatsira, kwete kutiutsanangura.",
+  "aboutAi.safety.2.title": "Kutumira kwakakomba",
+  "aboutAi.safety.2.body":
+    "Mamergency akakomba anoratidzwa nokukurumidza uye anopfuura mutsara kuti asvike kuchipatara chakakodzera.",
+  "aboutAi.safety.3.title": "Output yakabatanidzwa ne schema",
+  "aboutAi.safety.3.body":
+    "Mhinduro yese yeAI inonyatsongororwa neZod schema isati yasvika kumurwere kana kuUI yechipatara.",
+  "aboutAi.safety.4.title": "Fallback isina internet",
+  "aboutAi.safety.4.body":
+    "Kana AI Gateway isina kusvika, mitemo yakasimba inoshanda pefoni kuti murwere arege kushaya zano.",
+
+  "aboutAi.fallback.title": "Chii chinotika kana AI isina kusvika?",
+  "aboutAi.fallback.body":
+    "Kana netiweki yaburika kana AI Gateway yakazara, LifeLine+ inoshandisa mitemo yakasimba pefoni. Mhedzisiro inoratidzwa seoffline triage, uye vashandi vezvipatara vachaongororazve pakusvika. App inoramba ichishanda kunyange pasina internet.",
+
+  "aboutAi.cta.try": "Edza mubatsiri weAI",
 
   "landing.partners.eyebrow": "Zvipatara zvebatana",
   "landing.partners.title": "Yakabatana nezvinhu zvikuru zvemamergency muZimbabwe",
@@ -1176,6 +1276,106 @@ const nd: Dict = {
   "landing.ai.live": "Umsizi · manje",
   "landing.ai.whyAiCta": "Kungani i-AI?",
 
+  // About AI page
+  "aboutAi.eyebrow": "Ubuchwepheshe be-AI",
+  "aboutAi.title": "Kungani i-AI, hhayi ifomu kuphela?",
+  "aboutAi.subtitle":
+    "I-LifeLine+ ifakwa phansi kwe-AI4I Development track. I-Challenge ipenalisa 'AI njengelabel'. Leli khasi libhala lapho i-AI enza umsebenzi wangempela futhi lapho i-logic elula isetshenziswa ngabomu.",
+
+  "aboutAi.problems.title": "Izinkinga ezithathu i-AI ezixazulula lapha",
+  "aboutAi.problems.1.title": "Ukubheka imifanekiso",
+  "aboutAi.problems.1.body":
+    "Isiguli singalayisha isithombe semuva noma ivhidiyo emfishane. Injiniya yemithetho ayikwazi ukuthi ukushiswa kuyi-degree bani; i-Gemini vision iyakwazi, futhi ifaka lelo qwaliso ku-score yobunzima.",
+  "aboutAi.problems.2.title": "Umbhalo ovulekile wezimpawu",
+  "aboutAi.problems.2.body":
+    "Iziguli zichaza izimpawu ngesiNgisi, isiShona nesiNdebele, kazinje zisarudza izilimi. Ukufanisa amagama ayikwazi ukuthola 'inhliziyo iyaphimisela' kodwa imodeli iyafunda inhloso, ukuphikisana nezamagama asolwandle.",
+  "aboutAi.problems.3.title": "Isandiso esihleliwe",
+  "aboutAi.problems.3.body":
+    "Izibhedlela zithola isisho sezokwelapha, imikhawulo nethimba elidingekayo ngesiNgisi, elakhelwe ngokuchaza kwesiguli ngolimi lwalo. Lelo msebenzi wokuhumusha nokwakha isisho yilokho i-LLM enza kakhulu.",
+
+  "aboutAi.pipeline.title": "I-AI pipeline isebenza kanjani",
+  "aboutAi.pipeline.1.title": "Ukubamba",
+  "aboutAi.pipeline.1.body":
+    "Isiguli sichaza izimpawu ngombhalo noma ngezwi, ikhetha amatagi, futhi kungenzeka ilayishe izithombe noma ivhidiyo.",
+  "aboutAi.pipeline.2.title": "Ukubona",
+  "aboutAi.pipeline.2.body":
+    "I-vision layers ichaza amavatho, amakhala, ukuvuvuka kanye nokufuna ukuphefumula okuvela kumedia elayishiwe.",
+  "aboutAi.pipeline.3.title": "Ukuqonda",
+  "aboutAi.pipeline.3.body":
+    "Imodeli ibheka imikhawulo, ubuhlungu, iminyaka kanye nendlela eqondisene nerubric yobunzima obusebenzayo.",
+  "aboutAi.pipeline.4.title": "Ukufanisa",
+  "aboutAi.pipeline.4.body":
+    "I-SQL query ihlolisisa izibhedlela ngokuhambisana, ispecialty nemibhede. I-AI ayithinti lesi sigaba.",
+  "aboutAi.pipeline.5.title": "Ukwedlulisela",
+  "aboutAi.pipeline.5.body":
+    "Umbiko ohlotshelwe isibhedlela esamukelayo ubhaliwe: ubunzima, imikhawulo, usizo lokuqala, i-allergies nespecialty.",
+
+  "aboutAi.compare.title": "Imithetho kuphela vs LifeLine+ (macala)",
+  "aboutAi.compare.task": "Umsebenzi",
+  "aboutAi.compare.baseline": "Imithetho / SQL baseline",
+  "aboutAi.compare.ai": "I-LifeLine+ ne-AI",
+  "aboutAi.compare.rows.1.task": "Ahlolisise umuva kusukela esithombeni",
+  "aboutAi.compare.rows.1.baseline": "Akunakwenzeka - ayinakuqonda okubonwayo.",
+  "aboutAi.compare.rows.1.ai":
+    "I-Gemini vision ifunda igazi, ukuvuvuka, ukujula nomala ku-score yobunzima.",
+  "aboutAi.compare.rows.2.task": "Ukuqonda umbhalo ovulekile ngesiShona/Ndebele",
+  "aboutAi.compare.rows.2.baseline":
+    "Idinga ohlotshelwe ngamagama angashintshiwe okuyinto embi uma kuneziphazamiso.",
+  "aboutAi.compare.rows.2.ai":
+    "Iyaphatha ukuphikisana, izilimi ezihlangene nezamagama asolwandle.",
+  "aboutAi.compare.rows.3.task": "Ukuqanjwa kwesimo sezokwelapha esibhedlela",
+  "aboutAi.compare.rows.3.baseline": "I-string egcwele ezikhala - ayifundi okudingekayo.",
+  "aboutAi.compare.rows.3.ai":
+    "Umbiko ohlotshelwe ngesiNgisi unemikhawulo nespecialty, ulungele ithimba elamukelayo.",
+  "aboutAi.compare.rows.4.task": "Ukusiza ngesikhathi nje kokuqala",
+  "aboutAi.compare.rows.4.baseline":
+    "Isihlahla esimisiwe, sibanzima ukugcina sihambisana nezimpawu zonke.",
+  "aboutAi.compare.rows.4.ai":
+    "Imiyalo ehlelwe ngendlela yomuntu ngolimi lwakhe, ibhekene nendleya yakhe.",
+
+  "aboutAi.notAi.title": "Lapho sengqondweni asisetshenzisi i-AI",
+  "aboutAi.notAi.1.title": "Ukuhlolisisa izibhedlela",
+  "aboutAi.notAi.1.body":
+    "yi-SQL query ene-score ngokuhambisana, ispecialty nemibhede - ayidingi imodeli.",
+  "aboutAi.notAi.2.title": "Ukushintsha kwesimo",
+  "aboutAi.notAi.2.body": "(ithunyelwe, sendleleni, ifikile) yi-state machine eqondile.",
+  "aboutAi.notAi.3.title": "I-triage yokusabela ngaphandle kwe-inthanethi",
+  "aboutAi.notAi.3.body":
+    "isebenzisa imithetho edivayisini, ukuze isiguli sithole izinga lobunzima noma i-AI Gateway ingafumaneki.",
+
+  "aboutAi.model.title": "Imodeli nedatha",
+  "aboutAi.model.name": "Imodeli",
+  "aboutAi.model.nameValue":
+    "I-Google Gemini 3.6 Flash nge-Lovable AI Gateway. Ikhethelwe ukubona, ukuphinda ngokushesha nokwesekwa kwezilimi zeBantu.",
+  "aboutAi.model.data": "Idatha esetshenziswayo",
+  "aboutAi.model.dataValue":
+    "Kuphela i-SOS payload yamanje: amatagi, inkulumo, ubuhlungu, iminyaka, izithombe/ivhidiyo. Akukho kufundisa ngedatha yeziguli.",
+  "aboutAi.model.latency": "Isilinganiso senguva",
+  "aboutAi.model.latencyValue":
+    "Ngaphansi kwemizuzwana emibili yombhalo; ngaphansi kwemizuzwana eyishumi nambili yokubheka imifanekiso.",
+  "aboutAi.model.temp": "Ukulawula ukukhipha",
+  "aboutAi.model.tempValue":
+    "I-Temperature 0.3 ine-Zod JSON schema ukuze imiphumela ihambisane futhi kuncipheke ukucabanga okungakholeki.",
+
+  "aboutAi.safety.title": "Ukuphepha nezivikelo",
+  "aboutAi.safety.1.title": "Umuntu phakathi",
+  "aboutAi.safety.1.body":
+    "I-AI incoma; abathumeli nabasebenzi bezibhedlela banesinqumo. Umbiko uyisizo sokuqonda, hhayi ukuxilongwa.",
+  "aboutAi.safety.2.title": "Ukudlulisa okubucayi kuqala",
+  "aboutAi.safety.2.body":
+    "Izinga lobucayi libonakala masinyane futhi lidlule umzuzu ukuze lifike esibhedlela esilungele.",
+  "aboutAi.safety.3.title": "Imiphumela ehambisanayo ne-schema",
+  "aboutAi.safety.3.body":
+    "Mhinduro yonke ye-AI ihlolwa yi-Zod schema ngaphambi kokufika kuso isiguli noma kuUI yesibhedlela.",
+  "aboutAi.safety.4.title": "Ukubuyela emuva ngaphandle kwe-inthanethi",
+  "aboutAi.safety.4.body":
+    "Uma i-AI Gateway ingafumaneki, imithetho eqondile isebenza edivayisini ukuze isiguli singahlalwa ngaphandle kwesizo.",
+
+  "aboutAi.fallback.title": "Chinikelela uma i-AI ingafumaneki?",
+  "aboutAi.fallback.body":
+    "Uma inetweki yehluleka noma i-AI Gateway iphelelwe yisikhathi, i-LifeLine+ isebenzisa imithetho eqondile edivayisini. Imiphumela imakwa ngokucacile njengengaphandle kwe-inthanethi, futhi abasebenzi bezibhedlela bayaphinda bahlolisise ekufikeni. I-app iyaqhubeka noma kunqunywa intanethi.",
+
+  "aboutAi.cta.try": "Zama umsizi we-AI",
 
   "landing.partners.eyebrow": "Izibhedlela ezibambisana",
   "landing.partners.title": "Zixhume nezikhungo ezikhulu zeZimbabwe",
