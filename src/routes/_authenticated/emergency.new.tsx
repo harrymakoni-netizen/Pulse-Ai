@@ -17,6 +17,7 @@ import { listHospitals } from "@/lib/hospitals.functions";
 import { assessEmergency, createEmergencyRequest, type AiAssessment } from "@/lib/emergency.functions";
 import { useServerFn as tanUseServerFn } from "@tanstack/react-start";
 import { useI18n } from "@/i18n";
+import { runAi } from "@/lib/ai-queue";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
@@ -67,26 +68,19 @@ function NewEmergency() {
       const payload = {
         symptoms, symptomsText, painLevel, age: typeof age === "number" ? age : undefined, medicalHistory: history, language,
       };
-      let lastErr: unknown;
-      for (let attempt = 0; attempt < 3; attempt++) {
-        try {
-          return await assessFn({ data: payload });
-        } catch (e) {
-          lastErr = e;
-          const msg = e instanceof Error ? e.message : String(e);
-          // Only retry transient network errors (Safari says "Load failed", others "Failed to fetch")
-          if (!/load failed|failed to fetch|network|timeout/i.test(msg)) throw e;
-          await new Promise((r) => setTimeout(r, 600 * (attempt + 1)));
-        }
-      }
-      throw lastErr instanceof Error ? lastErr : new Error("Network error");
+      return await runAi(() => assessFn({ data: payload }), {
+        onQueued: () => toast.info(t("ai.queued")),
+        onRetry: () => toast.info(t("ai.retrying")),
+      });
     },
     onSuccess: (data) => { setAssessment(data); setStep(5); },
     onError: (e) => {
       const msg = e instanceof Error ? e.message : "";
-      const friendly = /load failed|failed to fetch|network|timeout/i.test(msg)
-        ? t("emerg.new.toastNetwork")
-        : msg || t("emerg.new.toastFail");
+      const friendly = /429|busy|rate.?limit/i.test(msg)
+        ? t("ai.failed")
+        : /load failed|failed to fetch|network|timeout/i.test(msg)
+          ? t("emerg.new.toastNetwork")
+          : msg || t("emerg.new.toastFail");
       toast.error(friendly);
       setStep(3);
     },
