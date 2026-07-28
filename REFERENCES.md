@@ -56,7 +56,39 @@ This document lists the technologies, APIs, data sources, frameworks, and domain
 
 ---
 
-## 5. Domain & Clinical References
+## 5. Presentation-Ready References
+
+Use these citations directly in your pitch deck or bibliography slide.
+
+### Zimbabwe Data Protection & Digital Governance
+
+| Citation | Reference |
+|----------|-----------|
+| Republic of Zimbabwe. (2021). *Cybersecurity and Data Protection Act [Chapter 12:07]*. Government of Zimbabwe. | https://www.zimlii.org/zw/legislation/act/2021/5/cybersecurity-and-data-protection-act-2021 |
+| Postal and Telecommunications Regulatory Authority of Zimbabwe (POTRAZ). (n.d.). *Data protection and consumer rights*. | https://www.potraz.gov.zw |
+
+### Zimbabwe Healthcare & Hospital Landscape
+
+| Citation | Reference |
+|----------|-----------|
+| Ministry of Health and Child Care, Zimbabwe. (n.d.). *Official ministry portal*. | https://www.mohcc.gov.zw |
+| Parirenyatwa Group of Hospitals. (n.d.). *About us*. | https://parirenyatwa.co.zw |
+| Mpilo Central Hospital. (n.d.). *Public hospital services — Bulawayo*. | https://www.cityofbulawayo.gov.zw |
+| United Bulawayo Hospitals. (n.d.). *Institutional information*. | https://www.ubh.co.zw |
+| Harare Central Hospital. (n.d.). *Public health services*. | (cite via Ministry of Health portal) |
+| Zimbabwe emergency numbers | 999 (police/fire/ambulance), 112 (standard emergency), 993 (ambulance) |
+
+### AI for Impact & Digital Innovation Context
+
+| Citation | Reference |
+|----------|-----------|
+| AI for Impact Challenge — Zimbabwe 2026. (2026). *Competition brief and rubric*. | (use your official competition URL or poster) |
+| World Health Organization. (2022). *Emergency care systems: strengthening emergency and critical care*. | https://www.who.int/emergencycare |
+| Google AI for Developers. (n.d.). *Gemini API — responsible AI and safety*. | https://ai.google.dev/gemini-api/docs/safety-setting |
+
+---
+
+## 6. Domain & Clinical References
 
 | Topic | Source / Reference |
 |-------|-------------------|
@@ -64,6 +96,7 @@ This document lists the technologies, APIs, data sources, frameworks, and domain
 | Zimbabwe emergency numbers | 999 and 112 — public emergency services numbers in Zimbabwe. |
 | Zimbabwe Data Protection Act | Informed the data-consent flow and privacy-first design. |
 | AI for Impact Challenge (Zimbabwe 2026) | The competition context that shaped the problem statement and pitch. |
+
 
 ---
 
