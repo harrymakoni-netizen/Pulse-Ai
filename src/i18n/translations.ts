@@ -608,6 +608,16 @@ const en: Dict = {
   "emerg.new.fallbackUsed": "Working offline. Using on-device triage.",
   "emerg.new.fallbackBanner":
     "This assessment was produced by the on-device rule-based fallback because the AI Gateway was unreachable. Hospital staff will re-triage on arrival.",
+  "tts.play": "Read aloud",
+  "tts.stop": "Stop reading",
+  "sos.record": "Record symptoms by voice",
+  "sos.listening": "Listening... tap stop when done",
+  "sos.stopRecording": "Stop and transcribe",
+  "sos.transcribing": "Transcribing your voice...",
+  "sos.micDenied": "Microphone access denied. Please allow it in your browser settings.",
+  "sos.micUnavailable": "Microphone not available on this device.",
+  "sos.recordTooShort": "Recording too short, please try again.",
+  "sos.transcribeFailed": "Could not transcribe audio. Please try again.",
 };
 
 const sn: Dict = {
