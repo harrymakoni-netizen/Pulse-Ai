@@ -10,9 +10,6 @@ import {
   User as UserIcon,
   Loader2,
   Mic,
-  Volume2,
-  VolumeX,
-  RotateCcw,
   Camera,
   Video,
   X,
@@ -22,6 +19,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/i18n";
 import { fetchAi } from "@/lib/ai-queue";
 import { compressImage, extractVideoFrames } from "@/lib/media";
+import { SpeakButton } from "@/components/lifeline/speak-button";
+import { stopSpeech } from "@/lib/tts";
 
 export const Route = createFileRoute("/_authenticated/assistant")({
   head: () => ({ meta: [{ title: "AI Assistant · LifeLine+" }] }),
@@ -168,7 +167,6 @@ function AssistantPage() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
-  const [ttsEnabled, setTtsEnabled] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [mediaBusy, setMediaBusy] = useState(false);
   const t = T[lang];
@@ -203,20 +201,9 @@ function AssistantPage() {
     () => () => {
       streamRef.current?.getTracks().forEach((tr) => tr.stop());
       if (timerRef.current) window.clearInterval(timerRef.current);
+      stopSpeech();
     },
     [],
-  );
-
-  const speakText = useCallback(
-    (text: string) => {
-      if (!ttsEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = ttsLang[lang] || "en-US";
-      utterance.rate = 0.95;
-      window.speechSynthesis.speak(utterance);
-    },
-    [ttsEnabled, lang],
   );
 
   async function send(text: string) {
