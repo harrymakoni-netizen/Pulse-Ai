@@ -1766,6 +1766,16 @@ const nd: Dict = {
   "emerg.new.fallbackUsed": "Sisebenza ngaphandle kwe-inthanethi. Sisebenzisa i-triage yasefonini.",
   "emerg.new.fallbackBanner":
     "Lolu hlolo lwenziwe yindlela yemithetho yasefonini ngoba i-AI Gateway ibingafinyeleleki. Abasebenzi bezempilo bazoxilonga futhi ekufikeni.",
+  "tts.play": "Funda ngezwi",
+  "tts.stop": "Yima ukufunda",
+  "sos.record": "Rekhoda izimpawu ngelizwi",
+  "sos.listening": "Ngilalele... cindezela yima nxa usuqedile",
+  "sos.stopRecording": "Yima uphendulele",
+  "sos.transcribing": "Kuphendulelwa ilizwi lakho...",
+  "sos.micDenied": "Imakrofoni ivimbelwe. Ivumele kuzilungiselelo zebhrawuza.",
+  "sos.micUnavailable": "Imakrofoni ayikho kule idivayisi.",
+  "sos.recordTooShort": "Ukurekhoda kufishane kakhulu, zama futhi.",
+  "sos.transcribeFailed": "Yehlulekile ukuphendulela. Zama futhi.",
 };
 
 export const DICT: Record<Lang, Dict> = { en, sn, nd };
