@@ -733,14 +733,14 @@ function SiteFooter() {
               [t("landing.nav.how"), "#how"],
               [t("landing.nav.features"), "#features"],
               [t("landing.nav.ai"), "#ai"],
-              ["Why AI?", "/about/ai"],
+              [t("landing.ai.whyAiCta"), "/about/ai"],
+              [t("landing.partners.eyebrow"), "#partners"],
               [t("landing.nav.faq"), "#faq"],
             ]}
           />
           <FooterCol
             title={t("landing.footer.company")}
             items={[
-              [t("landing.partners.eyebrow"), "#partners"],
               [t("landing.footer.privacy"), "#"],
               [t("landing.footer.terms"), "#"],
               [t("landing.footer.contact"), "mailto:hello@lifeline.co.zw"],
