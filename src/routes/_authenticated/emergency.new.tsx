@@ -139,8 +139,10 @@ function NewEmergency() {
   const submit = useMutation({
     mutationFn: async (hospitalId: string) => {
       if (!assessment) throw new Error("Missing assessment");
-      return await createFn({
-        data: {
+      return await runAi(
+        () =>
+          createFn({
+            data: {
           symptoms,
           symptomsText,
           painLevel,
@@ -155,14 +157,24 @@ function NewEmergency() {
           aiSummary: assessment,
           aiReport: assessment.hospitalReport,
           hospitalId,
+            },
+          }),
+        {
+          onRetry: () => toast.info(t("ai.retrying")),
         },
-      });
+      );
     },
     onSuccess: ({ id }) => {
       toast.success(t("emerg.new.toastConfirmed"));
       navigate({ to: "/emergency/$id", params: { id } });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : t("emerg.new.toastCreateFail")),
+    onError: (e) => {
+      const msg = e instanceof Error ? e.message : "";
+      const friendly = /load failed|failed to fetch|network|timeout|429|503/i.test(msg)
+        ? t("emerg.new.toastNetwork")
+        : msg || t("emerg.new.toastCreateFail");
+      toast.error(friendly);
+    },
   });
 
   // Auto-fill contact + geolocation on step 3
