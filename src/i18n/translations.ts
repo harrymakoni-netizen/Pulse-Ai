@@ -608,6 +608,16 @@ const en: Dict = {
   "emerg.new.fallbackUsed": "Working offline. Using on-device triage.",
   "emerg.new.fallbackBanner":
     "This assessment was produced by the on-device rule-based fallback because the AI Gateway was unreachable. Hospital staff will re-triage on arrival.",
+  "tts.play": "Read aloud",
+  "tts.stop": "Stop reading",
+  "sos.record": "Record symptoms by voice",
+  "sos.listening": "Listening... tap stop when done",
+  "sos.stopRecording": "Stop and transcribe",
+  "sos.transcribing": "Transcribing your voice...",
+  "sos.micDenied": "Microphone access denied. Please allow it in your browser settings.",
+  "sos.micUnavailable": "Microphone not available on this device.",
+  "sos.recordTooShort": "Recording too short, please try again.",
+  "sos.transcribeFailed": "Could not transcribe audio. Please try again.",
 };
 
 const sn: Dict = {
@@ -1179,6 +1189,16 @@ const sn: Dict = {
   "emerg.new.fallbackUsed": "Kushanda pasina internet. Tiri kushandisa triage yepafoni.",
   "emerg.new.fallbackBanner":
     "Ongororo iyi yakabudiswa nemitemo yepafoni nekuti AI Gateway haina kusvika. Vashandi vechipatara vachaongororazve pakusvika.",
+  "tts.play": "Verenga zvinonzwika",
+  "tts.stop": "Mira kuverenga",
+  "sos.record": "Rekodha zviratidzo neizwi",
+  "sos.listening": "Ndiri kuteerera... dzvanya mira kana wapedza",
+  "sos.stopRecording": "Mira uye shandurira",
+  "sos.transcribing": "Kushandura izwi rako kuita mashoko...",
+  "sos.micDenied": "Maikorofoni haabvumidzwe. Bvumidza mune settings dzebrowser.",
+  "sos.micUnavailable": "Maikorofoni haiwanikwe padhivhaisi iyi.",
+  "sos.recordTooShort": "Zvakanyanya kupfupika, edzazve.",
+  "sos.transcribeFailed": "Hazvina kubudirira kushandurira izwi. Edzazve.",
 };
 
 const nd: Dict = {
@@ -1746,6 +1766,16 @@ const nd: Dict = {
   "emerg.new.fallbackUsed": "Sisebenza ngaphandle kwe-inthanethi. Sisebenzisa i-triage yasefonini.",
   "emerg.new.fallbackBanner":
     "Lolu hlolo lwenziwe yindlela yemithetho yasefonini ngoba i-AI Gateway ibingafinyeleleki. Abasebenzi bezempilo bazoxilonga futhi ekufikeni.",
+  "tts.play": "Funda ngezwi",
+  "tts.stop": "Yima ukufunda",
+  "sos.record": "Rekhoda izimpawu ngelizwi",
+  "sos.listening": "Ngilalele... cindezela yima nxa usuqedile",
+  "sos.stopRecording": "Yima uphendulele",
+  "sos.transcribing": "Kuphendulelwa ilizwi lakho...",
+  "sos.micDenied": "Imakrofoni ivimbelwe. Ivumele kuzilungiselelo zebhrawuza.",
+  "sos.micUnavailable": "Imakrofoni ayikho kule idivayisi.",
+  "sos.recordTooShort": "Ukurekhoda kufishane kakhulu, zama futhi.",
+  "sos.transcribeFailed": "Yehlulekile ukuphendulela. Zama futhi.",
 };
 
 export const DICT: Record<Lang, Dict> = { en, sn, nd };

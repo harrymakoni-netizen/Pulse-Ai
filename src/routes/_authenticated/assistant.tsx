@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/lifeline/app-shell";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,9 +10,6 @@ import {
   User as UserIcon,
   Loader2,
   Mic,
-  Volume2,
-  VolumeX,
-  RotateCcw,
   Camera,
   Video,
   X,
@@ -22,6 +19,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/i18n";
 import { fetchAi } from "@/lib/ai-queue";
 import { compressImage, extractVideoFrames } from "@/lib/media";
+import { SpeakButton } from "@/components/lifeline/speak-button";
+import { stopSpeech } from "@/lib/tts";
 
 export const Route = createFileRoute("/_authenticated/assistant")({
   head: () => ({ meta: [{ title: "AI Assistant · LifeLine+" }] }),
@@ -160,15 +159,11 @@ const T = {
   },
 } as const;
 
-// BCP 47 codes for text-to-speech playback
-const ttsLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
-
 function AssistantPage() {
   const { lang, t: tGlobal } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
-  const [ttsEnabled, setTtsEnabled] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [mediaBusy, setMediaBusy] = useState(false);
   const t = T[lang];
@@ -203,20 +198,9 @@ function AssistantPage() {
     () => () => {
       streamRef.current?.getTracks().forEach((tr) => tr.stop());
       if (timerRef.current) window.clearInterval(timerRef.current);
+      stopSpeech();
     },
     [],
-  );
-
-  const speakText = useCallback(
-    (text: string) => {
-      if (!ttsEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = ttsLang[lang] || "en-US";
-      utterance.rate = 0.95;
-      window.speechSynthesis.speak(utterance);
-    },
-    [ttsEnabled, lang],
   );
 
   async function send(text: string) {
@@ -262,7 +246,7 @@ function AssistantPage() {
           return copy;
         });
       }
-      speakText(acc);
+      // Message is rendered with its own SpeakButton; no auto-play.
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Chat failed");
       setMessages((m) => m.slice(0, -1));
@@ -323,7 +307,7 @@ function AssistantPage() {
       return;
     }
     try {
-      window.speechSynthesis?.cancel();
+      stopSpeech();
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
       const mimeType = pickMime();
@@ -403,11 +387,6 @@ function AssistantPage() {
     }
   }
 
-  function replayLastAssistant() {
-    const last = [...messages].reverse().find((m) => m.role === "assistant" && m.content);
-    if (last) speakText(last.content);
-  }
-
   return (
     <AppShell>
       {/* Header */}
@@ -418,20 +397,7 @@ function AssistantPage() {
           </div>
           <h1 className="mt-1 font-display text-2xl font-semibold">{t.title}</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => {
-              setTtsEnabled((v) => !v);
-              window.speechSynthesis?.cancel();
-            }}
-            aria-label={ttsEnabled ? t.disableVoice : t.enableVoice}
-            className="h-8 w-8"
-          >
-            {ttsEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
-          </Button>
-        </div>
+        <div className="flex items-center gap-2" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
@@ -492,6 +458,17 @@ function AssistantPage() {
                     </div>
                   )}
                   {m.content || (busy && i === messages.length - 1 ? <Dots /> : null)}
+                  {m.role === "assistant" && m.content && !(busy && i === messages.length - 1) && (
+                    <div className="mt-1 -mb-1 -ml-2">
+                      <SpeakButton
+                        id={`assist-msg-${i}`}
+                        text={m.content}
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                      />
+                    </div>
+                  )}
                 </div>
                 {m.role === "user" && (
                   <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground">
@@ -669,19 +646,6 @@ function AssistantPage() {
             </div>
             <p className="mt-1 text-xs text-muted-foreground">{t.voiceBody}</p>
           </div>
-
-          {ttsEnabled && messages.some((m) => m.role === "assistant" && m.content) && (
-            <div className="rounded-2xl border border-border bg-card p-5">
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full gap-2"
-                onClick={replayLastAssistant}
-              >
-                <RotateCcw className="h-3.5 w-3.5" /> {t.replay}
-              </Button>
-            </div>
-          )}
 
           <div className="rounded-2xl border border-border bg-card p-5 text-xs text-muted-foreground">
             {t.disclaimer}

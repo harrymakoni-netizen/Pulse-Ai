@@ -22,6 +22,8 @@ import {
   Camera,
   Video,
   X,
+  Mic,
+  Send,
 } from "lucide-react";
 import { SeverityBadge } from "@/components/lifeline/severity-badge";
 import { EcgLoader } from "@/components/lifeline/ecg-loader";
@@ -38,6 +40,9 @@ import { compressImage, extractVideoFrames } from "@/lib/media";
 import { ruleBasedTriage } from "@/lib/triage-fallback";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ShieldCheck } from "lucide-react";
+import { useVoiceRecorder } from "@/lib/use-recorder";
+import { SpeakButton } from "@/components/lifeline/speak-button";
+import { AnimatePresence } from "framer-motion";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
@@ -89,6 +94,24 @@ function NewEmergency() {
   const hospitals = useQuery({ queryKey: ["hospitals"], queryFn: () => listHospitals() });
   const assessFn = tanUseServerFn(assessEmergency);
   const createFn = tanUseServerFn(createEmergencyRequest);
+
+  const recorder = useVoiceRecorder({
+    language,
+    onTranscript: (voiceText) => {
+      setSymptomsText((prev) => (prev ? prev.trimEnd() + " " + voiceText : voiceText));
+    },
+    onError: (kind) => {
+      const key =
+        kind === "denied"
+          ? "sos.micDenied"
+          : kind === "unavailable"
+            ? "sos.micUnavailable"
+            : kind === "short"
+              ? "sos.recordTooShort"
+              : "sos.transcribeFailed";
+      toast.error(t(key));
+    },
+  });
 
   const assess = useMutation({
     mutationFn: async () => {
@@ -310,14 +333,68 @@ function NewEmergency() {
               ))}
             </div>
             <Label htmlFor="txt">{t("emerg.new.describe")}</Label>
-            <Textarea
-              id="txt"
-              rows={4}
-              placeholder={t("emerg.new.describePh")}
-              value={symptomsText}
-              onChange={(e) => setSymptomsText(e.target.value)}
-              className="mt-1.5"
-            />
+            <div className="mt-1.5 relative">
+              <Textarea
+                id="txt"
+                rows={4}
+                placeholder={t("emerg.new.describePh")}
+                value={symptomsText}
+                onChange={(e) => setSymptomsText(e.target.value)}
+                className="pr-12"
+              />
+              {recorder.hasMic && !recorder.isRecording && !recorder.isTranscribing && (
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  aria-label={t("sos.record")}
+                  title={t("sos.record")}
+                  onClick={() => recorder.start()}
+                  className="absolute right-1.5 top-1.5 h-8 w-8 text-muted-foreground hover:text-primary"
+                >
+                  <Mic className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            <AnimatePresence>
+              {(recorder.isRecording || recorder.isTranscribing) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-3"
+                >
+                  {recorder.isRecording ? (
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--alert)] opacity-75" />
+                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[color:var(--alert)]" />
+                      </span>
+                      <span className="font-medium">{t("sos.listening")}</span>
+                      <span className="ml-auto tabular-nums text-xs text-muted-foreground">
+                        {String(Math.floor(recorder.elapsed / 60)).padStart(2, "0")}:
+                        {String(recorder.elapsed % 60).padStart(2, "0")}
+                      </span>
+                      <Button size="sm" className="ml-2 h-7 gap-1.5" onClick={recorder.stop}>
+                        <Send className="h-3.5 w-3.5" /> {t("sos.stopRecording")}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7"
+                        onClick={recorder.cancel}
+                      >
+                        {t("emerg.new.back")}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Loader2 className="h-4 w-4 animate-spin" /> {t("sos.transcribing")}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div className="mt-4 rounded-xl border border-dashed border-border p-4">
               <div className="text-sm font-medium">{t("emerg.new.media")}</div>
@@ -522,9 +599,16 @@ function NewEmergency() {
               <div className="rounded-2xl border border-border p-5">
                 <div className="flex items-center justify-between">
                   <SeverityBadge severity={assessment.severity} />
-                  <span className="text-xs text-muted-foreground">
-                    {assessment.recommendedSpecialty}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">
+                      {assessment.recommendedSpecialty}
+                    </span>
+                    <SpeakButton
+                      id="sos-summary"
+                      text={`${assessment.headline}. ${assessment.summary}. ${t("emerg.new.doNow")}: ${assessment.firstAid.join(". ")}. ${t("emerg.new.redFlags")}: ${assessment.redFlags.join(". ")}.`}
+                      className="h-7 w-7"
+                    />
+                  </div>
                 </div>
                 <h3 className="mt-3 font-display text-xl font-semibold">{assessment.headline}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{assessment.summary}</p>
