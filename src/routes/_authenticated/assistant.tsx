@@ -307,7 +307,7 @@ function AssistantPage() {
       return;
     }
     try {
-      window.speechSynthesis?.cancel();
+      stopSpeech();
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
       const mimeType = pickMime();
