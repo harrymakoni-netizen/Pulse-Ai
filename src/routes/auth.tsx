@@ -61,35 +61,43 @@ function AuthPage() {
         if (retry.error) throw retry.error;
       }
       try {
-        await supabase.auth.updateUser({ data: { full_name: trimmed } });
         window.localStorage.setItem("lifeline.displayName", trimmed);
       } catch {
         /* ignore */
       }
-      // Fresh session: wipe any lingering emergency requests from prior demo runs.
-      try {
-        const { data: u } = await supabase.auth.getUser();
-        if (u.user) {
-          await supabase.from("emergency_requests").delete().eq("patient_id", u.user.id);
-          await supabase
-            .from("profiles")
-            .update({
-              full_name: trimmed,
-              phone: null,
-              blood_type: null,
-              allergies: [],
-              medications: [],
-              dob: null,
-            })
-            .eq("id", u.user.id);
-          await supabase.from("emergency_contacts").delete().eq("user_id", u.user.id);
-          await supabase.from("medical_records").delete().eq("user_id", u.user.id);
-          await supabase.from("appointments").delete().eq("user_id", u.user.id);
-          await supabase.from("notifications").delete().eq("user_id", u.user.id);
+      // Fire-and-forget: don't block navigation on profile update or cleanup.
+      void (async () => {
+        try {
+          await supabase.auth.updateUser({ data: { full_name: trimmed } });
+        } catch {
+          /* ignore */
         }
-      } catch {
-        /* ignore */
-      }
+        try {
+          const { data: u } = await supabase.auth.getUser();
+          if (!u.user) return;
+          const uid = u.user.id;
+          await Promise.allSettled([
+            supabase.from("emergency_requests").delete().eq("patient_id", uid),
+            supabase
+              .from("profiles")
+              .update({
+                full_name: trimmed,
+                phone: null,
+                blood_type: null,
+                allergies: [],
+                medications: [],
+                dob: null,
+              })
+              .eq("id", uid),
+            supabase.from("emergency_contacts").delete().eq("user_id", uid),
+            supabase.from("medical_records").delete().eq("user_id", uid),
+            supabase.from("appointments").delete().eq("user_id", uid),
+            supabase.from("notifications").delete().eq("user_id", uid),
+          ]);
+        } catch {
+          /* ignore */
+        }
+      })();
       toast.success(t("auth.toast.welcome"));
       navigate({ to: "/dashboard", replace: true });
     } catch (e) {
