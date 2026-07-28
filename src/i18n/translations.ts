@@ -1189,6 +1189,16 @@ const sn: Dict = {
   "emerg.new.fallbackUsed": "Kushanda pasina internet. Tiri kushandisa triage yepafoni.",
   "emerg.new.fallbackBanner":
     "Ongororo iyi yakabudiswa nemitemo yepafoni nekuti AI Gateway haina kusvika. Vashandi vechipatara vachaongororazve pakusvika.",
+  "tts.play": "Verenga zvinonzwika",
+  "tts.stop": "Mira kuverenga",
+  "sos.record": "Rekodha zviratidzo neizwi",
+  "sos.listening": "Ndiri kuteerera... dzvanya mira kana wapedza",
+  "sos.stopRecording": "Mira uye shandurira",
+  "sos.transcribing": "Kushandura izwi rako kuita mashoko...",
+  "sos.micDenied": "Maikorofoni haabvumidzwe. Bvumidza mune settings dzebrowser.",
+  "sos.micUnavailable": "Maikorofoni haiwanikwe padhivhaisi iyi.",
+  "sos.recordTooShort": "Zvakanyanya kupfupika, edzazve.",
+  "sos.transcribeFailed": "Hazvina kubudirira kushandurira izwi. Edzazve.",
 };
 
 const nd: Dict = {
