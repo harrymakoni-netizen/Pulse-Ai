@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/lifeline/app-shell";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -158,9 +158,6 @@ const T = {
     removeAttachment: "Susa",
   },
 } as const;
-
-// BCP 47 codes for text-to-speech playback
-const ttsLang: Record<Lang, string> = { en: "en-ZW", sn: "sn-ZW", nd: "nd-ZW" };
 
 function AssistantPage() {
   const { lang, t: tGlobal } = useI18n();
