@@ -22,6 +22,8 @@ import {
   Camera,
   Video,
   X,
+  Mic,
+  Send,
 } from "lucide-react";
 import { SeverityBadge } from "@/components/lifeline/severity-badge";
 import { EcgLoader } from "@/components/lifeline/ecg-loader";
@@ -38,6 +40,9 @@ import { compressImage, extractVideoFrames } from "@/lib/media";
 import { ruleBasedTriage } from "@/lib/triage-fallback";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ShieldCheck } from "lucide-react";
+import { useVoiceRecorder } from "@/lib/use-recorder";
+import { SpeakButton } from "@/components/lifeline/speak-button";
+import { AnimatePresence } from "framer-motion";
 
 export const Route = createFileRoute("/_authenticated/emergency/new")({
   head: () => ({ meta: [{ title: "SOS · LifeLine+" }] }),
@@ -89,6 +94,24 @@ function NewEmergency() {
   const hospitals = useQuery({ queryKey: ["hospitals"], queryFn: () => listHospitals() });
   const assessFn = tanUseServerFn(assessEmergency);
   const createFn = tanUseServerFn(createEmergencyRequest);
+
+  const recorder = useVoiceRecorder({
+    language,
+    onTranscript: (voiceText) => {
+      setSymptomsText((prev) => (prev ? prev.trimEnd() + " " + voiceText : voiceText));
+    },
+    onError: (kind) => {
+      const key =
+        kind === "denied"
+          ? "sos.micDenied"
+          : kind === "unavailable"
+            ? "sos.micUnavailable"
+            : kind === "short"
+              ? "sos.recordTooShort"
+              : "sos.transcribeFailed";
+      toast.error(t(key));
+    },
+  });
 
   const assess = useMutation({
     mutationFn: async () => {
