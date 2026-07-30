@@ -15,7 +15,15 @@ export const Route = createFileRoute("/auth")({
     meta: [
       { title: "Sign in · LifeLine+" },
       { name: "description", content: "Access your LifeLine+ emergency healthcare account." },
+      { property: "og:title", content: "Sign in · LifeLine+" },
+      {
+        property: "og:description",
+        content: "Access your LifeLine+ emergency healthcare account.",
+      },
+      { property: "og:url", content: "https://www.lifelineai.co.zw/auth" },
+      { name: "robots", content: "noindex, follow" },
     ],
+    links: [{ rel: "canonical", href: "https://www.lifelineai.co.zw/auth" }],
   }),
   component: AuthPage,
 });

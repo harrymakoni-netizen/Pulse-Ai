@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /reset-password
+
+Sitemap: https://www.lifelineai.co.zw/sitemap.xml

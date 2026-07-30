@@ -105,16 +105,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "LifeLine+ connects patients, hospitals, and ambulances using AI to reduce emergency response times and save lives across Zimbabwe.",
       },
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a0ecc2f-e750-4a58-b4d1-3322caa88a1c",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a0ecc2f-e750-4a58-b4d1-3322caa88a1c",
-      },
+      { property: "og:site_name", content: "LifeLine+" },
+      { property: "og:locale", content: "en_ZW" },
     ],
     links: [
       {
