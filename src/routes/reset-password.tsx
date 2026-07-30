@@ -8,7 +8,16 @@ import { LifeLineLogo } from "@/components/lifeline/logo";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/reset-password")({
-  head: () => ({ meta: [{ title: "Reset password · LifeLine+" }] }),
+  head: () => ({
+    meta: [
+      { title: "Reset password · LifeLine+" },
+      {
+        name: "description",
+        content: "Set a new password for your LifeLine+ account.",
+      },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: ResetPassword,
 });
 
