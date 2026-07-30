@@ -35,6 +35,63 @@ import {
 import { Card, Step, SafetyCard } from "./about.ai";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "LifeLine+ · AI Emergency Triage & Ambulance Dispatch Zimbabwe" },
+      {
+        name: "description",
+        content:
+          "LifeLine+ uses AI triage in English, Shona and Ndebele to match patients with the nearest hospital and ambulance, cutting emergency response times in Zimbabwe.",
+      },
+      {
+        property: "og:title",
+        content: "LifeLine+ · AI Emergency Triage & Ambulance Dispatch Zimbabwe",
+      },
+      {
+        property: "og:description",
+        content:
+          "AI triage in English, Shona and Ndebele that matches patients with the nearest hospital and ambulance across Zimbabwe.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.lifelineai.co.zw/" },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a0ecc2f-e750-4a58-b4d1-3322caa88a1c",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a0ecc2f-e750-4a58-b4d1-3322caa88a1c",
+      },
+    ],
+    links: [{ rel: "canonical", href: "https://www.lifelineai.co.zw/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              name: "LifeLine+",
+              url: "https://www.lifelineai.co.zw/",
+              inLanguage: ["en", "sn", "nd"],
+            },
+            {
+              "@type": "Organization",
+              name: "LifeLine+",
+              url: "https://www.lifelineai.co.zw/",
+              areaServed: "ZW",
+              description:
+                "AI-powered emergency triage and ambulance coordination platform for Zimbabwe.",
+            },
+          ],
+        }),
+      },
+    ],
+  }),
   component: Landing,
 });
 
